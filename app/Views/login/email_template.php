@@ -10,6 +10,6 @@
     <h1>Confirmação de e-mail</h1>
     <h5>Olá <?= $post['txtName']?>, obrigado por se cadastrar em nosso site</h5>
     <p>Para que você possa ter acesso é necessário que confirme o seu e-mail no link abaixo</p>
-    <p><a href="<?= base_url('userscontroller/emailconfirm/'.'?key=' . $key)?>">Confirme aqui</a></p>
+    <p><a href="<?= base_url('logincontroller/emailconfirm/'.'?key=' . $key)?>">Confirme aqui</a></p>
 </body>
 </html>

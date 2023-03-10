@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\Todo;
-use CodeIgniter\Controller;
 
 class Main extends BaseController
 {
@@ -17,13 +16,13 @@ class Main extends BaseController
             $data = [
                 'jobs'      => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
                                    ->like('JOB', $searchInput)
-                                   ->orLike('DATETIME_CREATED', $searchInput)
+                                   ->orLike('jobs.DATETIME_CREATED', $searchInput = implode('-', array_reverse(explode('/', $searchInput))))
                                    ->orderBy('ID_JOB')
                                    ->paginate(10),
                 'pager'     => $job->pager,
                 'alljobs'   => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
                                    ->like('JOB', $searchInput)
-                                   ->orLike('DATETIME_CREATED', $searchInput)
+                                   ->orLike('jobs.DATETIME_CREATED', $searchInput = implode('-', array_reverse(explode('/', $searchInput))))
                                    ->countAllResults(),
                 'search'     => true,
               
@@ -60,16 +59,16 @@ class Main extends BaseController
         if ($searchInput) {
             $data = [
                 'jobs'      => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
-                                   ->like('JOB', $searchInput)->where('DATETIME_FINISHED !=', NULL)
-                                   ->orLike('DATETIME_CREATED', $searchInput)->where('DATETIME_FINISHED !=', NULL)
-                                   ->orLike('DATETIME_FINISHED', $searchInput)->where('DATETIME_FINISHED !=', NULL)
+                                   ->like('JOB', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
+                                   ->orLike('jobs.DATETIME_CREATED', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
+                                   ->orLike('jobs.DATETIME_FINISHED', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
                                    ->orderBy('ID_JOB')
                                    ->paginate(10),
                 'pager'     => $job->pager,
                 'alljobs'   => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
-                                   ->like('JOB', $searchInput)->where('DATETIME_FINISHED !=', NULL)
-                                   ->orLike('DATETIME_CREATED', $searchInput)->where('DATETIME_FINISHED !=', NULL)
-                                   ->orLike('DATETIME_FINISHED', $searchInput)->where('DATETIME_FINISHED !=', NULL)
+                                   ->like('JOB', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
+                                   ->orLike('jobs.DATETIME_CREATED', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
+                                   ->orLike('jobs.DATETIME_FINISHED', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
                                    ->countAllResults(),
                 'done'      => true,
                 'search'    => true,
@@ -77,9 +76,9 @@ class Main extends BaseController
             return view('home', $data);
         }
         $data = [
-            'jobs'    => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('DATETIME_FINISHED !=', NULL)->paginate(10),
+            'jobs'    => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.DATETIME_FINISHED !=', NULL)->paginate(10),
             'pager'   => $job->pager,
-            'alljobs' => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('DATETIME_FINISHED !=', NULL)->countAllResults(),
+            'alljobs' => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.DATETIME_FINISHED !=', NULL)->countAllResults(),
             'done'    => true,
         ];
         return view('home', $data);

@@ -57,8 +57,12 @@
                     &#9965;
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">&#129485; Minha Conta</a></li>
-                    <li><a class="dropdown-item" href="<?= base_url('userscontroller/logout') ?>"><strong>&#8998;</strong> Logout</a></li>
+                    <?php if (isset($_SESSION['USER_ID'])) : ?>
+                        <li><a class="dropdown-item" href="<?= base_url('userscontroller/profile/' . base64_encode($_SESSION['USER_ID'])) ?>">&#129485; Minha Conta</a></li>
+                        <li><a class="dropdown-item" href="<?= base_url('logincontroller/logout') ?>"><strong>&#8998;</strong> Logout</a></li>
+                    <?php else : ?>
+                        <li><a class="dropdown-item" href="<?= base_url('logincontroller/login') ?>">&#129485; Minha Conta</a></li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -75,7 +79,7 @@
 
     <?= $this->renderSection('conteudo') ?>
 
-    <footer class="container-fluid text-center">
+    <footer class="fixed-bottom text-center">
         <div>
             &copy; <?php echo date('Y') ?>
         </div>

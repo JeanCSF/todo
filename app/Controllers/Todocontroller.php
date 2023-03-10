@@ -37,12 +37,10 @@ class Todocontroller extends BaseController
     public function editJobSubmit()
     {
         $job = new Todo();
-        $params = [
-            'ID_JOB' => $this->request->getPost('id_job'),
-            'JOB' => $this->request->getPost('job_name'),
-        ];
-        if (!empty($params)) {
-            if ($job->editJob($params)) {
+        $post = $this->request->getPost();
+
+        if (!empty($post)) {
+            if ($job->editJob($post)) {
                 $mensagem = [
                     'mensagem' => 'Tarefa alterada com sucesso',
                     'tipo' => 'alert-success',

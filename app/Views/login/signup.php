@@ -10,7 +10,7 @@
                 <hr>
                 <?php
                 helper('form');
-                echo form_open('userscontroller/signup');
+                echo form_open('logincontroller/signup');
                 ?>
                 <div class="row mb-3">
                     <input type="text" name="txtUser" class="form-control" placeholder="Usuário" value="<?= isset($userData)? $userData['txtUser'] : ''?>" required autofocus>

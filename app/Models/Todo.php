@@ -60,9 +60,16 @@ class Todo extends Model
         }
     }
 
-    public function editJob($params)
+    public function editJob($post)
     {
-        return $this->query("UPDATE jobs SET DATETIME_UPDATED = NOW(), JOB = :JOB: WHERE ID_JOB = :ID_JOB:", $params) ? true : false;
+        date_default_timezone_set('America/Sao_Paulo');
+        if (!empty($post)) {
+            $data = [
+                'JOB'               => $post['job_name'],
+                'DATETIME_UPDATED'  => date('Y-m-d H:i:s'),
+            ];
+            return $this->table('jobs')->update($post['id_job'], $data) ? true : false;
+        }
     }
 
     public function finishJob($params)
@@ -72,6 +79,15 @@ class Todo extends Model
 
     public function deleteJob($params)
     {
-        return $this->query("DELETE FROM jobs WHERE ID_JOB = :ID_JOB:", $params)? true : false;
+        return $this->query("DELETE FROM jobs WHERE ID_JOB = :ID_JOB:", $params) ? true : false;
+    }
+
+    public function getUserJobs($id){
+        $tasks = $this->select()
+                      ->join('login', 'login.USER_ID = jobs.USER_ID')
+                      ->where('jobs.USER_ID',$id)
+                      ->orderBy('jobs.ID_JOB')->findAll();
+        
+        return $tasks;
     }
 }

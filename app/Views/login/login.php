@@ -7,7 +7,7 @@
         <div class="mt-5 col-2 offset-5">
             <?php
             helper('form');
-            echo form_open('userscontroller/login');
+            echo form_open('logincontroller/login');
             ?>
             <?php if (isset($error)) : ?>
                 <p class="alert alert-danger text-center"><?php echo $error; ?></p>
