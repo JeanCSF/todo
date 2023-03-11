@@ -14,12 +14,19 @@ class Userscontroller extends BaseController
         $jobs = new Todo();
         $profile = $users->getUser($id);
         $tasks = $jobs->getUserJobs($id);
+        $alltasks = $jobs->countAllUserJobs($id);
         $data = [
-            'userData'      => $profile,
-            'userTasks'     => $tasks,
+            'userData'          => $profile,
+            'userTasks'         => $tasks,
+            'pager'             => $jobs->pager,
+            'alltasks'          => $alltasks,
 
         ];
         echo view('users/profile', $data);
 
+    }
+
+    public function users(){
+        
     }
 }

@@ -77,17 +77,31 @@ class Todo extends Model
         return $this->query("UPDATE jobs SET DATETIME_FINISHED = NOW(), DATETIME_UPDATED = NOW() WHERE ID_JOB = :ID_JOB:", $params) ? true : false;
     }
 
-    public function deleteJob($params)
+    public function deleteJob($post)
     {
-        return $this->query("DELETE FROM jobs WHERE ID_JOB = :ID_JOB:", $params) ? true : false;
+        if(!empty($post)){
+
+            return $this->table('jobs')->where('ID_JOB', $post['deleteJobId'])->delete() ? true : false;
+        }
     }
 
-    public function getUserJobs($id){
-        $tasks = $this->select()
-                      ->join('login', 'login.USER_ID = jobs.USER_ID')
-                      ->where('jobs.USER_ID',$id)
-                      ->orderBy('jobs.ID_JOB')->findAll();
-        
-        return $tasks;
+    public function getUserJobs($id)
+    {
+        $data = $this->select('*')
+            ->join('login', 'login.USER_ID = jobs.USER_ID')
+            ->where('jobs.USER_ID', $id)
+            ->orderBy('jobs.ID_JOB')->paginate(5);
+
+        return $data;
+    }
+
+    public function countAllUserJobs($id)
+    {
+        $data = $this->select('*')
+        ->join('login', 'login.USER_ID = jobs.USER_ID')
+        ->where('jobs.USER_ID', $id)
+        ->countAllResults();
+
+        return $data;
     }
 }

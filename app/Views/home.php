@@ -4,11 +4,13 @@
 <?php
 
 use App\Models\Todo;
-
 $db = new Todo();
-$alltasks = $db->select()->join('login', 'login.USER_ID = jobs.USER_ID')->countAllResults();
-$alldone = $db->select()->join('login', 'login.USER_ID = jobs.USER_ID')->where('DATETIME_FINISHED !=', NULL)->countAllResults();
-$notdone = $db->select()->join('login', 'login.USER_ID = jobs.USER_ID')->where('DATETIME_FINISHED =', NULL)->countAllResults();
+$id = $_SESSION['USER_ID'];
+$alltasks = $db->select()->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.USER_ID', $id)->countAllResults();
+$alldone = $db->select()->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.USER_ID', $id)->where('DATETIME_FINISHED !=', NULL)->countAllResults();
+$notdone = $db->select()->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.USER_ID', $id)->where('DATETIME_FINISHED =', NULL)->countAllResults();
+
+
 $baseurl = base_url('/');
 $doneurl = site_url('main/done');
 
@@ -24,59 +26,6 @@ function reverseDates($oldData)
     return $newDate;
 }
 ?>
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="deleteModalLabel">Deletar Tarefa</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h3>Deseja deletar a tarefa:</h3>
-                <h5 id="tarefa"></h5>
-                <span class="text-danger">Esta ação é irreversível</span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a type="button" class="btn btn-warning" id="btnDeletar" onclick="deleteJob()">Deletar</a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Delete Modal -->
-
-<!-- Task Modal -->
-<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="taskModalLabel">Adicionar Tarefa</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-6 offset-3">
-                            <form action="" id="form" method="post">
-                                <div class="form-group">
-                                    <input type="text" placeholder="Nome da tarefa" name="job_name" id="job_name" value="" class="form-control" required>
-                                    <input type="hidden" name="id_job" id="id_job" value="">
-                                    <input type="hidden" id="editar" value="">
-                                </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <input type="submit" value="" id="btnSubmit" onclick="" class="btn btn-success">
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- Task Modal -->
 
 <header class="ms-5 me-5 d-flex justify-content-between">
         <h3>
@@ -167,46 +116,5 @@ function reverseDates($oldData)
             </div>
         </div>
     </div>
-
-    <?= $this->endSection() ?>
-
-    <?= $this->section('script') ?>
-
-    <script>
-        function fillModalDelete(id) {
-            modal = document.getElementById("deleteModal");
-            btnDelete = modal.getElementsByClassName("btn-warning")[0];
-            btnDelete.setAttribute('dado-alvo', id);
-
-        }
-
-        function fillModalNewJob() {
-            frm = document.getElementById("form");
-            frm.setAttribute('action', '<?= site_url('todocontroller/newjobsubmit') ?>')
-
-            frmBtn = document.getElementById("btnSubmit");
-            frmBtn.setAttribute('value', 'Gravar');
-        }
-
-        function fillModalEdit(id, job) {
-            frm = document.getElementById("form");
-            frm.setAttribute('action', '<?= site_url('todocontroller/editjobsubmit') ?>')
-
-            frmBtn = document.getElementById("btnSubmit");
-            frmBtn.setAttribute('value', 'Atualizar');
-
-            frmId = document.getElementById("id_job");
-            frmId.setAttribute('value', id);
-
-            frmJob = document.getElementById("job_name");
-            frmJob.setAttribute('value', job);
-
-        }
-
-        function deleteJob(id) {
-            var id = btnDelete.getAttribute('dado-alvo', id);
-            window.location.replace('todocontroller/delete/' + id);
-        }
-    </script>
 
     <?= $this->endSection() ?>

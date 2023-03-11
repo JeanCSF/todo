@@ -20,7 +20,7 @@ class Logincontroller extends BaseController
                 $this->session->setFlashdata('mensagem', $mensagem);
                 return view('login/signup', $data);
             }
-            if ($login->signUpCheckUser($post)) {
+            if (!$login->signUpCheckUser($post)) {
                 $data['userData']  = $post;
                 $mensagem['mensagem'] = 'Usuário ou email já cadastrado!';
                 $mensagem['tipo'] = 'alert-danger';
@@ -40,9 +40,6 @@ class Logincontroller extends BaseController
                 ];
 
                 $email->initialize($config);
-
-                $email->setFrom('jean.carlos16@livecom', 'Jean');
-                $email->setTo($post['txtEmail']);
 
                 $email->setSubject($post['txtName'] . ', confirme seu e-mail para continuar');
                 $emailData = [

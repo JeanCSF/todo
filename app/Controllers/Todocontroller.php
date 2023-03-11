@@ -22,14 +22,14 @@ class Todocontroller extends BaseController
                     'tipo' => 'alert-success',
                 ];
                 $this->session->setFlashdata('mensagem', $mensagem);
-                return redirect()->to(base_url('/'));
+                return redirect()->back();
             } else {
                 $mensagem = [
                     'mensagem' => 'Não foi possível adicionar tarefa',
                     'tipo' => 'alert-danger',
                 ];
                 $this->session->setFlashdata('mensagem', $mensagem);
-                return redirect()->to(base_url('/'));
+                return redirect()->back();
             }
         }
     }
@@ -46,14 +46,14 @@ class Todocontroller extends BaseController
                     'tipo' => 'alert-success',
                 ];
                 $this->session->setFlashdata('mensagem', $mensagem);
-                return redirect()->to(base_url('/'));
+                return redirect()->back();
             } else {
                 $mensagem = [
                     'mensagem' => 'Não foi possível editar tarefa',
                     'tipo' => 'alert-danger',
                 ];
                 $this->session->setFlashdata('mensagem', $mensagem);
-                return redirect()->to(base_url('/'));
+                return redirect()->back();
             }
         }
     }
@@ -71,39 +71,38 @@ class Todocontroller extends BaseController
                     'tipo' => 'alert-success',
                 ];
                 $this->session->setFlashdata('mensagem', $mensagem);
-                return redirect()->to(base_url('/'));
+                return redirect()->back();
+
             } else {
                 $mensagem = [
                     'mensagem' => 'Não foi possível concluir tarefa',
                     'tipo' => 'alert-danger',
                 ];
                 $this->session->setFlashdata('mensagem', $mensagem);
-                return redirect()->to(base_url('/'));
+                return redirect()->back();
             }
         }
     }
 
-    public function delete($id_job = -1)
+    public function delete()
     {
         $job = new Todo();
-        $params = [
-            'ID_JOB' => $id_job,
-        ];
-        if (!empty($params)) {
-            if ($job->deleteJob($params)) {
+        $post = $this->request->getPost();
+        if (!empty($post)) {
+            if ($job->deleteJob($post)) {
                 $mensagem = [
                     'mensagem' => 'Tarefa excluída com sucesso',
                     'tipo' => 'alert-success',
                 ];
                 $this->session->setFlashdata('mensagem', $mensagem);
-                return redirect()->to(base_url('/'));
+                return redirect()->back();
             } else {
                 $mensagem = [
                     'mensagem' => 'erro ao excluír tarefa',
                     'tipo' => 'alert-danger',
                 ];
                 $this->session->setFlashdata('mensagem', $mensagem);
-                return redirect()->to(base_url('/'));
+                return redirect()->back();
             }
         }
     }

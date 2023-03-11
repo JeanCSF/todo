@@ -11,16 +11,17 @@ class Main extends BaseController
     {
         $job = new Todo();
         if ($this->session->has('USER_ID')) {
+            $id = $_SESSION['USER_ID'];
         if ($this->request->getGet('search')) {
             $searchInput = $this->request->getGet('search');
             $data = [
-                'jobs'      => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
+                'jobs'      => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.USER_ID', $id)
                                    ->like('JOB', $searchInput)
                                    ->orLike('jobs.DATETIME_CREATED', $searchInput = implode('-', array_reverse(explode('/', $searchInput))))
                                    ->orderBy('ID_JOB')
                                    ->paginate(10),
                 'pager'     => $job->pager,
-                'alljobs'   => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
+                'alljobs'   => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.USER_ID', $id)
                                    ->like('JOB', $searchInput)
                                    ->orLike('jobs.DATETIME_CREATED', $searchInput = implode('-', array_reverse(explode('/', $searchInput))))
                                    ->countAllResults(),
@@ -31,8 +32,8 @@ class Main extends BaseController
         }
         
         $data = [
-            'jobs'      => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->orderBy('ID_JOB')->paginate(10),
-            'alljobs'   => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->countAllResults(),
+            'jobs'      => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.USER_ID', $id)->orderBy('ID_JOB')->paginate(10),
+            'alljobs'   => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.USER_ID', $id)->countAllResults(),
             'pager'     => $job->pager,
             
         ];
@@ -55,30 +56,35 @@ class Main extends BaseController
 
     public function done(){
         $job = new Todo();
+        $id = $_SESSION['USER_ID'];
         $searchInput = $this->request->getGet('search'); 
         if ($searchInput) {
             $data = [
-                'jobs'      => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
-                                   ->like('JOB', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
-                                   ->orLike('jobs.DATETIME_CREATED', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
-                                   ->orLike('jobs.DATETIME_FINISHED', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
+                'jobs'      => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.USER_ID', $id)
+                                   ->like('JOB', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)->where('jobs.USER_ID', $id)
+                                   ->orLike('jobs.DATETIME_CREATED', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)->where('jobs.USER_ID', $id)
+                                   ->orLike('jobs.DATETIME_FINISHED', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)->where('jobs.USER_ID', $id)
                                    ->orderBy('ID_JOB')
                                    ->paginate(10),
                 'pager'     => $job->pager,
-                'alljobs'   => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
-                                   ->like('JOB', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
+                'alljobs'   => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.USER_ID', $id)
+                                   ->like('JOB', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)->where('jobs.USER_ID', $id)
                                    ->orLike('jobs.DATETIME_CREATED', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
-                                   ->orLike('jobs.DATETIME_FINISHED', $searchInput)->where('jobs.DATETIME_FINISHED !=', NULL)
-                                   ->countAllResults(),
+                                   ->where('jobs.USER_ID', $id)->orLike('jobs.DATETIME_FINISHED', $searchInput)
+                                   ->where('jobs.DATETIME_FINISHED !=', NULL)->where('jobs.USER_ID', $id)->countAllResults(),
                 'done'      => true,
                 'search'    => true,
             ];
             return view('home', $data);
         }
         $data = [
-            'jobs'    => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.DATETIME_FINISHED !=', NULL)->paginate(10),
+            'jobs'    => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
+                             ->where('jobs.DATETIME_FINISHED !=', NULL)
+                             ->where('jobs.USER_ID', $id)->paginate(10),
             'pager'   => $job->pager,
-            'alljobs' => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.DATETIME_FINISHED !=', NULL)->countAllResults(),
+            'alljobs' => $job->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
+                             ->where('jobs.DATETIME_FINISHED !=', NULL)
+                             ->where('jobs.USER_ID', $id)->countAllResults(),
             'done'    => true,
         ];
         return view('home', $data);
