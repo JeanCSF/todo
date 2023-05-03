@@ -11,6 +11,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TODO!</title>
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap.min.css') ?>">
+    <!-- FontAwesome 6.2.0 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- (Optional) Use CSS or JS implementation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"
+        integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         #pager li {
             width: 25px;
@@ -78,19 +87,19 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="deleteModalLabel">Deletar Tarefa</h1>
+                <h1 class="modal-title fs-5" id="modalTitle"></h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <h3>Deseja deletar a tarefa:</h3>
+                <h3 id="bodyMsg"></h3>
                 <h5 id="tarefa"></h5>
                 <span class="text-danger">Esta ação é irreversível</span>
             </div>
             <form action="" id="formDelete" method="post">
-            <input type="hidden" name="deleteJobId" id="deleteJobId" value="">
+            <input type="hidden" name="id" id="id" value="">
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <input type="submit" class="btn btn-warning" id="btnDeletar" value="Deletar">
+                <input type="submit" class="btn btn-danger" id="btnDeletar" value="Sim, Deletar">
             </div>
             </form>
         </div>
@@ -149,20 +158,29 @@
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
     <script>
         <?php
-        if (isset($_SESSION['mensagem'])) {
+        if (isset($_SESSION['msg'])) {
             echo "msg = document.querySelector('#msgInfo');
              alerta = document.querySelector('#alerta');
-             alerta.classList.add('" . $_SESSION['mensagem']['tipo'] . "');
-             msg.textContent = '" . $_SESSION['mensagem']['mensagem'] . "';
+             alerta.classList.add('" . $_SESSION['msg']['type'] . "');
+             msg.textContent = '" . $_SESSION['msg']['msg'] . "';
              new bootstrap.Toast(document.querySelector('#basicToast')).show();";
         }
         ?>
 
         function fillModalDelete(id) {
             frm = document.getElementById("formDelete");
-            frm.setAttribute('action', '<?= site_url('todocontroller/delete') ?>')
-            frmId = document.getElementById("deleteJobId");
-            frmId.setAttribute('value', id);
+            document.getElementById("modalTitle").textContent = "Deletar Tarefa";
+            document.getElementById("bodyMsg").textContent = "Deseja realmente deletar esta tarefa?";
+            frm.setAttribute('action', '<?= site_url('todocontroller/delete') ?>');
+            document.getElementById("id").setAttribute('value', id);
+
+        }
+        function fillModalDeleteUser(id) {
+            frm = document.getElementById("formDelete");
+            document.getElementById("modalTitle").textContent = "Deletar Usuário";
+            document.getElementById("bodyMsg").textContent = "Deseja realmente deletar este usuário?";
+            frm.setAttribute('action', '<?= site_url('userscontroller/delete') ?>');
+            document.getElementById("id").setAttribute('value', id);
 
         }
 

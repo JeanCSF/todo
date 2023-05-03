@@ -17,18 +17,18 @@ class Todocontroller extends BaseController
 
         if (!empty($post)) {
             if ($job->insertJob($post)) {
-                $mensagem = [
-                    'mensagem' => 'Tarefa Adicionada com sucesso',
-                    'tipo' => 'alert-success',
+                $msg = [
+                    'msg' => 'Tarefa Adicionada com sucesso',
+                    'type' => 'alert-success',
                 ];
-                $this->session->setFlashdata('mensagem', $mensagem);
+                $this->session->setFlashdata('msg', $msg);
                 return redirect()->back();
             } else {
-                $mensagem = [
-                    'mensagem' => 'Não foi possível adicionar tarefa',
-                    'tipo' => 'alert-danger',
+                $msg = [
+                    'msg' => 'Não foi possível adicionar tarefa',
+                    'type' => 'alert-danger',
                 ];
-                $this->session->setFlashdata('mensagem', $mensagem);
+                $this->session->setFlashdata('msg', $msg);
                 return redirect()->back();
             }
         }
@@ -41,18 +41,18 @@ class Todocontroller extends BaseController
 
         if (!empty($post)) {
             if ($job->editJob($post)) {
-                $mensagem = [
-                    'mensagem' => 'Tarefa alterada com sucesso',
-                    'tipo' => 'alert-success',
+                $msg = [
+                    'msg' => 'Tarefa alterada com sucesso',
+                    'type' => 'alert-success',
                 ];
-                $this->session->setFlashdata('mensagem', $mensagem);
+                $this->session->setFlashdata('msg', $msg);
                 return redirect()->back();
             } else {
-                $mensagem = [
-                    'mensagem' => 'Não foi possível editar tarefa',
-                    'tipo' => 'alert-danger',
+                $msg = [
+                    'msg' => 'Não foi possível editar tarefa',
+                    'type' => 'alert-danger',
                 ];
-                $this->session->setFlashdata('mensagem', $mensagem);
+                $this->session->setFlashdata('msg', $msg);
                 return redirect()->back();
             }
         }
@@ -66,19 +66,19 @@ class Todocontroller extends BaseController
         ];
         if (!empty($params)) {
             if ($job->finishJob($params)) {
-                $mensagem = [
-                    'mensagem' => 'Tarefa concluída com sucesso',
-                    'tipo' => 'alert-success',
+                $msg = [
+                    'msg' => 'Tarefa concluída com sucesso',
+                    'type' => 'alert-success',
                 ];
-                $this->session->setFlashdata('mensagem', $mensagem);
+                $this->session->setFlashdata('msg', $msg);
                 return redirect()->back();
 
             } else {
-                $mensagem = [
-                    'mensagem' => 'Não foi possível concluir tarefa',
-                    'tipo' => 'alert-danger',
+                $msg = [
+                    'msg' => 'Não foi possível concluir tarefa',
+                    'type' => 'alert-danger',
                 ];
-                $this->session->setFlashdata('mensagem', $mensagem);
+                $this->session->setFlashdata('msg', $msg);
                 return redirect()->back();
             }
         }
@@ -90,18 +90,18 @@ class Todocontroller extends BaseController
         $post = $this->request->getPost();
         if (!empty($post)) {
             if ($job->deleteJob($post)) {
-                $mensagem = [
-                    'mensagem' => 'Tarefa excluída com sucesso',
-                    'tipo' => 'alert-success',
+                $msg = [
+                    'msg' => 'Tarefa excluída com sucesso',
+                    'type' => 'alert-success',
                 ];
-                $this->session->setFlashdata('mensagem', $mensagem);
+                $this->session->setFlashdata('msg', $msg);
                 return redirect()->back();
             } else {
-                $mensagem = [
-                    'mensagem' => 'erro ao excluír tarefa',
-                    'tipo' => 'alert-danger',
+                $msg = [
+                    'msg' => 'erro ao excluír tarefa',
+                    'type' => 'alert-danger',
                 ];
-                $this->session->setFlashdata('mensagem', $mensagem);
+                $this->session->setFlashdata('msg', $msg);
                 return redirect()->back();
             }
         }

@@ -14,17 +14,6 @@ $notdone = $db->select()->join('login', 'login.USER_ID = jobs.USER_ID')->where('
 $baseurl = base_url('/');
 $doneurl = site_url('main/done');
 
-
-
-
-function reverseDates($oldData)
-{
-    // $oldData = $value->entrada;
-    $orgDate = $oldData;
-    $date = str_replace('/', '-', $orgDate);
-    $newDate = date("d/m/Y", strtotime($date));
-    return $newDate;
-}
 ?>
 
 <header class="ms-5 me-5 d-flex justify-content-between">
@@ -37,7 +26,7 @@ function reverseDates($oldData)
         </h3>
         <form class="d-flex me-5" role="search">
             <input class="form-control me-1" type="search" name="search" placeholder="Pesquisar" aria-label="Search">
-            <input type="submit" value="&#128270;" class="btn btn-outline-primary me-5">
+            <input type="submit" class="btn btn-lg btn-outline-primary mt-1 me-5 fa fa-search">
         </form>
         <button type="button" class="ms-5 btn btn-primary" data-bs-toggle="modal" data-bs-target="#taskModal" role="new task" onclick="fillModalNewJob()">Criar Tarefa</button>
 </header>
@@ -68,24 +57,24 @@ function reverseDates($oldData)
                             <th>Tarefa</th>
                             <th class="text-center">Data de Criação</th>
                             <th class="text-center">Data de Finalização</th>
-                            <th></th>
+                            <th class="text-end">Ação</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($jobs as $job) : ?>
                             <tr>
                                 <td><?= $job->JOB ?></td>
-                                <td class="text-center"><?= reverseDates($job->DATETIME_CREATED) ?></td>
-                                <td class="text-center"><?= isset($job->DATETIME_FINISHED) ? reverseDates($job->DATETIME_FINISHED) : 'Não finalizada' ?></td>
+                                <td class="text-center"><?= date("d/m/Y", strtotime($job->DATETIME_CREATED)) ?></td>
+                                <td class="text-center"><?= isset($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) : 'Não finalizada' ?></td>
                                 <td class="text-end">
                                     <?php if (empty($job->DATETIME_FINISHED)) : ?>
-                                        <a href="<?= site_url('todocontroller/jobdone/' . $job->ID_JOB) ?>" class="btn btn-light btn-sm mx-1" role="finish" title="Finalizar Tarefa">&#9680;</a>
-                                        <a class="btn btn-light btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('<?= $job->ID_JOB ?>', '<?= $job->JOB ?>')">&#9997;</a>
+                                        <a href="<?= site_url('todocontroller/jobdone/' . $job->ID_JOB) ?>" class="btn btn-light btn-sm mx-1 text-success" role="finish" title="Finalizar Tarefa"><i class="fa fa-crosshairs"></i></a>
+                                        <a class="btn btn-light btn-sm mx-1 text-primary" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('<?= $job->ID_JOB ?>', '<?= $job->JOB ?>')"><i class="fa fa-pencil"></i></a>
                                     <?php else : ?>
-                                        <button class="btn btn-light btn-sm mx-1" disabled>&#10004;</button>
-                                        <button class="btn btn-light btn-sm mx-1" disabled>&#9997;</button>
+                                        <button class="btn btn-light btn-sm mx-1 text-success" disabled><i class="fa fa-check"></i></button>
+                                        <button class="btn btn-light btn-sm mx-1 text-primary" disabled><i class="fa fa-pencil"></i></button>
                                     <?php endif; ?>
-                                    <button type="button" class="btn btn-light btn-sm mx-1" data-bs-toggle="modal" title="Excluír Tarefa" role="delete" data-bs-target="#deleteModal" onclick="fillModalDelete(<?= $job->ID_JOB ?>)">&#128465;</button>
+                                    <button type="button" class="btn btn-light btn-sm mx-1 text-danger" data-bs-toggle="modal" title="Excluír Tarefa" role="delete" data-bs-target="#deleteModal" onclick="fillModalDelete(<?= $job->ID_JOB ?>)"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

@@ -13,10 +13,10 @@
                 <p class="alert alert-danger text-center"><?php echo $error; ?></p>
             <?php endif; ?>
             <div class="row mb-3">
-                <input type="text" class="form-control" name="txtUser" placeholder="Usuário" required>
+                <input type="text" class="form-control" name="user" placeholder="Usuário" required>
             </div>
             <div class="row mb-3">
-                <input type="password" class="form-control" name="txtPass" placeholder="Senha" required>
+                <input type="password" class="form-control" name="pass" placeholder="Senha" required>
             </div>
             <hr>
             <div class="text-center">

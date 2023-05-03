@@ -38,11 +38,11 @@ class Login extends Model
     {
         date_default_timezone_set('America/Sao_Paulo');
         $data = [
-            'USER'              => $post['txtUser'],
-            'PASS'              => password_hash($post['txtPass'], PASSWORD_BCRYPT),
-            'NAME'              => $post['txtName'],
-            'EMAIL'             => $post['txtEmail'],
-            'ACTIVATION_KEY'    => base64_encode($post['txtEmail'] . date('Y-m-d H:i:s')),
+            'USER'              => $post['user'],
+            'PASS'              => password_hash($post['pass'], PASSWORD_BCRYPT),
+            'NAME'              => $post['name'],
+            'EMAIL'             => $post['email'],
+            'ACTIVATION_KEY'    => base64_encode($post['email'] . date('Y-m-d H:i:s')),
             'SU'                => 0,
             'ACTIVATION'        => 0,
             'DATETIME_CREATED'  => date('Y-m-d H:i:s'),
@@ -54,8 +54,8 @@ class Login extends Model
 
     public function signUpCheckUser($post)
     {
-        $user = $post['txtUser'];
-        $email = $post['txtEmail'];
+        $user = $post['user'];
+        $email = $post['email'];
         $where = "USER = {$user} OR EMAIL = {$email}";
         $query = $this->select('login')
             ->where($where)
@@ -68,8 +68,8 @@ class Login extends Model
     public function checkLogin($post)
     {
 
-        $user = $post['txtUser'];
-        $pass = $post['txtPass'];
+        $user = $post['user'];
+        $pass = $post['pass'];
         $query = $this->select('*')
             ->where('USER', $user)->get();
         $row = $query->getRow();

@@ -15,19 +15,19 @@ class Logincontroller extends BaseController
         if (!empty($post)) {
             if ($this->checkPass($post)) {
                 $data['userData']  = $post;
-                $mensagem['mensagem'] = 'Senhas digitadas não conferem!';
-                $mensagem['tipo'] = 'alert-danger';
-                $this->session->setFlashdata('mensagem', $mensagem);
+                $msg['msg'] = 'Senhas digitadas não conferem!';
+                $msg['type'] = 'alert-danger';
+                $this->session->setFlashdata('msg', $msg);
                 return view('login/signup', $data);
             }
             if (!$login->signUpCheckUser($post)) {
                 $data['userData']  = $post;
-                $mensagem['mensagem'] = 'Usuário ou email já cadastrado!';
-                $mensagem['tipo'] = 'alert-danger';
-                $this->session->setFlashdata('mensagem', $mensagem);
+                $msg['msg'] = 'Usuário ou email já cadastrado!';
+                $msg['type'] = 'alert-danger';
+                $this->session->setFlashdata('msg', $msg);
                 return view('login/signup', $data);
             } else if ($login->signUpCreateAccount($post)) {
-                $key = base64_encode($post['txtEmail'] . date('Y-m-d H:i:s'));
+                $key = base64_encode($post['email'] . date('Y-m-d H:i:s'));
                 $email = \Config\Services::email();
 
                 $config = [
@@ -41,7 +41,7 @@ class Logincontroller extends BaseController
 
                 $email->initialize($config);
 
-                $email->setSubject($post['txtName'] . ', confirme seu e-mail para continuar');
+                $email->setSubject($post['name'] . ', confirme seu e-mail para continuar');
                 $emailData = [
                     'key'   => $key,
                     'post'  => $post
@@ -49,9 +49,9 @@ class Logincontroller extends BaseController
                 $email->setMessage(view('login/email_template', $emailData));
 
                 if ($email->send()) {
-                    $mensagem['mensagem'] = 'Cadastro criado, acesse seu email para confirmar a conta!';
-                    $mensagem['tipo'] = 'alert-success';
-                    $this->session->setFlashdata('mensagem', $mensagem);
+                    $msg['msg'] = 'Cadastro criado, acesse seu email para confirmar a conta!';
+                    $msg['type'] = 'alert-success';
+                    $this->session->setFlashdata('msg', $msg);
                     return redirect()->to(base_url('/'));
                 }
             }
@@ -71,15 +71,15 @@ class Logincontroller extends BaseController
                     'ACTIVATION_KEY'        => null,
                 ];
                 if ($login->activateUser($params)) {
-                    $mensagem = [
-                        'mensagem' => 'E-mail confirmado com sucesso!',
-                        'tipo' => 'alert-success',
+                    $msg = [
+                        'msg' => 'E-mail confirmado com sucesso!',
+                        'type' => 'alert-success',
                     ];
-                    $this->session->setFlashdata('mensagem', $mensagem);
+                    $this->session->setFlashdata('msg', $msg);
                 } else {
-                    $mensagem['mensagem'] = 'Erro ao confirmar e-mail';
-                    $mensagem['tipo'] = 'alert-danger';
-                    $this->session->setFlashdata('mensagem', $mensagem);
+                    $msg['msg'] = 'Erro ao confirmar e-mail';
+                    $msg['type'] = 'alert-danger';
+                    $this->session->setFlashdata('msg', $msg);
                 }
             }
         }
@@ -88,8 +88,8 @@ class Logincontroller extends BaseController
 
     public function checkPass($post)
     {
-        $pass1 = $post['txtPass'];
-        $pass2 = $post['txtPass2'];
+        $pass1 = $post['pass'];
+        $pass2 = $post['pass2'];
 
         return $pass1 != $pass2 ? true : false;
     }
@@ -101,13 +101,13 @@ class Logincontroller extends BaseController
         $post = $this->request->getPost();
         if (!empty($post)) {
             if ($login->checkLogin($post)) {
-                $row = $login->getUserData($post['txtUser']);
+                $row = $login->getUserData($post['user']);
                 if ($row->ACTIVATION == 0) {
-                    $mensagem = [
-                        'mensagem' => 'Por favor ative sua conta para acessar!',
-                        'tipo' => 'alert-danger',
+                    $msg = [
+                        'msg' => 'Por favor ative sua conta para acessar!',
+                        'type' => 'alert-danger',
                     ];
-                    $this->session->setFlashdata('mensagem', $mensagem);
+                    $this->session->setFlashdata('msg', $msg);
                     return view('login/login');
                 } else {
                     $data = [
@@ -118,18 +118,18 @@ class Logincontroller extends BaseController
                         'SU'            => $row->SU,
                     ];
                     $this->session->set($data);
-                    $mensagem = [
-                        'mensagem' => 'Bem vindo',
-                        'tipo' => 'alert-success',
+                    $msg = [
+                        'msg' => 'Bem vindo',
+                        'type' => 'alert-success',
                     ];
-                    $mensagem['mensagem'] = 'Bem vindo ' . $_SESSION['NAME'] . '!';
-                    $this->session->setFlashdata('mensagem', $mensagem);
+                    $msg['msg'] = 'Bem vindo ' . $_SESSION['NAME'] . '!';
+                    $this->session->setFlashdata('msg', $msg);
                     return redirect()->to(base_url('/'));
                 }
             } else {
-                $mensagem['mensagem'] = 'Usuário ou senha inválido';
-                $mensagem['tipo'] = 'alert-danger';
-                $this->session->setFlashdata('mensagem', $mensagem);
+                $msg['msg'] = 'Usuário ou senha inválido';
+                $msg['type'] = 'alert-danger';
+                $this->session->setFlashdata('msg', $msg);
             }
         }
         echo view('login/login');

@@ -81,7 +81,7 @@ class Todo extends Model
     {
         if(!empty($post)){
 
-            return $this->table('jobs')->where('ID_JOB', $post['deleteJobId'])->delete() ? true : false;
+            return $this->table('jobs')->where('ID_JOB', $post['id'])->delete() ? true : false;
         }
     }
 

@@ -39,4 +39,30 @@ class Users extends Model
         $result = $this->find($id);
         return $result;
     }
+
+    public function getAll()
+    {
+        return $this->findAll();
+    }
+
+    public function addUser($post)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $data = [
+            'USER'                  => $post['user'],
+            'PASS'                  => password_hash($post['pass'], PASSWORD_BCRYPT),
+            'NAME'                  => $post['name'],
+            'EMAIL'                 => $post['email'],
+            'DATETIME_CREATED'      => date("Y-m-d H:i:s"),
+        ];
+        return $this->save($data) ? true : false;
+    }
+
+    public function deleteUser($post)
+    {
+        if (!empty($post)) {
+            return $this->table('login')->where('USER_ID', $post['id'])->delete() ? true : false;
+        }
+    }
 }
