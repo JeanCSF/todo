@@ -26,7 +26,7 @@
                             <td><?= $user->EMAIL ?></td>
                             <td><?= date("d/m/Y", strtotime($user->DATETIME_CREATED)) ?></td>
                             <td class="text-end">
-                            <a class="btn btn-light btn-sm mx-1 text-primary" data-bs-toggle="modal" href="<?=base_url('userscontroller/edituser')?>" title="Editar Usuário" role="edit"><i class="fa fa-pencil"></i></a>
+                            <a class="btn btn-light btn-sm mx-1 text-primary" href="<?=base_url('userscontroller/edit/' . base64_encode($user->USER_ID))?>" title="Editar Usuário" role="edit"><i class="fa fa-pencil"></i></a>
                             <button type="button" class="btn btn-light btn-sm mx-1 text-danger" data-bs-toggle="modal" title="Excluír Usuário" role="delete" data-bs-target="#deleteModal" onclick="fillModalDeleteUser(<?= $user->USER_ID ?>)"><i class="fa fa-trash"></i></button>
                             </td>
                         </tr>

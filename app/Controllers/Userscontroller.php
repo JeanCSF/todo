@@ -14,14 +14,13 @@ class Userscontroller extends BaseController
             $id = base64_decode($id);
             $users = new Users();
             $jobs = new Todo();
-            $profile = $users->getUser($id);
-            $tasks = $jobs->getUserJobs($id);
-            $alltasks = $jobs->countAllUserJobs($id);
             $data = [
-                'userData'          => $profile,
-                'userTasks'         => $tasks,
-                'pager'             => $jobs->pager,
-                'alltasks'          => $alltasks,
+                'userData'              => $users->getUser($id),
+                'userTasks'             => $jobs->getUserJobs($id),
+                'pager'                 => $jobs->pager,
+                'alltasks'              => $jobs->countAllUserJobs($id),
+                'alldone'               => $jobs->countAllUserDoneJobs($id),
+                'notdone'               => $jobs->countAllUserNotDoneJobs($id),
 
             ];
             echo view('users/profile', $data);
@@ -55,7 +54,7 @@ class Userscontroller extends BaseController
         $login = new Login();
         $post = $this->request->getPost();
         if (!empty($post)) {
-            if ($login->signUpCheckUser($post)) {
+            if (!$login->signUpCheckUser($post)) {
                 $data['userData']  = $post;
                 $msg['msg'] = 'Usuário ou email já cadastrado!';
                 $msg['type'] = 'alert-danger';
@@ -65,10 +64,32 @@ class Userscontroller extends BaseController
                 $msg['msg'] = 'Usuário cadastrado com sucesso!';
                 $msg['type'] = 'alert-success';
                 $this->session->setFlashdata('msg', $msg);
-                redirect()->to(base_url('users/all_users'));
+                return redirect()->to(base_url('userscontroller/users'));
             }
         }
         echo view('users/form_users');
+    }
+
+    public function edit($id)
+    {
+        $id = base64_decode($id);
+        $users = new Users();
+        $post = $this->request->getPost();
+
+        if (!empty($post)) {
+            if ($users->editUser($id, $post)) {
+                $msg['msg'] = 'Usuário Atualizado com sucesso!';
+                $msg['type'] = 'alert-success';
+                $this->session->setFlashdata('msg', $msg);
+                return redirect()->to(base_url('userscontroller/users'));
+            }
+        }
+
+        $data = [
+            'user'          => $users->getUser($id),
+            'edit'          => true,
+        ];
+        echo view('users/form_users', $data);
     }
 
     public function delete()

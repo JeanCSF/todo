@@ -12,14 +12,10 @@
     <title>TODO!</title>
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap.min.css') ?>">
     <!-- FontAwesome 6.2.0 CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- (Optional) Use CSS or JS implementation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"
-        integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js" integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         #pager li {
             width: 25px;
@@ -55,7 +51,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="taskModalLabel">Adicionar Tarefa</h1>
+                <h1 class="modal-title fs-5" id="taskModalLabel"></h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -64,7 +60,7 @@
                         <div class="col-6 offset-3">
                             <form action="" id="form" method="post">
                                 <div class="form-group">
-                                    <input type="text" placeholder="Nome da tarefa" name="job_name" id="job_name" value="" class="form-control" required>
+                                    <input type="text" placeholder="Nome da tarefa" name="job_name" id="job_name" value="" class="form-control" autofocus required>
                                     <input type="hidden" name="id_job" id="id_job" value="">
                                     <input type="hidden" id="editar" value="">
                                 </div>
@@ -96,11 +92,11 @@
                 <span class="text-danger">Esta ação é irreversível</span>
             </div>
             <form action="" id="formDelete" method="post">
-            <input type="hidden" name="id" id="id" value="">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <input type="submit" class="btn btn-danger" id="btnDeletar" value="Sim, Deletar">
-            </div>
+                <input type="hidden" name="id" id="id" value="">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <input type="submit" class="btn btn-danger" id="btnDeletar" value="Sim, Deletar">
+                </div>
             </form>
         </div>
     </div>
@@ -120,15 +116,15 @@
         <div class="col-1 collapse navbar-collapse justify-content-end" id="navbarNavDarkDropdown">
             <div class="btn-group dropstart">
                 <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    &#9965;
+                    <i class="fa fa-gear"></i>
                 </button>
                 <ul class="dropdown-menu">
                     <?php if (isset($_SESSION['USER_ID'])) : ?>
                         <?php if ($_SESSION['SU'] == 1) : ?>
-                            <li><a class="dropdown-item" href="<?= base_url('userscontroller/users/') ?>">&#129485; Usuários</a></li>
+                            <li><a class="dropdown-item" href="<?= base_url('userscontroller/users/') ?>"><i class="fa fa-users"></i> Usuários</a></li>
                         <?php endif; ?>
-                        <li><a class="dropdown-item" href="<?= base_url('userscontroller/profile/' . base64_encode($_SESSION['USER_ID'])) ?>">&#129485; Minha Conta</a></li>
-                        <li><a class="dropdown-item" href="<?= base_url('logincontroller/logout') ?>"><strong>&#8998;</strong> Logout</a></li>
+                        <li><a class="dropdown-item" href="<?= base_url('userscontroller/profile/' . base64_encode($_SESSION['USER_ID'])) ?>"><i class="fa fa-user"></i> Minha Conta</a></li>
+                        <li><a class="dropdown-item" href="<?= base_url('logincontroller/logout') ?>"><strong><i class="fa fa-right-from-bracket"></i></strong> Logout</a></li>
                     <?php else : ?>
                         <li><a class="dropdown-item" href="<?= base_url('logincontroller/login') ?>">&#129485; Minha Conta</a></li>
                     <?php endif; ?>
@@ -156,7 +152,14 @@
 
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
+    <script src="<?= base_url('assets/infinite-scroll.pkgd.min.js') ?>"></script>
     <script>
+        let elem = document.querySelector('.container');
+        let infScroll = new InfiniteScroll(elem, {
+            // options
+            path: '.pagination__next',
+            history: true,
+        });
         <?php
         if (isset($_SESSION['msg'])) {
             echo "msg = document.querySelector('#msgInfo');
@@ -168,48 +171,36 @@
         ?>
 
         function fillModalDelete(id) {
-            frm = document.getElementById("formDelete");
+            document.getElementById("formDelete").setAttribute('action', '<?= site_url('todocontroller/delete') ?>');
             document.getElementById("modalTitle").textContent = "Deletar Tarefa";
             document.getElementById("bodyMsg").textContent = "Deseja realmente deletar esta tarefa?";
-            frm.setAttribute('action', '<?= site_url('todocontroller/delete') ?>');
             document.getElementById("id").setAttribute('value', id);
 
         }
+
         function fillModalDeleteUser(id) {
-            frm = document.getElementById("formDelete");
+            document.getElementById("formDelete").setAttribute('action', '<?= site_url('userscontroller/delete') ?>');
             document.getElementById("modalTitle").textContent = "Deletar Usuário";
             document.getElementById("bodyMsg").textContent = "Deseja realmente deletar este usuário?";
-            frm.setAttribute('action', '<?= site_url('userscontroller/delete') ?>');
             document.getElementById("id").setAttribute('value', id);
 
         }
 
         function fillModalNewJob() {
-            frm = document.getElementById("form");
-            frm.setAttribute('action', '<?= site_url('todocontroller/newjobsubmit') ?>')
-
-            frmBtn = document.getElementById("btnSubmit");
-            frmBtn.setAttribute('value', 'Gravar');
+            document.getElementById("form").setAttribute('action', '<?= site_url('todocontroller/newjobsubmit') ?>');
+            document.getElementById("taskModalLabel").textContent = "Adicionar Tarefa";
+            document.getElementById("btnSubmit").setAttribute('value', 'Gravar');
+            document.getElementById("id_job").setAttribute('value', '');
+            document.getElementById("job_name").setAttribute('value', '');
         }
 
         function fillModalEdit(id, job) {
-            frm = document.getElementById("form");
-            frm.setAttribute('action', '<?= site_url('todocontroller/editjobsubmit') ?>')
+            document.getElementById("form").setAttribute('action', '<?= site_url('todocontroller/editjobsubmit') ?>');
+            document.getElementById("taskModalLabel").textContent = "Atualizar Tarefa";
+            document.getElementById("btnSubmit").setAttribute('value', 'Atualizar');
+            document.getElementById("id_job").setAttribute('value', id);
+            document.getElementById("job_name").setAttribute('value', job);
 
-            frmBtn = document.getElementById("btnSubmit");
-            frmBtn.setAttribute('value', 'Atualizar');
-
-            frmId = document.getElementById("id_job");
-            frmId.setAttribute('value', id);
-
-            frmJob = document.getElementById("job_name");
-            frmJob.setAttribute('value', job);
-
-        }
-
-        function deleteJob(id) {
-            var id = btnDelete.getAttribute('dado-alvo', id);
-            window.location.replace('todocontroller/delete/' + id);
         }
     </script>
     <?= $this->renderSection("script"); ?>

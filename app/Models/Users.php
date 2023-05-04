@@ -13,7 +13,7 @@ class Users extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['USER', 'PASS', 'NAME', 'EMAIL', 'SU', 'ACTIVATION', 'ACTIVATION_KEY', 'DATETIME_CREATED'];
+    protected $allowedFields    = ['USER', 'PASS', 'NAME', 'EMAIL', 'SU', 'ACTIVATION', 'ACTIVATION_KEY', 'DATETIME_CREATED', 'DATETIME_UPDATED'];
 
 
 
@@ -55,8 +55,23 @@ class Users extends Model
             'NAME'                  => $post['name'],
             'EMAIL'                 => $post['email'],
             'DATETIME_CREATED'      => date("Y-m-d H:i:s"),
+            'ACTIVATION'            => 1,
         ];
         return $this->save($data) ? true : false;
+    }
+
+    public function editUser($id, $post)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+        if (!empty($post)) {
+            $data = [
+                'USER'                  => $post['user'],
+                'NAME'                  => $post['name'],
+                'EMAIL'                 => $post['email'],
+                'DATETIME_UPDATED'      => date("Y-m-d H:i:s"),
+            ];
+            return $this->table('login')->update($id, $data) ? true : false;
+        }
     }
 
     public function deleteUser($post)

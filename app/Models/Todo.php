@@ -13,7 +13,7 @@ class Todo extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['JOB', 'DATETIME_CREATED', 'DATETIME_UPDATED', 'DATETIME_FINISHED', 'USER_ID'];
+    protected $allowedFields    = ['JOB', 'DATETIME_CREATED', 'DATETIME_UPDATED', 'DATETIME_FINISHED', 'USER_ID', 'PRIVACY'];
 
 
 
@@ -54,7 +54,8 @@ class Todo extends Model
             $data = [
                 'JOB'               => $post['job_name'],
                 'DATETIME_CREATED'  => date('Y-m-d H:i:s'),
-                'USER_ID'           => $_SESSION['USER_ID']
+                'USER_ID'           => $_SESSION['USER_ID'],
+                'PRIVACY'           => 1,
             ];
             return $this->save($data) ? true : false;
         }
@@ -79,7 +80,7 @@ class Todo extends Model
 
     public function deleteJob($post)
     {
-        if(!empty($post)){
+        if (!empty($post)) {
 
             return $this->table('jobs')->where('ID_JOB', $post['id'])->delete() ? true : false;
         }
@@ -87,7 +88,7 @@ class Todo extends Model
 
     public function getUserJobs($id)
     {
-        $data = $this->select('*')
+        $data = $this->select('jobs.ID_JOB, jobs.USER_ID, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED')
             ->join('login', 'login.USER_ID = jobs.USER_ID')
             ->where('jobs.USER_ID', $id)
             ->orderBy('jobs.ID_JOB')->paginate(5);
@@ -98,9 +99,28 @@ class Todo extends Model
     public function countAllUserJobs($id)
     {
         $data = $this->select('*')
-        ->join('login', 'login.USER_ID = jobs.USER_ID')
-        ->where('jobs.USER_ID', $id)
-        ->countAllResults();
+            ->join('login', 'login.USER_ID = jobs.USER_ID')
+            ->where('jobs.USER_ID', $id)
+            ->countAllResults();
+
+        return $data;
+    }
+
+    public function countAllUserDoneJobs($id)
+    {
+        $data = $this->select()
+            ->join('login', 'login.USER_ID = jobs.USER_ID')
+            ->where('jobs.USER_ID', $id)
+            ->where('DATETIME_FINISHED !=', NULL)->countAllResults();
+
+        return $data;
+    }
+    public function countAllUserNotDoneJobs($id)
+    {
+        $data = $this->select()
+            ->join('login', 'login.USER_ID = jobs.USER_ID')
+            ->where('jobs.USER_ID', $id)
+            ->where('DATETIME_FINISHED =', NULL)->countAllResults();
 
         return $data;
     }
