@@ -52,15 +52,18 @@
                             <th>Tarefa</th>
                             <th class="text-center">Data de Criação</th>
                             <th class="text-center">Data de Finalização</th>
+                            <?php if ($_SESSION['USER_ID'] == $userTasks[0]->USER_ID):?>
                             <th class="text-end"><button type="button" class="btn btn-sm text-white bg-transparent" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"><i class="fa fa-plus"></i></button></th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($userTasks as $job) : ?>
                             <tr>
-                                <td><?= $job->JOB ?></td>
+                                <td><span <?= !empty($job->DATETIME_FINISHED)? "style='text-decoration: line-through;'" : "" ?>><?= $job->JOB_TITLE ?></span></td>
                                 <td class="text-center"><?= date('d/m/Y', strtotime($job->DATETIME_CREATED)) ?></td>
                                 <td class="text-center"><?= isset($job->DATETIME_FINISHED) ? date('d/m/Y', strtotime($job->DATETIME_FINISHED)) : 'Não finalizada' ?></td>
+                                <?php if ($_SESSION['USER_ID'] == $userTasks[0]->USER_ID):?>
                                 <td class="text-end">
                                     <?php if (empty($job->DATETIME_FINISHED)) : ?>
                                         <a href="<?= site_url('todocontroller/jobdone/' . $job->ID_JOB) ?>" class="btn btn-light btn-sm mx-1" role="finish" title="Finalizar Tarefa"><i class="fa fa-crosshairs text-success"></i></a>
@@ -71,6 +74,7 @@
                                     <?php endif; ?>
                                     <button type="button" class="btn btn-light btn-sm mx-1" data-bs-toggle="modal" title="Excluír Tarefa" role="delete" data-bs-target="#deleteModal" onclick="fillModalDelete(<?= $job->ID_JOB ?>)"><i class="fa fa-trash text-danger"></i></button>
                                 </td>
+                                <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

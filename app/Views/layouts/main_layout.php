@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TODO!</title>
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/main.css') ?>">
     <!-- FontAwesome 6.2.0 CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -144,22 +145,56 @@
 
     <?= $this->renderSection('conteudo') ?>
 
-    <footer class="fixed-bottom text-center">
-        <div>
-            &copy; <?php echo date('Y') ?>
+    <footer class="container-fluid bg-dark bg-gradient text-white fw-5 fs-3">
+        <div class="row">
+            <div class="col-4">
+                <a href="#" class="text-decoration-none link-secondary fw-bolder">OUTROS IDIOMAS</a>
+                <ul class="fs-6" style="list-style: none; line-height: 2.5em;">
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Tour</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Ajuda</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Chat</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Contato</a></li>
+                    <li><a href="mailto:jean.csf.17@gmail.com" class="nav-link link-secondary mt-5">Feedback</a></li>
+                </ul>
+
+            </div>
+            <div class="col-4">
+                <a href="#" class="text-decoration-none link-secondary fw-bolder">EMPRESA</a>
+                <ul class="fs-6" style="list-style: none; line-height: 2.5em;">
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">c0Ka0</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Teams</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Advertising</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Collectives</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Talent</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Sobre</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Imprensa</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Legal</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Política de Privacidade</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Termos de serviço</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Configurações dos Cookies</a></li>
+                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Política dos Cookies</a></li>
+                </ul>
+            </div>
+            <div class="footer-socials col-4 d-flex flex-column justify-content-between">
+                <div>
+                    <a class="link-secondary me-1" href="https://github.com/JeanCSF" target="_blank">GitHub</a>
+                    <a class="link-secondary mx-2" href="https://facebook.com/fookinselfish" target="_blank">Facebook</a>
+                    <a class="link-secondary mx-2" href="https://twitter.com/JCS_16" target="_blank">Twitter</a>
+                    <a class="link-secondary me-2" href="https://www.linkedin.com/in/jean-carlos-6149a2232/" target="_blank">Linkedin</a>
+                    <a class="link-secondary" href="https://instagram.com/fookinselfish" target="_blank">Instagram</a>
+                </div>
+                <div>
+                    <p class="link-secondary">Site design / logo &copy; <?= date("Y") ?> c0ka0 Inc; user contributions licensed under CC BY-SA. rev 2023.5.5.43414</p>
+
+                </div>
+            </div>
         </div>
     </footer>
 
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
-    <script src="<?= base_url('assets/infinite-scroll.pkgd.min.js') ?>"></script>
+
     <script>
-        let elem = document.querySelector('.container');
-        let infScroll = new InfiniteScroll(elem, {
-            // options
-            path: '.pagination__next',
-            history: true,
-        });
         <?php
         if (isset($_SESSION['msg'])) {
             echo "msg = document.querySelector('#msgInfo');

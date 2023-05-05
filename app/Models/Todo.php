@@ -13,7 +13,7 @@ class Todo extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['JOB', 'DATETIME_CREATED', 'DATETIME_UPDATED', 'DATETIME_FINISHED', 'USER_ID', 'PRIVACY'];
+    protected $allowedFields    = ['JOB_TITLE', 'JOB', 'DATETIME_CREATED', 'DATETIME_UPDATED', 'DATETIME_FINISHED', 'USER_ID', 'PRIVACY'];
 
 
 
@@ -52,7 +52,8 @@ class Todo extends Model
 
         if (!empty($post)) {
             $data = [
-                'JOB'               => $post['job_name'],
+                'JOB_TITLE'         => $post['job_name'],
+                'JOB'               => $post['job_desc'],
                 'DATETIME_CREATED'  => date('Y-m-d H:i:s'),
                 'USER_ID'           => $_SESSION['USER_ID'],
                 'PRIVACY'           => 1,
@@ -66,7 +67,8 @@ class Todo extends Model
         date_default_timezone_set('America/Sao_Paulo');
         if (!empty($post)) {
             $data = [
-                'JOB'               => $post['job_name'],
+                'JOB_TITLE'         => $post['job_name'],
+                'JOB'               => $post['job_desc'],
                 'DATETIME_UPDATED'  => date('Y-m-d H:i:s'),
             ];
             return $this->table('jobs')->update($post['id_job'], $data) ? true : false;
@@ -88,7 +90,7 @@ class Todo extends Model
 
     public function getUserJobs($id)
     {
-        $data = $this->select('jobs.ID_JOB, jobs.USER_ID, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED')
+        $data = $this->select('jobs.ID_JOB, jobs.USER_ID, jobs.JOB_TITLE, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED')
             ->join('login', 'login.USER_ID = jobs.USER_ID')
             ->where('jobs.USER_ID', $id)
             ->orderBy('jobs.ID_JOB')->paginate(5);
