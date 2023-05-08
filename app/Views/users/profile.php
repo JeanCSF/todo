@@ -19,7 +19,7 @@
             <div class="card mb-3" style="max-width: fit-content">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img src="https://placehold.co/1000x1000" class="img-fluid rounded" alt="Profile pic">
+                        <a data-bs-toggle="modal" data-bs-target="#profileModal" title="Adicionar Foto"><img src="https://placehold.co/1000x1000" class="img-fluid rounded" alt="Profile pic"></a>
                         <p class="card-text"><small class="text-muted text-nowrap">Data do cadastro: <?= date('d/m/Y', strtotime($userData->DATETIME_CREATED)) ?></small></p>
                     </div>
                     <div class="col-md-8">
@@ -67,7 +67,7 @@
                                 <td class="text-end">
                                     <?php if (empty($job->DATETIME_FINISHED)) : ?>
                                         <a href="<?= site_url('todocontroller/jobdone/' . $job->ID_JOB) ?>" class="btn btn-light btn-sm mx-1" role="finish" title="Finalizar Tarefa"><i class="fa fa-crosshairs text-success"></i></a>
-                                        <a class="btn btn-light btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('<?= $job->ID_JOB ?>', '<?= $job->JOB ?>')"><i class="fa fa-pencil text-primary"></i></a>
+                                        <a class="btn btn-light btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('<?= $job->ID_JOB ?>', '<?= $job->JOB_TITLE ?>', '<?=$job->JOB?>')"><i class="fa fa-pencil text-primary"></i></a>
                                     <?php else : ?>
                                         <button class="btn btn-light btn-sm mx-1" disabled><i class="fa fa-check text-success"></i></button>
                                         <button class="btn btn-light btn-sm mx-1" disabled><i class="fa fa-pencil text-primary"></i></button>

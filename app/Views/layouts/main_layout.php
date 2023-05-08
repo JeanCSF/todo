@@ -47,6 +47,42 @@
     </style>
 </head>
 
+<!-- Profile Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="profileModalLabel">Foto do Perfil</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-8 offset-2">
+                            <form action="<?= url_to('upload')?>" id="form" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <?php if(session()->has('errors')): ?>
+                                        <p class="text-danger"><?= session()->get('errors')['userfile'] ?></p>
+                                    <?php endif; ?>
+                                    <?php if(session()->has('uploaded')): ?>
+                                        <p class="text-success"><?= session()->get('uploaded')?></p>
+                                    <?php endif; ?>
+                                    <input type="file" name="userfile" id="userfile" class="form-control-file">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <input type="submit" value="Salvar Imagem" id="btnUpload" onclick="" class="btn btn-success">
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Profile Modal -->
+
 <!-- Task Modal -->
 <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -62,6 +98,7 @@
                             <form action="" id="form" method="post">
                                 <div class="form-group">
                                     <input type="text" placeholder="Nome da tarefa" name="job_name" id="job_name" value="" class="form-control" autofocus required>
+                                    <textarea placeholder="Descrição" name="job_desc" id="job_desc" value="" class="form-control mt-3" required></textarea>
                                     <input type="hidden" name="id_job" id="id_job" value="">
                                     <input type="hidden" id="editar" value="">
                                 </div>
@@ -227,14 +264,17 @@
             document.getElementById("btnSubmit").setAttribute('value', 'Gravar');
             document.getElementById("id_job").setAttribute('value', '');
             document.getElementById("job_name").setAttribute('value', '');
+            document.getElementById("job_desc").setAttribute('value', '');
         }
 
-        function fillModalEdit(id, job) {
+        function fillModalEdit(id, job, desc) {
             document.getElementById("form").setAttribute('action', '<?= site_url('todocontroller/editjobsubmit') ?>');
             document.getElementById("taskModalLabel").textContent = "Atualizar Tarefa";
             document.getElementById("btnSubmit").setAttribute('value', 'Atualizar');
             document.getElementById("id_job").setAttribute('value', id);
             document.getElementById("job_name").setAttribute('value', job);
+            document.getElementById("job_desc").setAttribute('value', desc);
+            document.getElementById("job_desc").textContent = '' + desc;
 
         }
     </script>
