@@ -13,7 +13,7 @@ class Users extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['USER', 'PASS', 'NAME', 'EMAIL', 'SU', 'ACTIVATION', 'ACTIVATION_KEY', 'DATETIME_CREATED', 'DATETIME_UPDATED'];
+    protected $allowedFields    = ['USER', 'PASS', 'NAME', 'EMAIL', 'SU', 'ACTIVATION', 'ACTIVATION_KEY', 'DATETIME_CREATED', 'DATETIME_UPDATED', 'PROFILE_PIC'];
 
 
 
@@ -78,6 +78,16 @@ class Users extends Model
     {
         if (!empty($post)) {
             return $this->table('login')->where('USER_ID', $post['id'])->delete() ? true : false;
+        }
+    }
+
+    public function saveProfilePic($id, $img_name)
+    {
+        $data = [
+            'PROFILE_PIC'           => $img_name,
+        ];
+        if(!empty ($img_name)){
+            return $this->table('login')->update($id,$data) ? true : false;
         }
     }
 }

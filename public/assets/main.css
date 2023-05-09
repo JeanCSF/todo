@@ -1,6 +1,6 @@
 .post-it {
-    width: 250px;
-    height: 240px;
+    width: 282px;
+    height: 250px;
     background: #ffa;
     overflow: hidden;
     margin: 30px auto;
@@ -31,6 +31,10 @@
 
 .post-it-dropdown a:hover {
     background: rgba(100, 100, 63, 0.582);
+}
+
+.home-container {
+    background-color: rgba(3, 62, 43, 0.644);
 }
 
 .footer-socials {

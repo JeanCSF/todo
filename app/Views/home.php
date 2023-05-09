@@ -11,35 +11,33 @@
             Todas as tarefas
         <?php endif; ?>
     </h3>
-    <form class="d-flex me-5" role="search">
-        <input class="form-control me-1" type="search" name="search" placeholder="Pesquisar" aria-label="Search">
-        <input type="submit" class="btn btn-lg btn-outline-primary mt-1 me-5 fa fa-search">
+    <form class="d-flex me-5 col-6" role="search">
+        <input class="form-control me-1" type="search" name="search" aria-label="Search" />
+        <input type="submit" class="btn btn-outline-primary me-5" value="Pesquisar" />
     </form>
+    <button type="button" class="btn text-primary bg-transparent border-0" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"><i class="fa fa-file-circle-plus fs-2"></i></button>
 </header>
 <hr>
-<div class="container mt-1 bg-light bg-gradient">
+<div class="col-10 offset-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item <?= isset($search) ? '' : 'active' ?>" <?= isset($search) ? '' : 'aria-current="page"' ?>>
+                <?= isset($search) ? "<a class='text-decoration-none link-secondary'  href='" . base_url('/') . "'>Home</a>" : "Home" ?></li>
+
+            <?= isset($search) ?
+                "<li class='breadcrumb-item active' aria-current='page'>Pesquisa</li>" : '' ?>
+        </ol>
+    </nav>
+</div>
+<div class="container mt-1 home-container bg-gradient">
     <div class="row">
         <div class="col-lg-auto col-md-auto col-sm-auto">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item <?= isset($done) || isset($search) ? '' : 'active' ?>" <?= isset($done) ? '' : 'aria-current="page"' ?>>
-                        <?= isset($done) || isset($search) ? "<a  href='$baseurl'>Home</a>" : "Home" ?></li>
-
-                    <?= isset($search) && empty($done) ?
-                        "<li class='breadcrumb-item active' aria-current='page'>Pesquisa</li>" : '' ?>
-
-                    <?= isset($done) && empty($search) ? '<li class="breadcrumb-item active" aria-current="page">Concluídas</li>' : '' ?>
-                    <?= isset($search) && isset($done) ?
-                        "<li class='breadcrumb-item'><a href='$doneurl'>Concluídas</a></li>
-                        <li class='breadcrumb-item active' aria-current='page'>Pesquisa</li>" : '' ?>
-                </ol>
-            </nav>
             <?php if (count($jobs) == 0) : ?>
-                <h3 class="alert alert-warning text-center"><?= isset($done) || isset($search) ? 'Não existem tarefas para esta pesquisa' : 'Não existem tarefas' ?></h3>
+                <h3 class="alert alert-warning text-center"><?= isset($search) ? 'Não existem tarefas para esta pesquisa' : 'Não existem tarefas' ?></h3>
             <?php else : ?>
                 <div class="row">
                     <?php foreach ($jobs as $job) : ?>
-                        <div class="col-3 post-it me-5 my-3">
+                        <div class="col-3 post-it mx-4 my-3">
                             <div class="mt-1 d-flex justify-content-between">
                                 <p><a href="<?= base_url('userscontroller/profile/' . base64_encode($job->USER_ID)) ?>" class="nav-link"><?= $job->USER ?></a></p>
                                 <p class=""><?= date("d/m/Y", strtotime($job->DATETIME_CREATED)) ?> <i class="fa fa-play"></i></p>
@@ -60,11 +58,11 @@
                             </div>
                             <hr>
                             <div class="p-2 text-center" style="height:40%;">
-                                <h4 <?= !empty($job->DATETIME_FINISHED) ? "style='text-decoration: line-through;'" : "" ?>><?= $job->JOB_TITLE ?></h4>
+                                <h4 <?= !empty($job->DATETIME_FINISHED) ? "style='text-decoration: line-through;'" : "" ?>><a data-bs-toggle="popover" data-bs-title="<?= $job->JOB_TITLE ?>" data-bs-content="<?= $job->JOB ?>"><?= $job->JOB_TITLE ?></a></h4>
                             </div>
                             <div class="card-footer text-end">
                                 <hr>
-                                <span><?= !empty($job->DATETIME_FINISHED)? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) . "<i class='fa fa-check-double'></i>" : '' ?></span>
+                                <span><?= !empty($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) . "<i class='fa fa-check-double'></i>" : '' ?></span>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -74,7 +72,7 @@
         </div>
     </div>
 </div>
-<div class="col-10 offset-1 mt-3" id="pager">
+<div class="col-10 offset-1 mt-5" id="pager">
     <div class="col mt-1">
         <?php
         if ($pager) {

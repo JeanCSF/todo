@@ -11,30 +11,33 @@ class Userscontroller extends BaseController
     public function upload()
     {
         $img = $this->request->getFile('userfile');
-        
-        if (! $this->validate([
+
+        if (!$this->validate([
             'userfile'          => 'uploaded[userfile]|is_image[userfile]|ext_in[userfile,jpeg,jpg,png]|max_dims[userfile,1920,1080]|max_size[userfile,2048]'
         ], [
             'userfile'  => [
                 'uploaded'      => 'Escolha uma Imagem',
                 'is_image'      => 'Arquivo não é de imagem',
-                'ext_in'        => 'Extensão '. $img->getExtension() .' não é suportada',
+                'ext_in'        => 'Extensão ' . $img->getExtension() . ' não é suportada',
                 'max_dims'      => 'Resolução máxima é 1920x1080'
             ]
         ])) {
             session()->setFlashdata('errors', $this->validator->getErrors());
-            
         }
 
 
-        if (! $img->hasMoved()) {
-            // $filepath = WRITEPATH . 'uploads/' . $img->store();
-            $img->store('../../public/assets/img', $img->getRandomName());
+        if (!$img->hasMoved()) {
+            $users = new Users();
+            $img_name = $img->getRandomName();
+            $id = $_SESSION['USER_ID'];
+            if ($users->saveProfilePic($id, $img_name)) {
 
-            session()->setFlashdata('uploaded', 'Uploaded Sucessfully');
+                $img->store('../../public/assets/img/profiles_pics', $img_name);
 
-            return redirect()->back();
+                session()->setFlashdata('uploaded', 'Uploaded Sucessfully');
 
+                return redirect()->back();
+            }
         }
     }
 
@@ -47,10 +50,10 @@ class Userscontroller extends BaseController
             $data = [
                 'userData'              => $users->getUser($id),
                 'userTasks'             => $jobs->getUserJobs($id),
-                'pager'                 => $jobs->pager,
                 'alltasks'              => $jobs->countAllUserJobs($id),
                 'alldone'               => $jobs->countAllUserDoneJobs($id),
                 'notdone'               => $jobs->countAllUserNotDoneJobs($id),
+                'pager'                 => $jobs->pager,
 
             ];
             echo view('users/profile', $data);

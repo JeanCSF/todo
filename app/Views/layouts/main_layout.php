@@ -18,28 +18,7 @@
     <!-- (Optional) Use CSS or JS implementation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js" integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
-        #pager li {
-            width: 25px;
-            height: 25px;
-            margin-left: 15px;
-        }
-
-        #pager a:hover {
-            color: #EFEFEF;
-            background-color: #3B71CA;
-        }
-
-        .active a {
-            color: #EFEFEF !important;
-            background-color: #3B71CA !important;
-        }
-
         #pager a {
-            display: inline-block;
-            position: relative;
-            z-index: 1;
-            padding: 1em;
-            margin: -1em;
             text-decoration: none;
             color: black;
             font-weight: bolder;
@@ -59,25 +38,25 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-8 offset-2">
-                            <form action="<?= url_to('upload')?>" id="form" method="post" enctype="multipart/form-data">
+                            <form action="<?= url_to('upload') ?>" id="formProfilePic" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <?php if(session()->has('errors')): ?>
+                                    <?php if (session()->has('errors')) : ?>
                                         <p class="text-danger"><?= session()->get('errors')['userfile'] ?></p>
                                     <?php endif; ?>
-                                    <?php if(session()->has('uploaded')): ?>
-                                        <p class="text-success"><?= session()->get('uploaded')?></p>
+                                    <?php if (session()->has('uploaded')) : ?>
+                                        <p class="text-success"><?= session()->get('uploaded') ?></p>
                                     <?php endif; ?>
                                     <input type="file" name="userfile" id="userfile" class="form-control-file">
                                 </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <input type="submit" value="Salvar Imagem" id="btnUpload" onclick="" class="btn btn-success">
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <input type="submit" value="Salvar Imagem" id="btnUpload" onclick="" class="btn btn-success">
-            </div>
-            </form>
         </div>
     </div>
 </div>
@@ -102,15 +81,15 @@
                                     <input type="hidden" name="id_job" id="id_job" value="">
                                     <input type="hidden" id="editar" value="">
                                 </div>
-                        </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <input type="submit" value="" id="btnSubmit" onclick="" class="btn btn-success">
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <input type="submit" value="" id="btnSubmit" onclick="" class="btn btn-success">
-            </div>
-            </form>
         </div>
     </div>
 </div>
@@ -141,7 +120,7 @@
 </div>
 <!-- Delete Modal -->
 
-<body>
+<body class="bg-gradient">
     <navbar class="navbar navbar-expand-lg bg-light mb-2">
         <ul class="text-light col-1 navbar-nav me-auto mb-1 mb-lg-0">
             <li class="nav-item">
@@ -185,13 +164,12 @@
     <footer class="container-fluid bg-dark bg-gradient text-white fw-5 fs-3">
         <div class="row">
             <div class="col-4">
-                <a href="#" class="text-decoration-none link-secondary fw-bolder">OUTROS IDIOMAS</a>
+                <a href="#" class="text-decoration-none link-secondary fw-bolder">FALE COMIGO</a>
                 <ul class="fs-6" style="list-style: none; line-height: 2.5em;">
-                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Tour</a></li>
-                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Ajuda</a></li>
-                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Chat</a></li>
-                    <li><a href="#" class="text-decoration-none link-secondary mt-5">Contato</a></li>
-                    <li><a href="mailto:jean.csf.17@gmail.com" class="nav-link link-secondary mt-5">Feedback</a></li>
+                    <li><a href="mailto:jean.csf.17@gmail.com" class="text-decoration-none link-secondary mt-5">Ajuda</a></li>
+                    <li><a href="mailto:jean.csf.17@gmail.com" class="text-decoration-none link-secondary mt-5">Chat</a></li>
+                    <li><a href="mailto:jean.csf.17@gmail.com" class="text-decoration-none link-secondary mt-5">Contato</a></li>
+                    <li><a href="mailto:jean.csf.17@gmail.com" class="nav-link link-secondary">Feedback</a></li>
                 </ul>
 
             </div>
@@ -221,7 +199,7 @@
                     <a class="link-secondary" href="https://instagram.com/fookinselfish" target="_blank">Instagram</a>
                 </div>
                 <div>
-                    <p class="link-secondary">Site design / logo &copy; <?= date("Y") ?> c0ka0 Inc; user contributions licensed under CC BY-SA. rev 2023.5.5.43414</p>
+                    <p class="link-secondary">Site design / logo &copy; <?= date("Y") ?> c0ka0 Inc;</p>
 
                 </div>
             </div>
@@ -242,6 +220,19 @@
         }
         ?>
 
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
+        function fillModalEdit(id, job, desc) {
+            document.getElementById("form").setAttribute('action', '<?= site_url('todocontroller/editjobsubmit') ?>');
+            document.getElementById("taskModalLabel").textContent = "Atualizar Tarefa";
+            document.getElementById("btnSubmit").setAttribute('value', 'Atualizar');
+            document.getElementById("id_job").setAttribute('value', id);
+            document.getElementById("job_name").setAttribute('value', job);
+            document.getElementById("job_desc").setAttribute('value', desc);
+            document.getElementById("job_desc").textContent = '' + desc;
+
+        }
         function fillModalDelete(id) {
             document.getElementById("formDelete").setAttribute('action', '<?= site_url('todocontroller/delete') ?>');
             document.getElementById("modalTitle").textContent = "Deletar Tarefa";
@@ -267,16 +258,6 @@
             document.getElementById("job_desc").setAttribute('value', '');
         }
 
-        function fillModalEdit(id, job, desc) {
-            document.getElementById("form").setAttribute('action', '<?= site_url('todocontroller/editjobsubmit') ?>');
-            document.getElementById("taskModalLabel").textContent = "Atualizar Tarefa";
-            document.getElementById("btnSubmit").setAttribute('value', 'Atualizar');
-            document.getElementById("id_job").setAttribute('value', id);
-            document.getElementById("job_name").setAttribute('value', job);
-            document.getElementById("job_desc").setAttribute('value', desc);
-            document.getElementById("job_desc").textContent = '' + desc;
-
-        }
     </script>
     <?= $this->renderSection("script"); ?>
 </body>

@@ -98,6 +98,14 @@ class Todo extends Model
         return $data;
     }
 
+    public function getUserDoneJobs($id)
+    {
+        $data = $this->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
+                ->where('jobs.DATETIME_FINISHED !=', NULL)
+                ->where('jobs.USER_ID', $id)->paginate(10);
+        return $data;
+    }
+
     public function countAllUserJobs($id)
     {
         $data = $this->select('*')
