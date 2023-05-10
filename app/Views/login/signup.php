@@ -1,12 +1,12 @@
 <?= $this->extend('layouts/main_layout') ?>
 
-<?= $this->section('conteudo') ?>
+<?= $this->section('section') ?>
 
 <div class="container mt-5 mb-5">
     <div class="row">
         <div class="col-sm-6 offset-3 col-8 offset-2">
             <div class="card p-4">
-                <h3>Nova conta de usuário</h3>
+                <h3 class="text-center">Nova conta de usuário</h3>
                 <hr>
                 <?php
                 helper('form');

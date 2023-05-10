@@ -1,6 +1,6 @@
 <?= $this->extend('layouts/main_layout') ?>
 
-<?= $this->section('conteudo') ?>
+<?= $this->section('section') ?>
 
 <h1 class="text-center">Confirmação de e-mail!</h1>
 

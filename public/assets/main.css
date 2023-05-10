@@ -1,3 +1,27 @@
+body,
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1 0 auto;
+}
+
+.footer {
+    flex-shrink: 0;
+}
+
+#pager a {
+    text-decoration: none;
+    color: black;
+    font-weight: bolder;
+}
+
 .post-it {
     width: 282px;
     height: 250px;
@@ -39,9 +63,19 @@
 
 .footer-socials {
     font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 0.5em;    
+    font-size: 0.5em;
 }
 
 .footer-socials a {
+    text-decoration: none;
+}
+
+.about {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    line-height: 1.7em;
+    text-align: justify;
+}
+
+.about a {
     text-decoration: none;
 }

@@ -1,6 +1,6 @@
 <?= $this->extend('layouts/main_layout') ?>
 
-<?= $this->section('conteudo') ?>
+<?= $this->section('section') ?>
 <div class="container mt-1">
     <div class="row">
         <h1 class="text-center">Usuários cadastrados</h1>

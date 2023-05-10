@@ -1,9 +1,6 @@
 <?= $this->extend('layouts/main_layout') ?>
 
-<?= $this->section('conteudo') ?>
-
-<style>
-</style>
+<?= $this->section('section') ?>
 <div class="container mt-1">
     <div class="row">
         <div class="col-lg-8 col-md-auto col-sm-auto offset-2">

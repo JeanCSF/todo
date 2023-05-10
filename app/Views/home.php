@@ -1,9 +1,9 @@
 <?= $this->extend('layouts/main_layout') ?>
 
-<?= $this->section('conteudo') ?>
+<?= $this->section('section') ?>
 
 
-<header class="ms-5 me-5 d-flex justify-content-between">
+<div class="ms-5 me-5 d-flex justify-content-between">
     <h3>
         <?php if (isset($done)) : ?>
             Concluídas
@@ -16,7 +16,7 @@
         <input type="submit" class="btn btn-outline-primary me-5" value="Pesquisar" />
     </form>
     <button type="button" class="btn text-primary bg-transparent border-0" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"><i class="fa fa-file-circle-plus fs-2"></i></button>
-</header>
+</div>
 <hr>
 <div class="col-10 offset-1">
     <nav aria-label="breadcrumb">
@@ -49,7 +49,7 @@
                                         <ul class="dropdown-menu post-it-dropdown">
                                             <?php if (empty($job->DATETIME_FINISHED)) : ?>
                                                 <li><a class="dropdown-item" href="<?= site_url('todocontroller/jobdone/' . $job->ID_JOB) ?>" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
-                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('<?= $job->ID_JOB ?>', '<?= $job->JOB_TITLE ?>')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
+                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit(`<?= $job->ID_JOB ?>`,  `<?= $job->JOB_TITLE ?>`, `<?= $job->JOB ?>`)">Editar <i class="fa fa-pencil text-primary"></i></a></li>
                                             <?php endif; ?>
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(<?= $job->ID_JOB ?>)">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                         </ul>

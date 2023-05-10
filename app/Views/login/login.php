@@ -1,10 +1,12 @@
 <?= $this->extend('layouts/main_layout') ?>
 
-<?= $this->section('conteudo') ?>
+<?= $this->section('section') ?>
 
 <div class="container mt-5">
     <div class="row mt-5">
-        <div class="mt-5 col-2 offset-5">
+        <div class=" card p-4 mt-5 col-4 offset-4">
+            <h1 class="text-center">Login</h1>
+            <hr>
             <?php
             helper('form');
             echo form_open('logincontroller/login');

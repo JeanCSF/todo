@@ -42,6 +42,7 @@ class Logincontroller extends BaseController
                 $email->initialize($config);
 
                 $email->setSubject($post['name'] . ', confirme seu e-mail para continuar');
+                $email->setTo($post['email']);
                 $emailData = [
                     'key'   => $key,
                     'post'  => $post
