@@ -125,16 +125,16 @@
     <!-- Toast Notification -->
     <header>
         <navbar class="ms navbar navbar-expand-lg bg-light mb-2">
-            <ul class="text-light col-1 navbar-nav me-auto mb-1 mb-lg-0">
+            <ul class="text-light col-3 navbar-nav me-auto mb-1 mb-lg-0">
                 <li class="nav-item">
-                    <a href="<?= base_url('/') ?>">
-                    <img class="rounded float-start" src="<?= base_url('/assets/logo.png')?>" alt="logo" width="64" height="64">
+                    <a class="navbar-brand" href="<?= base_url('/') ?>">
+                    <img class="d-inline-block align-text-top" src="<?= base_url('/assets/logo.png')?>" alt="logo" width="56" height="56" title="Tome Nota!">
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item p-2">
                     <a href="<?= base_url('/') ?>" class="nav-link">Home</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item p-2">
                     <a href="<?= base_url('main/about') ?>" class="nav-link">Sobre</a>
                 </li>
             </ul>
@@ -159,7 +159,7 @@
         </navbar>
     </header>
 
-    <section class="content">
+    <section class="content col-8 offset-2">
         <?= $this->renderSection('section') ?>
     </section>
 

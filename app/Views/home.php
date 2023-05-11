@@ -18,7 +18,7 @@
     <button type="button" class="btn text-primary bg-transparent border-0" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"><i class="fa fa-file-circle-plus fs-2"></i></button>
 </div>
 <hr>
-<div class="col-10 offset-1">
+<div>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item <?= isset($search) ? '' : 'active' ?>" <?= isset($search) ? '' : 'aria-current="page"' ?>>
@@ -29,7 +29,7 @@
         </ol>
     </nav>
 </div>
-<div class="container mt-1 home-container bg-gradient">
+<div class="container mt-1 bg-light bg-gradient">
     <div class="row">
         <div class="col-lg-auto col-md-auto col-sm-auto">
             <?php if (count($jobs) == 0) : ?>
@@ -37,10 +37,16 @@
             <?php else : ?>
                 <div class="row">
                     <?php foreach ($jobs as $job) : ?>
-                        <div class="col-3 post-it mx-4 my-3">
-                            <div class="mt-1 d-flex justify-content-between">
-                                <p><a href="<?= base_url('userscontroller/profile/' . base64_encode($job->USER_ID)) ?>" class="nav-link"><?= $job->USER ?></a></p>
-                                <p class=""><?= date("d/m/Y", strtotime($job->DATETIME_CREATED)) ?> <i class="fa fa-play"></i></p>
+                        <div class="row d-flex justify-content-between post-it ms-2 my-2">
+                            <div class="d-flex justify-content-between">
+                                <p>
+                                    <a style="text-decoration: none;" href="<?= base_url('userscontroller/profile/' . base64_encode($job->USER_ID)) ?>" class="link-secondary fs-4">
+                                        <img class="rounded-circle" height="64" width="64" src="<?= !empty($job->PROFILE_PIC) ? base_url('../../assets/img/profiles_pics/' . $job->PROFILE_PIC) : base_url('/assets/logo.png') ?>" alt=""> <?= $job->USER ?>
+                                    </a>
+                                    <br>
+                                    <span style="font-size: 12px;" class="fst-italic text-muted"><?= date("d/m/Y", strtotime($job->DATETIME_CREATED)) ?></span>
+                                </p>
+                                <p <?= !empty($job->DATETIME_FINISHED) ? "style='text-decoration: line-through;'" : "" ?>><?= $job->JOB_TITLE ?></p>
                                 <?php if ($_SESSION['USER_ID'] == $job->USER_ID) : ?>
                                     <div class="dropdown">
                                         <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -54,25 +60,28 @@
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(<?= $job->ID_JOB ?>)">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                         </ul>
                                     </div>
+                                <?php else : ?>
+                                    <p> </p>
                                 <?php endif; ?>
                             </div>
                             <hr>
-                            <div class="p-2 text-center" style="height:40%;">
-                                <h4 <?= !empty($job->DATETIME_FINISHED) ? "style='text-decoration: line-through;'" : "" ?>><a data-bs-toggle="popover" data-bs-title="<?= $job->JOB_TITLE ?>" data-bs-content="<?= $job->JOB ?>"><?= $job->JOB_TITLE ?></a></h4>
+                            <div class="mx-2 p-1 text-justify" style="height:25%;">
+                                <h6><?= $job->JOB ?></h6>
                             </div>
-                            <div class="card-footer text-end">
-                                <hr>
-                                <span><?= !empty($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) . "<i class='fa fa-check-double'></i>" : '' ?></span>
-                            </div>
+                            <hr>
+                            <?php if (!empty($job->DATETIME_FINISHED)) : ?>
+                                <div class="text-end">
+                                    <p>Finalizada - <?= date("d/m/Y", strtotime($job->DATETIME_FINISHED)) ?> <i class='fa fa-check-double'></i></p>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
-
                 <?php endif; ?>
                 </div>
         </div>
     </div>
 </div>
-<div class="col-10 offset-1 mt-5" id="pager">
+<div class="mt-3" id="pager">
     <div class="col mt-1">
         <?php
         if ($pager) {

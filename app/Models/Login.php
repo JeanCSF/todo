@@ -13,7 +13,7 @@ class Login extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['USER', 'PASS', 'NAME', 'EMAIL', 'SU', 'ACTIVATION', 'ACTIVATION_KEY', 'DATETIME_CREATED'];
+    protected $allowedFields    = ['USER', 'PASS', 'NAME', 'EMAIL', 'SU', 'ACTIVATION', 'ACTIVATION_KEY', 'DATETIME_CREATED', 'PROFILE_PIC'];
 
 
 
@@ -34,7 +34,7 @@ class Login extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function signUpCreateAccount($post)
+    public function signUpCreateAccount($post, $img_name)
     {
         date_default_timezone_set('America/Sao_Paulo');
         $data = [
@@ -46,6 +46,7 @@ class Login extends Model
             'SU'                => 0,
             'ACTIVATION'        => 0,
             'DATETIME_CREATED'  => date('Y-m-d H:i:s'),
+            'PROFILE_PIC'       => $img_name,
 
         ];
 
@@ -56,13 +57,8 @@ class Login extends Model
     {
         $user = $post['user'];
         $email = $post['email'];
-        $where = "USER = {$user} OR EMAIL = {$email}";
-        $query = $this->select('login')
-            ->where($where)
-            ->countAll();
-
-
-        return $query ? true : false;
+        $query = $this->select('*')->where('login.USER', $user)->orWhere('login.EMAIL', $email)->countAllResults();
+        return $query;
     }
 
     public function checkLogin($post)

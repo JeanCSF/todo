@@ -23,9 +23,9 @@ body {
 }
 
 .post-it {
-    width: 282px;
-    height: 250px;
-    background: #ffa;
+    width: 100%;
+    height: fit-content;
+    background: rgba(165, 182, 245, 0);
     overflow: hidden;
     margin: 30px auto;
     padding: 20px;
@@ -33,14 +33,14 @@ body {
     box-shadow:
         inset 0 -40px 40px rgba(0, 0, 0, 0.2),
         inset 0 25px 10px rgba(0, 0, 0, 0.2),
-        0 5px 6px 5px rgba(0, 0, 0, 0.2);
-    font-family: 'Permanent Marker', cursive;
+        0 5px 6px 5px rgba(0, 0, 0, 0.5);
+    font-family: Consolas;
     line-height: 1.7em;
     font-size: 15px;
 }
 
 .post-it-dropdown {
-    background: #ffa;
+    background: rgba(116, 224, 243, 0);
     overflow: hidden;
     padding: 0.2em;
     border-radius: 0 0 0 30px/45px;
@@ -54,7 +54,7 @@ body {
 }
 
 .post-it-dropdown a:hover {
-    background: rgba(100, 100, 63, 0.582);
+    background: rgba(177, 159, 230, 0.315);
 }
 
 .home-container {

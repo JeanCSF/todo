@@ -3,7 +3,7 @@
 <?= $this->section('section') ?>
 <div class="container mt-1">
     <div class="row">
-        <div class="col-lg-8 col-md-auto col-sm-auto offset-2">
+        <div class="col-lg-auto col-md-auto col-sm-auto ">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item <?= isset($userData) ? '' : 'active' ?>" <?= isset($userData) ? '' : 'aria-current="page"' ?>>
@@ -13,12 +13,13 @@
                     <?php endif; ?>
                 </ol>
             </nav>
+
             <div class="card mb-3" style="width: 100%;">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <?php if (empty($userData->PROFILE_PIC)) : ?>
-                            <a <?= $_SESSION['USER_ID'] == $userData->USER_ID ? 'data-bs-toggle="modal" data-bs-target="#profileModal"' : '' ?> title="Adicionar Foto">
-                                <img src="https://placehold.co/500x500" class="img-fluid rounded" alt="Profile pic" style="cursor: pointer;" width="500" height="500">
+                            <a <?= $_SESSION['USER_ID'] == $userData->USER_ID ? 'data-bs-toggle="modal" data-bs-target="#profileModal"' : '' ?> title="<?= empty($userData->PROFILE_PIC) ? 'Adicionar Foto' : 'Alterar Foto' ?>">
+                                <img src="<?= base_url('/assets/logo.png') ?>" class="img-fluid rounded" alt="Profile pic" style="cursor: pointer;" width="500" height="500">
                             </a>
                         <?php else : ?>
                             <img src="<?= base_url('../../assets/img/profiles_pics/' . $userData->PROFILE_PIC) ?>" class="img-fluid rounded" alt="Profile pic" width="500" height="500">
@@ -68,10 +69,10 @@
                                 <td class="text-center"><?= isset($job->DATETIME_FINISHED) ? date('d/m/Y', strtotime($job->DATETIME_FINISHED)) : 'Não finalizada' ?></td>
                                 <?php if ($_SESSION['USER_ID'] == $userTasks[0]->USER_ID) : ?>
                                     <td class="text-end">
-                                        <?php if (empty($job->DATETIME_FINISHED)): ?>
+                                        <?php if (empty($job->DATETIME_FINISHED)) : ?>
                                             <a href="<?= site_url('todocontroller/jobdone/' . $job->ID_JOB) ?>" class="btn btn-light btn-sm mx-1" role="finish" title="Finalizar Tarefa"><i class="fa fa-crosshairs text-success"></i></a>
                                             <button class="btn btn-light btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit(`<?= $job->ID_JOB ?>`,  `<?= $job->JOB_TITLE ?>`, `<?= $job->JOB ?>`)"><i class="fa fa-pencil text-primary"></i></button>
-                                        <?php else: ?>
+                                        <?php else : ?>
                                             <button class="btn btn-light btn-sm mx-1" disabled><i class="fa fa-check text-success"></i></button>
                                             <button class="btn btn-light btn-sm mx-1" disabled><i class="fa fa-pencil text-primary"></i></button>
                                         <?php endif; ?>
@@ -82,6 +83,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+
                 <div class="row" id="pager">
                     <div class="col mt-1">
                         <?php
@@ -97,7 +99,7 @@
             <?php endif; ?>
 
         </div>
-        <div class="position-sticky top-0 col-sm-auto col-lg-auto col-md-auto">
+        <div class="col-2 position-absolute top-25 end-0 col-sm-auto col-lg-auto col-md-auto">
             <div class="card text-bg-light mb-3 opacity-50" style="max-width: 18rem;">
                 <div class="card-header">Tarefas</div>
                 <div class="card-body">
@@ -107,6 +109,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 <?= $this->endSection() ?>

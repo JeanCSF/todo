@@ -13,6 +13,18 @@ class Logincontroller extends BaseController
         $login = new login();
         $post = $this->request->getPost();
         if (!empty($post)) {
+            $img = $this->request->getFile('userpic');
+            if (!$this->validate([
+                'userpic'          => 'is_image[userpic]|ext_in[userpic,jpeg,jpg,png]|max_dims[userpic,1920,1080]|max_size[userpic,2048]'
+            ], [
+                'userpic'  => [
+                    'is_image'      => 'Arquivo não é de imagem',
+                    'ext_in'        => 'Extensão ' . (!empty($img) ? $img->getExtension() : '') . ' não é suportada',
+                    'max_dims'      => 'Resolução máxima é 1920x1080'
+                ]
+            ])) {
+                session()->setFlashdata('errors', $this->validator->getErrors());
+            }
             if ($this->checkPass($post)) {
                 $data['userData']  = $post;
                 $msg['msg'] = 'Senhas digitadas não conferem!';
@@ -20,16 +32,21 @@ class Logincontroller extends BaseController
                 $this->session->setFlashdata('msg', $msg);
                 return view('login/signup', $data);
             }
-            if (!$login->signUpCheckUser($post)) {
+            if ($login->signUpCheckUser($post) != 0) {
                 $data['userData']  = $post;
                 $msg['msg'] = 'Usuário ou email já cadastrado!';
                 $msg['type'] = 'alert-danger';
                 $this->session->setFlashdata('msg', $msg);
                 return view('login/signup', $data);
-            } else if ($login->signUpCreateAccount($post)) {
+            } else if (!$img->hasMoved()) {
+                $foto = $img->getFilename();
+                $img_name = '';
+                !empty($foto)? $img_name = $img->getRandomName() : $img_name = NULL;
+
+                $login->signUpCreateAccount($post, $img_name);
+                !empty($foto)? $img->store('../../public/assets/img/profiles_pics', $img_name) : PHP_EOL;
                 $key = base64_encode($post['email'] . date('Y-m-d H:i:s'));
                 $email = \Config\Services::email();
-
                 $config = [
                     'protocol'      => 'smtp',
                     'SMTPHost'      => 'sandbox.smtp.mailtrap.io',
@@ -38,9 +55,7 @@ class Logincontroller extends BaseController
                     'SMTPPort'      => '2525',
                     'mailType'      => 'html'
                 ];
-
                 $email->initialize($config);
-
                 $email->setSubject($post['name'] . ', confirme seu e-mail para continuar');
                 $email->setTo($post['email']);
                 $emailData = [
@@ -48,13 +63,11 @@ class Logincontroller extends BaseController
                     'post'  => $post
                 ];
                 $email->setMessage(view('login/email_template', $emailData));
-
-                if ($email->send()) {
-                    $msg['msg'] = 'Cadastro criado, acesse seu email para confirmar a conta!';
-                    $msg['type'] = 'alert-success';
-                    $this->session->setFlashdata('msg', $msg);
-                    return redirect()->to(base_url('/'));
-                }
+                $email->send();
+                $msg['msg'] = 'Cadastro criado, acesse seu email para confirmar a conta!';
+                $msg['type'] = 'alert-success';
+                $this->session->setFlashdata('msg', $msg);
+                return redirect()->to(base_url('/'));
             }
         }
         echo view('login/signup');
