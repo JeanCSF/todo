@@ -44,7 +44,14 @@ class Logincontroller extends BaseController
                 !empty($foto)? $img_name = $img->getRandomName() : $img_name = NULL;
 
                 $login->signUpCreateAccount($post, $img_name);
-                !empty($foto)? $img->store('../../public/assets/img/profiles_pics', $img_name) : PHP_EOL;
+                $path = '../../public/assets/img/profiles_pics/'. $_SESSION['USER'];
+                function createProfileFolder($path){
+                    if(!is_dir($path)){
+                        mkdir($path);
+                        return $path;
+                    }
+                }
+                !empty($foto)? $img->store(createProfileFolder($path), $img_name) : PHP_EOL;
                 $key = base64_encode($post['email'] . date('Y-m-d H:i:s'));
                 $email = \Config\Services::email();
                 $config = [

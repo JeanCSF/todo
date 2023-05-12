@@ -8,14 +8,14 @@
         <?php if (isset($done)) : ?>
             Concluídas
         <?php else : ?>
-            Todas as tarefas
+            Todas as notas
         <?php endif; ?>
     </h3>
     <form class="d-flex me-5 col-6" role="search">
         <input class="form-control me-1" type="search" name="search" aria-label="Search" />
         <input type="submit" class="btn btn-outline-primary me-5" value="Pesquisar" />
     </form>
-    <button type="button" class="btn text-primary bg-transparent border-0" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"><i class="fa fa-file-circle-plus fs-2"></i></button>
+    <button type="button" class="btn text-primary bg-transparent border-0" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"><i class="fa fa-pen-to-square fs-2"></i><i class="fa fa-circle-plus"></i></button>
 </div>
 <hr>
 <div>
@@ -41,7 +41,7 @@
                             <div class="d-flex justify-content-between">
                                 <p>
                                     <a style="text-decoration: none;" href="<?= base_url('userscontroller/profile/' . base64_encode($job->USER_ID)) ?>" class="link-secondary fs-4">
-                                        <img class="rounded-circle" height="64" width="64" src="<?= !empty($job->PROFILE_PIC) ? base_url('../../assets/img/profiles_pics/' . $job->PROFILE_PIC) : base_url('/assets/logo.png') ?>" alt=""> <?= $job->USER ?>
+                                        <img class="rounded-circle" height="64" width="64" src="<?= !empty($job->PROFILE_PIC) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $job->PROFILE_PIC) : base_url('/assets/logo.png') ?>" alt=""> <?= $job->USER ?>
                                     </a>
                                     <br>
                                     <span style="font-size: 12px;" class="fst-italic text-muted"><?= date("d/m/Y", strtotime($job->DATETIME_CREATED)) ?></span>
@@ -49,10 +49,11 @@
                                 <p <?= !empty($job->DATETIME_FINISHED) ? "style='text-decoration: line-through;'" : "" ?>><?= $job->JOB_TITLE ?></p>
                                 <?php if ($_SESSION['USER_ID'] == $job->USER_ID) : ?>
                                     <div class="dropdown">
-                                        <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fa fa-ellipsis-vertical"></i>
+                                        <button  class="nav-link bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-bars"></i>
                                         </button>
                                         <ul class="dropdown-menu post-it-dropdown">
+                                            <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item">Privacidade <?= $job->PRIVACY == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'?></a></li>
                                             <?php if (empty($job->DATETIME_FINISHED)) : ?>
                                                 <li><a class="dropdown-item" href="<?= site_url('todocontroller/jobdone/' . $job->ID_JOB) ?>" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
                                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit(`<?= $job->ID_JOB ?>`,  `<?= $job->JOB_TITLE ?>`, `<?= $job->JOB ?>`)">Editar <i class="fa fa-pencil text-primary"></i></a></li>

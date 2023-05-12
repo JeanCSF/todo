@@ -28,11 +28,20 @@ class Userscontroller extends BaseController
 
         if (!$img->hasMoved()) {
             $users = new Users();
-            $img_name = $img->getRandomName();
             $id = $_SESSION['USER_ID'];
-            if ($users->saveProfilePic($id, $img_name)) {
-
-                $img->store('../../public/assets/img/profiles_pics', $img_name);
+            $img_name = $users->getUser($id);
+            if ($users->saveProfilePic($id, $img_name->PROFILE_PIC)) {
+                $path = ('../../public/assets/img/profiles_pics/'. $_SESSION['USER']);
+                function createProfileFolder($path){
+                    if(!is_dir($path)){
+                        mkdir($path, 0777, true);
+                        return $path;
+                    }
+                }
+                if (file_exists($path . "/" .  $img_name->PROFILE_PIC)) {
+                    unlink($path . "/" .  $img_name->PROFILE_PIC);
+                }
+                $img->store($path, $img_name->PROFILE_PIC, true);
 
                 session()->setFlashdata('uploaded', 'Uploaded Sucessfully');
 

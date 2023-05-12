@@ -22,7 +22,9 @@
                                 <img src="<?= base_url('/assets/logo.png') ?>" class="img-fluid rounded" alt="Profile pic" style="cursor: pointer;" width="500" height="500">
                             </a>
                         <?php else : ?>
-                            <img src="<?= base_url('../../assets/img/profiles_pics/' . $userData->PROFILE_PIC) ?>" class="img-fluid rounded" alt="Profile pic" width="500" height="500">
+                            <a <?= $_SESSION['USER_ID'] == $userData->USER_ID ? 'data-bs-toggle="modal" data-bs-target="#profileModal"' : '' ?> title="<?= empty($userData->PROFILE_PIC) ? 'Adicionar Foto' : 'Alterar Foto' ?>">
+                                <img src="<?= base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $userData->PROFILE_PIC) ?>" class="img-fluid rounded" alt="Profile pic" style="cursor: pointer;" width="500" height="500">
+                            </a>
                         <?php endif; ?>
                         <p class="card-text"><small class="text-muted text-nowrap">Data do cadastro: <?= date('d/m/Y', strtotime($userData->DATETIME_CREATED)) ?></small></p>
                     </div>

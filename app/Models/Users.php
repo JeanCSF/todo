@@ -90,4 +90,5 @@ class Users extends Model
             return $this->table('login')->update($id,$data) ? true : false;
         }
     }
+
 }
