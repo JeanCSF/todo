@@ -41,7 +41,7 @@
                             <div class="d-flex justify-content-between">
                                 <p>
                                     <a style="text-decoration: none;" href="<?= base_url('userscontroller/profile/' . base64_encode($job->USER_ID)) ?>" class="link-secondary fs-4">
-                                        <img class="rounded-circle" height="64" width="64" src="<?= !empty($job->PROFILE_PIC) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $job->PROFILE_PIC) : base_url('/assets/logo.png') ?>" alt=""> <?= $job->USER ?>
+                                        <img class="rounded-circle" height="64" width="64" src="<?= !empty($job->PROFILE_PIC) ? base_url('../../assets/img/profiles_pics/' . $job->USER . '/' . $job->PROFILE_PIC) : base_url('/assets/logo.png') ?>" alt=""> <?= $job->USER ?>
                                     </a>
                                     <br>
                                     <span style="font-size: 12px;" class="fst-italic text-muted"><?= date("d/m/Y", strtotime($job->DATETIME_CREATED)) ?></span>

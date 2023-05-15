@@ -20,6 +20,24 @@
             </div>
         </div>
     </div>
+    <hr>
+    <div class="row bg-light bg-gradient">
+        <div class="col-8 offset-2">
+            <h1 class="text-center">About this project</h1>
+            <hr>
+            <div class="about">
+                <p>This project is a full-stack application, which means that I developed both the front-end and the back-end of the application, using several technologies that I learned so far.</p>
+                <p>In the front-end, Bootstrap 5 and FontAwesome 6 were used to create a responsive and modern design for the application. I also used JavaScript and CSS to give more functionality and styling.</p>
+                <p>For the back-end, I chose to use the CodeIgniter 4 framework, as I already have a certain affinity with its previous version (CodeIgniter 3) as I use it a lot in my internship. So I thought that a good way to learn this new version of the framework would be to use it to develop a real application. MySQL database to store user information and tasks.</p>
+                <p>In this application, users can create a profile and share their tasks with others. This is very useful for organizing team projects or remembering activities that need to be done together.</p>
+                <p>In short, this project is a full-stack application for managing shared tasks that uses several technologies that I've been learning in my journey as a programmer. The main focus here is learning, as I learn new technologies and different forms of programs I will be applying them to this project. It is also a way to materialize my knowledge by creating a real application and putting it on the air, remembering that this application is still under development so all feedback is welcome.</p>
+                <hr>
+                <div class="text-end">
+                    <a class="link-secondary" href="https://github.com/JeanCSF/todo" target="_blank" rel="noopener noreferrer">Repository</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?= $this->endSection() ?>

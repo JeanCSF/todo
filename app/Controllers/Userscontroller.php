@@ -8,6 +8,7 @@ use App\Models\Users;
 
 class Userscontroller extends BaseController
 {
+
     public function upload()
     {
         $img = $this->request->getFile('userfile');
@@ -30,18 +31,17 @@ class Userscontroller extends BaseController
             $users = new Users();
             $id = $_SESSION['USER_ID'];
             $img_name = $users->getUser($id);
-            if ($users->saveProfilePic($id, $img_name->PROFILE_PIC)) {
-                $path = ('../../public/assets/img/profiles_pics/'. $_SESSION['USER']);
-                function createProfileFolder($path){
-                    if(!is_dir($path)){
-                        mkdir($path, 0777, true);
-                        return $path;
-                    }
+            $rand_img_name = $img->getRandomName();
+            if ($users->saveProfilePic($id, empty($img_name->PROFILE_PIC) ? $rand_img_name : $img_name->PROFILE_PIC)) {
+                $path = ('../../public/assets/img/profiles_pics/' . $_SESSION['USER']);
+                if (!is_dir($path)) {
+                    mkdir($path, 0777, true);
+                }  
+                if(!file_exists($path . '/' . $img_name->PROFILE_PIC)) {
+                    $file_delete = dirname(__FILE__, 3) . '\\public\\assets\\img\\profiles_pics\\' . $_SESSION['USER'] .'\\' . $img_name->PROFILE_PIC;
+                    unlink($file_delete);
                 }
-                if (file_exists($path . "/" .  $img_name->PROFILE_PIC)) {
-                    unlink($path . "/" .  $img_name->PROFILE_PIC);
-                }
-                $img->store($path, $img_name->PROFILE_PIC, true);
+                $img->store($path, empty($img_name->PROFILE_PIC) ? $rand_img_name : $img_name->PROFILE_PIC, true);
 
                 session()->setFlashdata('uploaded', 'Uploaded Sucessfully');
 
@@ -49,6 +49,7 @@ class Userscontroller extends BaseController
             }
         }
     }
+
 
     public function profile($id)
     {
