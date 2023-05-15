@@ -1,4 +1,4 @@
-#About this project
+# About this project
 This project is a full-stack application, which means that I developed both the front-end and the back-end of the application, using several technologies that I learned so far.
 
 In the front-end, Bootstrap 5 and FontAwesome 6 were used to create a responsive and modern design for the application. I also used JavaScript and CSS to give more functionality and styling.
