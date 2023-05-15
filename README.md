@@ -1,3 +1,14 @@
+#About this project
+This project is a full-stack application, which means that I developed both the front-end and the back-end of the application, using several technologies that I learned so far.
+
+In the front-end, Bootstrap 5 and FontAwesome 6 were used to create a responsive and modern design for the application. I also used JavaScript and CSS to give more functionality and styling.
+
+For the back-end, I chose to use the CodeIgniter 4 framework, as I already have a certain affinity with its previous version (CodeIgniter 3) as I use it a lot in my internship. So I thought that a good way to learn this new version of the framework would be to use it to develop a real application. MySQL database to store user information and tasks.
+
+In this application, users can create a profile and share their tasks with others. This is very useful for organizing team projects or remembering activities that need to be done together.
+
+In short, this project is a full-stack application for managing shared tasks that uses several technologies that I've been learning in my journey as a programmer. The main focus here is learning, as I learn new technologies and different forms of programs I will be applying them to this project. It is also a way to materialize my knowledge by creating a real application and putting it on the air, remembering that this application is still under development so all feedback is welcome.
+
 # Sobre este projeto
 Este projeto é uma aplicação full-stack, o que significa que eu desenvolvi tanto o front-end quanto o back-end da aplicação, usando diversas tecnologias que aprendi até o momento.
 
@@ -8,6 +19,7 @@ Para o back-end, optei por utilizar a framework CodeIgniter 4, pois já tenho ce
 Nesta aplicação, os usuários podem criar um perfil e compartilhar suas tarefas com outras pessoas. Isso é muito útil para organizar projetos em equipe ou para lembrar de atividades que precisam ser feitas em conjunto.
 
 Em resumo, este projeto é uma aplicação full-stack de gerenciamento de tarefas compartilhadas que usa diversas tecnologias que venho aprendendo na minha jornada como programador. O foco principal aqui é o aprendizado, conforme eu for aprendendo novas tecnologias e formas diferentes de programas estarei aplicando neste projeto. É também uma forma de materializar meus conhecimentos criando uma aplicação de verdade e a colocando no ar, lembrando que esta aplicação segue em desenvolvimento então todo feedback é bem-vindo.
+
 # CodeIgniter 4 Development
 
 [![Build Status](https://github.com/codeigniter4/CodeIgniter4/workflows/PHPUnit/badge.svg)](https://github.com/codeigniter4/CodeIgniter4/actions?query=workflow%3A%22PHPUnit%22)
