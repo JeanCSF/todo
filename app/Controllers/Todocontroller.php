@@ -106,4 +106,29 @@ class Todocontroller extends BaseController
             }
         }
     }
+
+    public function changePrivacy()
+    {
+        $job = new Todo();
+        $post = $this->request->getPost();
+        
+        if(!empty($post)){
+            if ($job->changeJobPrivacy($post)) {
+                $msg = [
+                    'msg' => 'Privacidade alterada com com sucesso',
+                    'type' => 'alert-success',
+                ];
+                $this->session->setFlashdata('msg', $msg);
+                return redirect()->back();
+            } else {
+                $msg = [
+                    'msg' => 'Não foi possível adicionar tarefa',
+                    'type' => 'alert-danger',
+                ];
+                $this->session->setFlashdata('msg', $msg);
+                return redirect()->back();
+            }
+        }
+
+    }
 }

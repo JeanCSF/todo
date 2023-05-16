@@ -90,7 +90,7 @@ class Todo extends Model
 
     public function getUserJobs($id)
     {
-        $data = $this->select('jobs.ID_JOB, jobs.USER_ID, jobs.JOB_TITLE, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED')
+        $data = $this->select('jobs.ID_JOB, jobs.USER_ID, jobs.JOB_TITLE, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED, jobs.PRIVACY')
             ->join('login', 'login.USER_ID = jobs.USER_ID')
             ->where('jobs.USER_ID', $id)
             ->orderBy('jobs.ID_JOB')->paginate(5);
@@ -101,8 +101,8 @@ class Todo extends Model
     public function getUserDoneJobs($id)
     {
         $data = $this->select('*')->join('login', 'login.USER_ID = jobs.USER_ID')
-                ->where('jobs.DATETIME_FINISHED !=', NULL)
-                ->where('jobs.USER_ID', $id)->paginate(10);
+            ->where('jobs.DATETIME_FINISHED !=', NULL)
+            ->where('jobs.USER_ID', $id)->paginate(10);
         return $data;
     }
 
@@ -125,6 +125,7 @@ class Todo extends Model
 
         return $data;
     }
+
     public function countAllUserNotDoneJobs($id)
     {
         $data = $this->select()
@@ -132,6 +133,38 @@ class Todo extends Model
             ->where('jobs.USER_ID', $id)
             ->where('DATETIME_FINISHED =', NULL)->countAllResults();
 
+        return $data;
+    }
+
+    public function changeJobPrivacy($post)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+        if (!empty($post)) {
+            $data = [
+                'DATETIME_UPDATED'  => date('Y-m-d H:i:s'),
+                'PRIVACY'           => $post['privacyRb']
+            ];
+            return $this->table('jobs')->update($post['privacy_id'], $data) ? true : false;
+        }
+    }
+
+    public function getJobsForProfile($id)
+    {
+        $data = $this->select('login.PROFILE_PIC
+                                , login.USER
+                                , login.USER_ID
+                                , jobs.ID_JOB
+                                , jobs.USER_ID
+                                , jobs.JOB_TITLE
+                                , jobs.JOB
+                                , jobs.DATETIME_CREATED
+                                , jobs.DATETIME_UPDATED
+                                , jobs.DATETIME_FINISHED
+                                , jobs.PRIVACY')
+            ->join('login', 'login.USER_ID = jobs.USER_ID')
+            ->where('jobs.USER_ID', $id)
+            ->where('jobs.PRIVACY', true)
+            ->orderBy('jobs.DATETIME_CREATED DESC')->paginate(5);
         return $data;
     }
 }

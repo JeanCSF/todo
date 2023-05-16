@@ -64,9 +64,10 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         <?php foreach ($userTasks as $job) : ?>
                             <tr>
-                                <td><span <?= !empty($job->DATETIME_FINISHED) ? "style='text-decoration: line-through;'" : "" ?>><a data-bs-toggle="popover" data-bs-title="<?= $job->JOB_TITLE ?>" data-bs-content="<?= $job->JOB ?>"><?= $job->JOB_TITLE ?></a></span></td>
+                                <td><span <?= !empty($job->DATETIME_FINISHED) ? "style='text-decoration: line-through;'" : "" ?>><a data-bs-toggle="modal" data-bs-target="#plusTaskModal" onclick="fillModalPlus(`<?= $job->JOB ?>`, `<?= $job->JOB_TITLE ?>`)"><?= $job->JOB_TITLE ?></a></span></td>
                                 <td class="text-center"><?= date('d/m/Y', strtotime($job->DATETIME_CREATED)) ?></td>
                                 <td class="text-center"><?= isset($job->DATETIME_FINISHED) ? date('d/m/Y', strtotime($job->DATETIME_FINISHED)) : 'Não finalizada' ?></td>
                                 <?php if ($_SESSION['USER_ID'] == $userTasks[0]->USER_ID) : ?>

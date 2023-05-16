@@ -53,7 +53,7 @@
                                             <i class="fa fa-bars"></i>
                                         </button>
                                         <ul class="dropdown-menu post-it-dropdown">
-                                            <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item">Privacidade <?= $job->PRIVACY == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'?></a></li>
+                                            <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(`<?= $job->ID_JOB ?>`)">Privacidade <?= $job->PRIVACY == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'?></a></li>
                                             <?php if (empty($job->DATETIME_FINISHED)) : ?>
                                                 <li><a class="dropdown-item" href="<?= site_url('todocontroller/jobdone/' . $job->ID_JOB) ?>" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
                                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit(`<?= $job->ID_JOB ?>`,  `<?= $job->JOB_TITLE ?>`, `<?= $job->JOB ?>`)">Editar <i class="fa fa-pencil text-primary"></i></a></li>
@@ -67,7 +67,7 @@
                             </div>
                             <hr>
                             <div class="mx-2 p-1 text-justify" style="height:25%;">
-                                <h6><?= $job->JOB ?></h6>
+                                <h6><code><?= $job->JOB ?></code></h6>
                             </div>
                             <hr>
                             <?php if (!empty($job->DATETIME_FINISHED)) : ?>

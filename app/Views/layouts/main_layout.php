@@ -73,9 +73,8 @@
                                         <input type="text" placeholder="Nome da tarefa" name="job_name" id="job_name" value="" class="form-control" autofocus required>
                                         <label for="job_name">Nome da tarefa</label>
                                     </div>
-                                    <div class="row form-floating mb-3">
+                                    <div class="row mb-3">
                                         <textarea placeholder="Descrição" name="job_desc" id="job_desc" rows="10" value="" class="form-control mt-3" required></textarea>
-                                        <label class="mt-3" for="job_desc">Descrição</label>
                                     </div>
                                     <input type="hidden" name="id_job" id="id_job" value="">
                                     <input type="hidden" id="editar" value="">
@@ -127,11 +126,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body col-8 offset-2 p-4">
-                    <form action="" id="formPrivacy" method="post">
+                    <form action="<?= base_url('todocontroller/changeprivacy') ?>" id="formPrivacy" method="post">
                         <div class="row">
                             <div class="row mb-3">
                                 <div class="col-1">
-                                    <input type="radio" name="privacyRb" id="privacyRb">
+                                    <input type="radio" name="privacyRb" id="privacyRb" value="<?= true ?>">
                                 </div>
                                 <div class="col">
                                     <label for="privacyRb">Visível para todos</label>
@@ -139,13 +138,14 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-1">
-                                    <input type="radio" name="privacyRb" id="privacyRb">
+                                    <input type="radio" name="privacyRb" id="privacyRb" value="<?= false ?>">
                                 </div>
                                 <div class="col">
                                     <label for="privacyRb">Somente eu</label>
                                 </div>
                             </div>
                         </div>
+                        <input type="hidden" name="privacy_id" id="privacy_id" value="">
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                             <input type="submit" class="btn btn-primary" id="btnPrivacy" value="Salvar Alterações">
@@ -156,6 +156,24 @@
         </div>
     </div>
     <!-- Privacy Modal -->
+
+    <!-- Plus Task Modal -->
+    <div class="modal fade" id="plusTaskModal" tabindex="-1" aria-labelledby="plusTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="plusTaskModalTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body col-10 offset-1 p-2">
+                    <div class="row">
+                        <p id="plusTaskModalDesc" class="text-justify"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Plus Task Modal -->
 
 
     <!-- Toast Notification -->
@@ -284,6 +302,17 @@
             document.getElementById("job_desc").setAttribute('value', '');
             document.getElementById("job_desc").textContent = '';
         }
+
+        function fillModalPlus(job, title) {
+            document.getElementById("plusTaskModalDesc").textContent = job;
+            document.getElementById("plusTaskModalTitle").textContent = title;
+        }
+
+        function fillModalPrivacy(id) {
+            document.getElementById("privacy_id").setAttribute('value', id)
+        }
+
+        
     </script>
     <?= $this->renderSection("script"); ?>
 </body>

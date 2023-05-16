@@ -59,7 +59,7 @@ class Userscontroller extends BaseController
             $jobs = new Todo();
             $data = [
                 'userData'              => $users->getUser($id),
-                'userTasks'             => $jobs->getUserJobs($id),
+                'userTasks'             => (($_SESSION['USER_ID'] == $id)? $jobs->getUserJobs($id) : $jobs->getJobsForProfile($id)),
                 'alltasks'              => $jobs->countAllUserJobs($id),
                 'alldone'               => $jobs->countAllUserDoneJobs($id),
                 'notdone'               => $jobs->countAllUserNotDoneJobs($id),
