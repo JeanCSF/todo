@@ -36,9 +36,9 @@ class Userscontroller extends BaseController
                 $path = ('../../public/assets/img/profiles_pics/' . $_SESSION['USER']);
                 if (!is_dir($path)) {
                     mkdir($path, 0777, true);
-                }  
-                if(!file_exists($path . '/' . $img_name->PROFILE_PIC)) {
-                    $file_delete = dirname(__FILE__, 3) . '\\public\\assets\\img\\profiles_pics\\' . $_SESSION['USER'] .'\\' . $img_name->PROFILE_PIC;
+                }
+                if (!file_exists($path . '/' . $img_name->PROFILE_PIC)) {
+                    $file_delete = dirname(__FILE__, 3) . '\\public\\assets\\img\\profiles_pics\\' . $_SESSION['USER'] . '\\' . $img_name->PROFILE_PIC;
                     unlink($file_delete);
                 }
                 $img->store($path, empty($img_name->PROFILE_PIC) ? $rand_img_name : $img_name->PROFILE_PIC, true);
@@ -59,7 +59,7 @@ class Userscontroller extends BaseController
             $jobs = new Todo();
             $data = [
                 'userData'              => $users->getUser($id),
-                'userTasks'             => (($_SESSION['USER_ID'] == $id)? $jobs->getUserJobs($id) : $jobs->getJobsForProfile($id)),
+                'userTasks'             => (($_SESSION['USER_ID'] == $id) ? $jobs->getUserJobs($id) : $jobs->getJobsForProfile($id)),
                 'alltasks'              => $jobs->countAllUserJobs($id),
                 'alldone'               => $jobs->countAllUserDoneJobs($id),
                 'notdone'               => $jobs->countAllUserNotDoneJobs($id),
@@ -84,11 +84,15 @@ class Userscontroller extends BaseController
 
     public function users()
     {
-        $users = new Users();
-        $data = [
-            'users'     => $users->getAll(),
-        ];
-        echo view('users/all_users', $data);
+        if ($this->session->has('USER_ID')) {
+            $users = new Users();
+            $data = [
+                'users'     => $users->getAll(),
+            ];
+            echo view('users/all_users', $data);
+        } else {
+            $this->login();
+        }
     }
 
     public function newUser()

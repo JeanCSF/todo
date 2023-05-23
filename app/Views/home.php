@@ -66,8 +66,8 @@
                                 <?php endif; ?>
                             </div>
                             <hr>
-                            <div class="mx-2 p-1 text-justify" style="height:25%;">
-                                <h6><code><?= $job->JOB ?></code></h6>
+                            <div class="mx-2 p-4" style="text-align: justify;">
+                                <h6 class="p-2"><?= $job->JOB ?></h6>
                             </div>
                             <hr>
                             <?php if (!empty($job->DATETIME_FINISHED)) : ?>
