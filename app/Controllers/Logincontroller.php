@@ -53,10 +53,10 @@ class Logincontroller extends BaseController
                 $email = \Config\Services::email();
                 $config = [
                     'protocol'      => 'smtp',
-                    'SMTPHost'      => 'sandbox.smtp.mailtrap.io',
-                    'SMTPUser'      => '6a29d381cdc759',
-                    'SMTPPass'      => '60e1758b41e608',
-                    'SMTPPort'      => '2525',
+                    'SMTPHost'      => 'smtp.gmail.com',
+                    'SMTPUser'      => 'emailt104@gmail.com',
+                    'SMTPPass'      => 'wfieldkgarmiynyw',
+                    'SMTPPort'      => '587',
                     'mailType'      => 'html'
                 ];
                 $email->initialize($config);

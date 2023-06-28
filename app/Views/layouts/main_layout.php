@@ -73,8 +73,9 @@
                                         <input type="text" placeholder="Nome da tarefa" name="job_name" id="job_name" value="" class="form-control" autofocus required>
                                         <label for="job_name">Nome da tarefa</label>
                                     </div>
-                                    <div class="row mb-3">
-                                        <textarea placeholder="Descrição" name="job_desc" id="job_desc" rows="10" value="" class="form-control mt-3" required></textarea>
+                                    <div class="row form-floating mb-3">
+                                        <textarea style="height: 150px;" name="job_desc" id="job_desc" value="" class="form-control" required></textarea>
+                                        <label for="job_desc">Descrição</label>
                                     </div>
                                     <input type="hidden" name="id_job" id="id_job" value="">
                                     <input type="hidden" id="editar" value="">
@@ -222,7 +223,7 @@
         </navbar>
     </header>
 
-    <section class="content col-8 offset-2">
+    <section class="content col-lg-8 offset-lg-2 col-md-auto offset-md-auto col-sm-auto offset-sm-auto">
         <?= $this->renderSection('section') ?>
     </section>
 
@@ -243,7 +244,9 @@
                     <a class="link-secondary" href="https://instagram.com/fookinselfish" target="_blank">Instagram</a>
                 </div>
                 <div>
-                    <p class="link-secondary">Site design / logo &copy; <?= date("Y") ?> c0ka0 Inc;</p>
+                    <p>
+                        <a class="link-secondary" href="http://jeancsf.github.io/portfolio" target="_blank" rel="noopener noreferrer"> Site design / logo &copy; <?= date("Y") ?> JeanCSF</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -311,8 +314,6 @@
         function fillModalPrivacy(id) {
             document.getElementById("privacy_id").setAttribute('value', id)
         }
-
-        
     </script>
     <?= $this->renderSection("script"); ?>
 </body>

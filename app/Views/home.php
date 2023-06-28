@@ -3,7 +3,7 @@
 <?= $this->section('section') ?>
 
 
-<div class="ms-5 me-5 d-flex justify-content-between">
+<div class="col-lg-10 offset-lg-1 col-md-auto offset-md-auto col-sm-auto offset-sm-auto d-flex justify-content-between">
     <h3>
         <?php if (isset($done)) : ?>
             Concluídas
