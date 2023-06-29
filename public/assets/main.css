@@ -73,9 +73,36 @@ body {
 .about {
     font-family: Georgia, 'Times New Roman', Times, serif;
     line-height: 1.7em;
-    text-align: justify;
 }
 
 .about a {
     text-decoration: none;
+}
+
+@media screen and (max-width: 40em) {
+    .content div {
+        /* margin: 0 auto; */
+        padding: 0.8rem;
+    }
+}
+
+#userActions a {
+    text-decoration: none;
+    display: block;
+    font-size: large;
+    font-weight: 900;
+    color: #212121;
+}
+
+.post-hr hr {
+    width: 100%;
+    border-bottom: .3rem inset #000000;
+}
+
+.post p {
+    max-width: fit-content;
+}
+
+.post div {
+    padding: 0.3rem;
 }

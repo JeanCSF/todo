@@ -134,6 +134,7 @@ class Logincontroller extends BaseController
                         'EMAIL'         => $row->EMAIL,
                         'NAME'          => $row->NAME,
                         'SU'            => $row->SU,
+                        'IMG'           => $row->PROFILE_PIC,
                     ];
                     $this->session->set($data);
                     $msg = [

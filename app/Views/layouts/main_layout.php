@@ -19,7 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js" integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
-<body class="bg-gradient">
+<body>
     <!-- Profile Modal -->
     <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -202,44 +202,26 @@
                     <a href="<?= base_url('main/about') ?>" class="nav-link">Sobre</a>
                 </li>
             </ul>
-            <div class="col-1 collapse navbar-collapse justify-content-end" id="navbarNavDarkDropdown">
-                <div class="btn-group dropstart">
-                    <button type="button" class="btn bg-transparent border-0 fs-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-gear"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <?php if (isset($_SESSION['USER_ID'])) : ?>
-                            <?php if ($_SESSION['SU'] == 1) : ?>
-                                <li><a class="dropdown-item" href="<?= base_url('userscontroller/users/') ?>"><i class="fa fa-users"></i> Usuários</a></li>
-                            <?php endif; ?>
-                            <li><a class="dropdown-item" href="<?= base_url('userscontroller/profile/' . base64_encode($_SESSION['USER_ID'])) ?>"><i class="fa fa-user"></i> Minha Conta</a></li>
-                            <li><a class="dropdown-item" href="<?= base_url('logincontroller/logout') ?>"><strong><i class="fa fa-right-from-bracket"></i></strong> Logout</a></li>
-                        <?php else : ?>
-                            <li><a class="dropdown-item" href="<?= base_url('logincontroller/login') ?>"><i class="fa fa-user"></i> Minha Conta</a></li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-            </div>
         </navbar>
     </header>
 
-    <section class="content col-lg-8 offset-lg-2 col-md-auto offset-md-auto col-sm-auto offset-sm-auto">
+    <main class="content container">
         <?= $this->renderSection('section') ?>
-    </section>
+    </main>
 
     <footer class="footer container-fluid bg-dark bg-gradient text-white fw-5 fs-5 mt-3">
         <div class="row">
             <div class="col-4">
                 <a href="<?= base_url('main/contact') ?>" class="text-decoration-none link-secondary fw-bolder">FEEDBACK</a>
             </div>
-            <div class="col-4">
+            <div class="col-2">
                  
             </div>
-            <div class="footer-socials col-4 d-flex flex-column justify-content-between">
+            <div class="footer-socials col-6 d-flex flex-column justify-content-between">
                 <div>
                     <a class="link-secondary me-1" href="https://github.com/JeanCSF" target="_blank">GitHub</a>
-                    <a class="link-secondary mx-2" href="https://facebook.com/fookinselfish" target="_blank">Facebook</a>
-                    <a class="link-secondary mx-2" href="https://twitter.com/JCS_16" target="_blank">Twitter</a>
+                    <a class="link-secondary me-2" href="https://facebook.com/fookinselfish" target="_blank">Facebook</a>
+                    <a class="link-secondary me-2" href="https://twitter.com/JCS_16" target="_blank">Twitter</a>
                     <a class="link-secondary me-2" href="https://www.linkedin.com/in/jean-carlos-6149a2232/" target="_blank">Linkedin</a>
                     <a class="link-secondary" href="https://instagram.com/fookinselfish" target="_blank">Instagram</a>
                 </div>

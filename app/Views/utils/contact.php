@@ -4,7 +4,7 @@
 
 <div class="container bg-light bg-gradient">
     <div class="row">
-        <div class="col-8 offset-2">
+        <div class="col-lg-8 offset-lg-2">
             <h1 class="text-center">Contato</h1>
             <hr>
             <form action="<?= base_url('main/contact') ?>" method="post">
