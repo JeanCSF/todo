@@ -187,52 +187,61 @@
         </div>
     </div>
     <!-- Toast Notification -->
-    <header>
-        <navbar class="ms navbar navbar-expand-lg bg-light mb-2">
-            <ul class="text-light col-3 navbar-nav me-auto mb-1 mb-lg-0">
-                <li class="nav-item">
-                    <a class="navbar-brand" href="<?= base_url('/') ?>">
-                        <img class="d-inline-block align-text-top" src="<?= base_url('/assets/logo.png') ?>" alt="logo" width="56" height="56" title="Tome Nota!">
-                    </a>
-                </li>
-                <li class="nav-item p-2">
-                    <a href="<?= base_url('/') ?>" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item p-2">
-                    <a href="<?= base_url('main/about') ?>" class="nav-link">Sobre</a>
-                </li>
-            </ul>
-        </navbar>
-    </header>
 
-    <main class="content container">
-        <?= $this->renderSection('section') ?>
-    </main>
-
-    <footer class="footer container-fluid bg-dark bg-gradient text-white fw-5 fs-5 mt-3">
-        <div class="row">
-            <div class="col-4">
-                <a href="<?= base_url('main/contact') ?>" class="text-decoration-none link-secondary fw-bolder">FEEDBACK</a>
+    <div class="row">
+        <header class="col-3 d-flex flex-column justify-content-between p-3 mt-2 left-panel">
+            <div id="userActions" class="mx-3">
+                <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home"></i> Home</a>
+                <a href="<?= base_url('main/about') ?>" class="nav-link"><i class="fa fa-circle-info"></i> Sobre</a>
+                <?php if (isset($_SESSION['USER_ID'])) : ?>
+                    <?php if ($_SESSION['SU'] == 1) : ?>
+                        <a href="<?= base_url('userscontroller/users/') ?>"><i class="fa fa-users"></i> Usuários</a>
+                    <?php endif; ?>
+                    <a href="<?= base_url('logincontroller/logout') ?>"><strong><i class="fa fa-right-from-bracket"></i></strong> Logout</a>
+                <?php endif; ?>
+                <div class="row mt-5">
+                    <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()">Nova Tarefa</button>
+                </div>
             </div>
-            <div class="col-2">
-                 
+            <div class="avatarDiv">
+                <a style="text-decoration: none;" href="<?= base_url('userscontroller/profile/' . base64_encode($_SESSION['USER_ID'])) ?>" class="link-secondary fs-4">
+                    <img class="rounded-circle border border-light-subtle" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt=""> <span class="ms-2"><?= $_SESSION['USER'] ?></span>
+                </a>
             </div>
-            <div class="footer-socials col-6 d-flex flex-column justify-content-between">
+        </header>
+        <div class="col-3">
+             
+        </div>
+        <main class="content col-6">
+            <section>
+                <?= $this->renderSection('section') ?>
+            </section>
+        </main>
+        <div class="col-3">
+             
+        </div>
+        <footer class="col-3 d-flex flex-column justify-content-between right-panel">
+            <form class="d-flex mt-2" role="search">
+                <input class="form-control me-1" type="search" name="search" aria-label="Search" />
+                <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+            </form>
+            <nav class="footer mt-3">
                 <div>
-                    <a class="link-secondary me-1" href="https://github.com/JeanCSF" target="_blank">GitHub</a>
+                    <a href="<?= base_url('main/contact') ?>" class="text-decoration-none link-secondary fw-bolder">FEEDBACK</a>
+                </div>
+                <div class="footer-socials">
+                    <a class="link-secondary me-2" href="https://github.com/JeanCSF" target="_blank">GitHub</a>
                     <a class="link-secondary me-2" href="https://facebook.com/fookinselfish" target="_blank">Facebook</a>
                     <a class="link-secondary me-2" href="https://twitter.com/JCS_16" target="_blank">Twitter</a>
                     <a class="link-secondary me-2" href="https://www.linkedin.com/in/jean-carlos-6149a2232/" target="_blank">Linkedin</a>
                     <a class="link-secondary" href="https://instagram.com/fookinselfish" target="_blank">Instagram</a>
-                </div>
-                <div>
                     <p>
                         <a class="link-secondary" href="http://jeancsf.github.io/portfolio" target="_blank" rel="noopener noreferrer"> Site design / logo &copy; <?= date("Y") ?> JeanCSF</a>
                     </p>
                 </div>
-            </div>
-        </div>
-    </footer>
+            </nav>
+        </footer>
+    </div>
 
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
