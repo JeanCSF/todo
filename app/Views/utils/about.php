@@ -3,8 +3,7 @@
 <?= $this->section('section') ?>
 
 <div class="container">
-    <div class="row bg-light bg-gradient">
-        <div class="col-8 offset-2">
+    <div class="row">
             <h1 class="text-center">Sobre este projeto</h1>
             <hr>
             <div class="about">
@@ -18,7 +17,6 @@
                     <a class="link-secondary" href="https://github.com/JeanCSF/todo" target="_blank" rel="noopener noreferrer">Repositório</a>
                 </div>
             </div>
-        </div>
     </div>
     <hr>
     <div class="row bg-light bg-gradient">
