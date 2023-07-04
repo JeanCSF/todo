@@ -1,24 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 :root {
     --maingrey: rgb(247, 247, 247);
     --hovergrey: rgb(231, 231, 231)
 }
 
-body,
-html {
-    height: 100%;
-}
-
 body {
-    display: flex;
-    flex-direction: column;
     overflow-x: hidden;
 }
 
 .content {
-    flex: 1 0 auto;
     min-height: 100vh;
     border-inline: 1px solid var(--maingrey);
-    margin: 0 auto;
+
 }
 
 .content p {
@@ -35,10 +33,8 @@ section {
 }
 
 .footer {
-    flex-shrink: 0;
     width: 100%;
     bottom: 5%;
-    z-index: 999;
 }
 
 #pager a {
@@ -46,7 +42,6 @@ section {
     color: black;
     font-weight: bolder;
 }
-
 
 .post-it-dropdown {
     background: rgba(134, 140, 141, 0.712);
@@ -156,4 +151,42 @@ section {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.page-title {
+    border-bottom: 1px solid var(--maingrey);
+    background: rgba(255, 255, 255, 0.26);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(7.1px);
+    -webkit-backdrop-filter: blur(7.1px);
+    min-height: 150px;
+    font-weight: 900;
+    color: #212121;
+    font-size: 1.5rem;
+    padding: 1rem;
+}
+
+.row .page-title {
+    position: fixed;
+    
+}
+
+.header-post {
+    margin-top: 100px;
+}
+
+.header-post button {
+    border-radius: 50px;
+}
+
+.header-post input {
+    min-width: 350px;
+    min-height: 60px;
+    right: 0;
+    border: none;
+    padding: 0.5rem;
+}
+
+.header-post input:focus{
+    outline: none;
 }

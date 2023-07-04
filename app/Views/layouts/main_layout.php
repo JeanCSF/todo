@@ -212,8 +212,14 @@
             <?php endif; ?>
             </div>
         </header>
-
-        <main class="content col-6">
+        <main class="content container-fluid col-6">
+            <?php if (!empty($pageTitle)) : ?>
+                <div class="row">
+                    <div class="page-title z-3">
+                        <p><?= isset($pageTitle) ? $pageTitle : "" ?></p>
+                    </div>
+                </div>
+            <?php endif ?>
             <section>
                 <?= $this->renderSection('section') ?>
             </section>
@@ -241,7 +247,7 @@
             </div>
         </footer>
     </div>
-
+    
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
 
@@ -306,6 +312,7 @@
         }
     </script>
     <?= $this->renderSection("script"); ?>
+
 </body>
 
 </html>

@@ -17,7 +17,6 @@ class Main extends BaseController
         }
     }
 
-    public $rowperpage = 5;
 
     public function index()
     {
@@ -42,9 +41,9 @@ class Main extends BaseController
             }
 
             $data = [
-                'jobs'              => $job->select('login.PROFILE_PIC, login.USER, login.USER_ID, jobs.ID_JOB, jobs.USER_ID, jobs.JOB_TITLE, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED, jobs.PRIVACY')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->findAll($this->rowperpage, 0),
+                'jobs'              => $job->select('login.PROFILE_PIC, login.USER, login.USER_ID, jobs.ID_JOB, jobs.USER_ID, jobs.JOB_TITLE, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED, jobs.PRIVACY')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->findAll(),
                 'totalrecords'      => $job->select('jobs.ID_JOB')->where('jobs.PRIVACY', true)->countAllResults(),
-                'rowperpage'        => $this->rowperpage,
+                'pageTitle'        => "Página Inicial",
             ];
 
             echo view('home', $data);

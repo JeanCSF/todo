@@ -1,7 +1,14 @@
 <?= $this->extend('layouts/main_layout') ?>
 
 <?= $this->section('section') ?>
-<input type="hidden" class="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
+<div class="mb-3 header-post">
+    <form action="<?= base_url('todocontroller/newjobsubmit') ?>" method="post">
+        <input type="text" id="job_desc" name="job_desc"  placeholder="Whats poppin?!" required autocomplete="off">
+        <div class="text-end mt-2">
+            <button type="submit" class="btn btn-lg btn-primary">Tarefa</button>
+        </div>
+    </form>
+</div>
 <?php if (count($jobs) == 0) : ?>
     <div class="row mt-2">
         <p class="fs-3 alert alert-warning text-center"><?= isset($search) ? 'Não existem tarefas para esta pesquisa' : 'Não existem tarefas' ?></p>
@@ -20,7 +27,7 @@
                 <p <?= !empty($job->DATETIME_FINISHED) ? "style='text-decoration: line-through;'" : "" ?> class="fs-3"><?= $job->JOB_TITLE ?></p>
                 <?php if ($_SESSION['USER_ID'] == $job->USER_ID) : ?>
                     <div class="dropdown">
-                        <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="nav-link z-n1 bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-ellipsis"></i>
                         </button>
                         <ul class="dropdown-menu post-it-dropdown">
@@ -46,72 +53,4 @@
         </div>
     <?php endforeach; ?>
 <?php endif; ?>
-<input type="hidden" id="start" value="0">
-<input type="hidden" id="rowperpage" value="<?= $rowperpage ?>">
-<input type="hidden" id="totalrecords" value="<?= $totalrecords; ?>">
-
 <?= $this->endSection() ?>
-<script>
-    function checkWindowSize() {
-        if ($(window).height() >= $(document).height()) {
-            // Fetch records
-            fetchData();
-        }
-    }
-
-    function fetchData() {
-        var start = Number($('#start').val());
-        var allcount = Number($('#totalrecords').val());
-        var rowperpage = Number($('#rowperpage').val());
-        start = start + rowperpage;
-
-        if (start <= allcount) {
-            $('#start').val(start);
-
-            // CSRF Hash 
-            var csrfName = $('.txt_csrfname').attr('name');
-            // CSRF Token name 
-            var csrfHash = $('.txt_csrfname').val(); // CSRF hash
-
-            $.ajax({
-                url: "<?= site_url('homePosts') ?>",
-                type: 'post',
-                data: {
-                    [csrfName]: csrfHash,
-                    start: start
-                },
-                dataType: 'json',
-                success: function(response) {
-
-                    // Add
-                    $(".post:last").after(response.html).show().fadeIn("slow");
-
-                    // Update token
-                    $('.txt_csrfname').val(response.token);
-
-                    // Check if the page has enough content or not. If not then fetch records
-                    checkWindowSize();
-                }
-            });
-        }
-    }
-    $(document).on('touchmove', onScroll); // for mobile
-    function onScroll() {
-
-        if ($(window).scrollTop() > $(document).height() - $(window).height() - 100) {
-
-            fetchData();
-        }
-    }
-
-    $(window).scroll(function() {
-
-        var position = $(window).scrollTop();
-        var bottom = $(document).height() - $(window).height();
-
-        if (position == bottom) {
-            fetchData();
-        }
-
-    });
-</script>

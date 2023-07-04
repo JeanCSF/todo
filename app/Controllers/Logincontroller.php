@@ -151,7 +151,8 @@ class Logincontroller extends BaseController
                 $this->session->setFlashdata('msg', $msg);
             }
         }
-        echo view('login/login');
+        $data['pageTitle'] = "Login";
+        echo view('login/login', $data);
     }
 
     public function logout()
