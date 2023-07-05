@@ -2,7 +2,7 @@
 
 <?= $this->section('section') ?>
 
-<div class="container-fluid pt-5 pb-5">
+<div class="container-fluid">
     <h3 class="text-center">Tome Nota</h3>
     <h5 class="text-center">Anote suas tarefas!</h5>
     <div class="text-center mt-5">

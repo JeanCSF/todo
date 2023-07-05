@@ -9,11 +9,6 @@
     --hovergrey: rgb(231, 231, 231)
 }
 
-body,
-html {
-    height: 100%;
-}
-
 body {
     display: flex;
     flex-direction: column;
@@ -22,7 +17,6 @@ body {
 }
 
 .content {
-    flex: 1 0 auto;
     min-height: 100vh;
     border-inline: 1px solid var(--maingrey);
 }
@@ -93,7 +87,6 @@ section {
 }
 
 .footer {
-    flex-shrink: 0;
     width: 100%;
     bottom: 5%;
     z-index: 999;
@@ -104,7 +97,6 @@ section {
     color: black;
     font-weight: bolder;
 }
-
 
 .post-it-dropdown {
     background: rgba(134, 140, 141, 0.712);

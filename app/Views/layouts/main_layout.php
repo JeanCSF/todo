@@ -247,7 +247,7 @@
             </div>
         </footer>
     </div>
-
+    
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
 
@@ -312,6 +312,7 @@
         }
     </script>
     <?= $this->renderSection("script"); ?>
+
 </body>
 
 </html>

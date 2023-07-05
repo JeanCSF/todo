@@ -12,11 +12,13 @@
             <?php if (isset($error)) : ?>
                 <p class="alert alert-danger text-center"><?php echo $error; ?></p>
             <?php endif; ?>
-            <div class="row mb-3">
-                <input type="text" class="form-control" name="user" placeholder="Usuário" required>
+            <div class="row form-floating mb-3">
+                <input type="text" class="form-control" name="user" required>
+                <label for="user" class="form-label">Usuário</label>
             </div>
-            <div class="row mb-3">
-                <input type="password" class="form-control" name="pass" placeholder="Senha" required>
+            <div class="row form-floating mb-3">
+                <input type="password" class="form-control" name="pass" required>
+                <label for="pass">Senha</label>
             </div>
             <div class="d-flex justify-content-between">
                 <a href="<?= site_url('/') ?>" class="btn btn-secondary">Cancelar</a>
