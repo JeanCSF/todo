@@ -32,7 +32,7 @@ class Main extends BaseController
             $data = [
                 'jobs'      => $job->select('login.PROFILE_PIC, login.USER, login.USER_ID, jobs.ID_JOB, jobs.USER_ID, jobs.JOB_TITLE, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED, jobs.PRIVACY')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->paginate(5),
                 'alljobs'   => $job->select('jobs.ID_JOB')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.PRIVACY', true)->countAllResults(),
-                'pager'     => $job->pager,
+                'pageTitle'     => "Página Inicial",
 
             ];
 
@@ -91,7 +91,8 @@ class Main extends BaseController
 
     public function about()
     {
-        echo view('utils/about');
+        $data['pageTitle'] = "Sobre o Projeto";
+        echo view('utils/about', $data);
     }
 
     public function contact()
@@ -123,6 +124,7 @@ class Main extends BaseController
                 return redirect()->to(base_url('/'));
             }
         }
-        echo view('utils/contact');
+        $data['pageTitle'] = "Contato";
+        echo view('utils/contact', $data);
     }
 }

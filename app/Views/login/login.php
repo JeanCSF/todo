@@ -2,11 +2,9 @@
 
 <?= $this->section('section') ?>
 
-<div class="container mt-5">
-    <div class="row mt-5">
-        <div class=" card p-4 mt-5 col-4 offset-4">
-            <h1 class="text-center">Login</h1>
-            <hr>
+<div class="container-fluid">
+    <div class="row">
+        <div class="p-2 mt-5 col-4 offset-4">
             <?php
             helper('form');
             echo form_open('logincontroller/login');
@@ -20,8 +18,7 @@
             <div class="row mb-3">
                 <input type="password" class="form-control" name="pass" placeholder="Senha" required>
             </div>
-            <hr>
-            <div class="text-center">
+            <div class="d-flex justify-content-between">
                 <a href="<?= site_url('/') ?>" class="btn btn-secondary">Cancelar</a>
                 <input class="btn btn-primary" type="submit" value="Entrar">
             </div>

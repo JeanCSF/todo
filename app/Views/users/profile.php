@@ -1,20 +1,10 @@
 <?= $this->extend('layouts/main_layout') ?>
 
 <?= $this->section('section') ?>
-<div class="container mt-1">
+<div class="container-fluid">
     <div class="row">
         <div class="col-lg-auto col-md-auto col-sm-auto ">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item <?= isset($userData) ? '' : 'active' ?>" <?= isset($userData) ? '' : 'aria-current="page"' ?>>
-                        <?= isset($userData) ? "<a  href='" . base_url('/') . "' >Home</a>" : "Home" ?></li>
-                    <?php if (isset($userData)) : ?>
-                        <li class='breadcrumb-item active' aria-current='page'>Perfil - <?= $_SESSION['NAME'] ?> </li>
-                    <?php endif; ?>
-                </ol>
-            </nav>
-
-            <div class="card mb-3" style="width: 100%;">
+            <div class="mb-1" style="width: 100%;">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <?php if (empty($userData->PROFILE_PIC)) : ?>
@@ -48,7 +38,6 @@
                     </div>
                 </div>
             </div>
-            <hr>
             <?php if (count($userTasks) == 0) : ?>
                 <h3 class="alert alert-warning text-center">Não existem tarefas!</h3>
             <?php else : ?>

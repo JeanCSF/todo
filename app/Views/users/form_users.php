@@ -2,11 +2,8 @@
 
 <?= $this->section('section') ?>
 
-<div class="container col-8 offset-2">
+<div class="container-fluid">
     <div class="row">
-        <h1 class="text-center mt-3"><?= isset($edit) ? 'Editar Usuário' : 'Cadastrar Usuário' ?></h1>
-        <hr>
-        <div class="col-8 offset-2">
             <form action="<?= isset($edit) ? base_url('userscontroller/edit/' . base64_encode($user->USER_ID)) : base_url('userscontroller/newuser') ?>" method="post">
                 <div class="row my-3">
                     <div class="row">
@@ -40,13 +37,11 @@
                         </div>
                     </div>
                 </div>
-                <hr>
                 <div class=" text-center d-flex justify-content-between">
                     <a href="javascript:history.go(-1)" class="btn btn-secondary">Cancelar</a>
                     <input class="btn btn-primary" type="submit" value="<?= isset($edit) ? 'Atualizar' : 'Cadastrar' ?>">
                 </div>
             </form>
-        </div>
     </div>
 </div>
 

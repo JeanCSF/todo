@@ -63,6 +63,7 @@ class Userscontroller extends BaseController
                 'alltasks'              => $jobs->countAllUserJobs($id),
                 'alldone'               => $jobs->countAllUserDoneJobs($id),
                 'notdone'               => $jobs->countAllUserNotDoneJobs($id),
+                'pageTitle'             => "Perfil - " . $_SESSION['NAME'],
                 'pager'                 => $jobs->pager,
 
             ];
@@ -88,6 +89,8 @@ class Userscontroller extends BaseController
             $users = new Users();
             $data = [
                 'users'     => $users->getAll(),
+                'pageTitle'     => "Usuários Cadastrados",
+
             ];
             echo view('users/all_users', $data);
         } else {
@@ -114,7 +117,8 @@ class Userscontroller extends BaseController
                 return redirect()->to(base_url('userscontroller/users'));
             }
         }
-        echo view('users/form_users');
+        $data['pageTitle'] = "Cadastrar Usuário";
+        echo view('users/form_users', $data);
     }
 
     public function edit($id)
@@ -135,6 +139,8 @@ class Userscontroller extends BaseController
         $data = [
             'user'          => $users->getUser($id),
             'edit'          => true,
+            'pageTitle'     => "Editar Usuário",
+
         ];
         echo view('users/form_users', $data);
     }

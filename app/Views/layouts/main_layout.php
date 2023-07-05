@@ -198,48 +198,53 @@
                         <a href="<?= base_url('userscontroller/users/') ?>"><i class="fa fa-users"></i> Usuários</a>
                     <?php endif; ?>
                     <a href="<?= base_url('logincontroller/logout') ?>"><strong><i class="fa fa-right-from-bracket"></i></strong> Logout</a>
+
+                    <div class="row mt-5">
+                        <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()">Nova Tarefa</button>
+                    </div>
+                    <div class="avatarDiv">
+                        <a style="text-decoration: none;" href="<?= base_url('userscontroller/profile/' . base64_encode($_SESSION['USER_ID'])) ?>" class="link-secondary fs-4">
+                            <img class="rounded-circle border border-light-subtle" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt=""> <span class="ms-2"><?= $_SESSION['USER'] ?></span>
+                        </a>
+                    </div>
                 <?php endif; ?>
-                <div class="row mt-5">
-                    <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()">Nova Tarefa</button>
-                </div>
-            </div>
-            <div class="avatarDiv">
-                <a style="text-decoration: none;" href="<?= base_url('userscontroller/profile/' . base64_encode($_SESSION['USER_ID'])) ?>" class="link-secondary fs-4">
-                    <img class="rounded-circle border border-light-subtle" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt=""> <span class="ms-2"><?= $_SESSION['USER'] ?></span>
-                </a>
             </div>
         </header>
-        <div class="col-3">
-             
-        </div>
+
         <main class="content col-6">
+            <?php if (!empty($pageTitle)) : ?>
+                <div class="row">
+                    <div class="page-title col-6 offset-3 fixed-top">
+                        <a href="javascript:history.go(-1)" style="<?= ($pageTitle == 'Página Inicial') ? 'visibility:hidden' : '' ?>"><i class="fa fa-arrow-left me-3"></i></a>
+                        <p><?= isset($pageTitle) ? $pageTitle : "" ?></p>
+                    </div>
+                </div>
+            <?php endif ?>
             <section>
                 <?= $this->renderSection('section') ?>
             </section>
         </main>
-        <div class="col-3">
-             
-        </div>
+
         <footer class="col-3 d-flex flex-column justify-content-between right-panel">
-            <form class="d-flex mt-2" role="search">
-                <input class="form-control me-1" type="search" name="search" aria-label="Search" />
-                <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
-            </form>
-            <nav class="footer mt-3">
-                <div>
+            <div>
+                <form class="d-flex mt-2" role="search">
+                    <input class="form-control me-1" type="search" name="search" aria-label="Search" />
+                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+                </form>
+                <div class="footer mt-3">
                     <a href="<?= base_url('main/contact') ?>" class="text-decoration-none link-secondary fw-bolder">FEEDBACK</a>
+                    <div class="footer-socials">
+                        <a class="link-secondary me-4" href="https://github.com/JeanCSF" target="_blank">GitHub</a>
+                        <a class="link-secondary me-4" href="https://facebook.com/fookinselfish" target="_blank">Facebook</a>
+                        <a class="link-secondary me-4" href="https://twitter.com/JCS_16" target="_blank">Twitter</a>
+                        <a class="link-secondary me-4" href="https://www.linkedin.com/in/jean-carlos-6149a2232/" target="_blank">Linkedin</a>
+                        <a class="link-secondary" href="https://instagram.com/fookinselfish" target="_blank">Instagram</a>
+                        <p>
+                            <a class="link-secondary" href="http://jeancsf.github.io/portfolio" target="_blank" rel="noopener noreferrer"> Site design / logo &copy; <?= date("Y") ?> JeanCSF</a>
+                        </p>
+                    </div>
                 </div>
-                <div class="footer-socials">
-                    <a class="link-secondary me-2" href="https://github.com/JeanCSF" target="_blank">GitHub</a>
-                    <a class="link-secondary me-2" href="https://facebook.com/fookinselfish" target="_blank">Facebook</a>
-                    <a class="link-secondary me-2" href="https://twitter.com/JCS_16" target="_blank">Twitter</a>
-                    <a class="link-secondary me-2" href="https://www.linkedin.com/in/jean-carlos-6149a2232/" target="_blank">Linkedin</a>
-                    <a class="link-secondary" href="https://instagram.com/fookinselfish" target="_blank">Instagram</a>
-                    <p>
-                        <a class="link-secondary" href="http://jeancsf.github.io/portfolio" target="_blank" rel="noopener noreferrer"> Site design / logo &copy; <?= date("Y") ?> JeanCSF</a>
-                    </p>
-                </div>
-            </nav>
+            </div>
         </footer>
     </div>
 

@@ -1,10 +1,8 @@
 <?= $this->extend('layouts/main_layout') ?>
 
 <?= $this->section('section') ?>
-<div class="container mt-1">
+<div class="container-fluid ">
     <div class="row">
-        <h1 class="text-center">Usuários cadastrados</h1>
-        <div class="col-8 offset-2 mt-5">
                 <div class="text-end mb-2">
                     <a class="btn btn-primary" href="<?= base_url('userscontroller/newuser')?>" title="Adicionar Usuário" role="Add User"><i class="fa fa-plus"></i></a>
                 </div>
@@ -33,7 +31,6 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
-        </div>
     </div>
 </div>
 
