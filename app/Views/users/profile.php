@@ -12,8 +12,8 @@
                                 <img src="<?= base_url('/assets/logo.png') ?>" class="img-fluid rounded" alt="Profile pic" style="cursor: pointer;" width="500" height="500">
                             </a>
                         <?php else : ?>
-                            <a <?= $_SESSION['USER_ID'] == $userData->USER_ID ? 'data-bs-toggle="modal" data-bs-target="#profileModal"' : '' ?> title="<?= empty($userData->PROFILE_PIC) ? 'Adicionar Foto' : 'Alterar Foto' ?>">
-                                <img src="<?= base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $userData->PROFILE_PIC) ?>" class="img-fluid rounded" alt="Profile pic" style="cursor: pointer;" width="500" height="500">
+                            <a style="<?= $_SESSION['USER_ID'] != $userData->USER_ID? 'pointer-events:none;' : '' ?>" <?= $_SESSION['USER_ID'] == $userData->USER_ID ? 'data-bs-toggle="modal" data-bs-target="#profileModal"' : '' ?> title="<?= empty($userData->PROFILE_PIC) ? 'Adicionar Foto' : 'Alterar Foto' ?>">
+                                <img src="<?= base_url('../../assets/img/profiles_pics/' . $userData->USER . '/' . $userData->PROFILE_PIC) ?>" class="img-fluid rounded" alt="Profile pic" style="cursor: pointer;" width="500" height="500">
                             </a>
                         <?php endif; ?>
                         <p class="card-text"><small class="text-muted text-nowrap">Data do cadastro: <?= date('d/m/Y', strtotime($userData->DATETIME_CREATED)) ?></small></p>
@@ -89,19 +89,7 @@
                     </div>
                 </div>
             <?php endif; ?>
-
         </div>
-        <div class="col-2 position-absolute top-25 end-0 col-sm-auto col-lg-auto col-md-auto">
-            <div class="card text-bg-light mb-3 opacity-50" style="max-width: 18rem;">
-                <div class="card-header">Tarefas</div>
-                <div class="card-body">
-                    <h6 class="card-title">Totais: <strong><?= $alltasks ?></strong></h6>
-                    <h6 class="card-title">Concluídas: <strong><a style="text-decoration: none;" class="text-success" href="<?= site_url('main/done') ?>"><?= $alldone ?></a></strong></h6>
-                    <h6 class="card-title">Não Concluídas: <strong class="text-warning"><?= $notdone ?></strong></h6>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 <?= $this->endSection() ?>

@@ -57,13 +57,14 @@ class Userscontroller extends BaseController
             $id = base64_decode($id);
             $users = new Users();
             $jobs = new Todo();
+            $userData = $users->getUser($id);
             $data = [
                 'userData'              => $users->getUser($id),
                 'userTasks'             => (($_SESSION['USER_ID'] == $id) ? $jobs->getUserJobs($id) : $jobs->getJobsForProfile($id)),
                 'alltasks'              => $jobs->countAllUserJobs($id),
                 'alldone'               => $jobs->countAllUserDoneJobs($id),
                 'notdone'               => $jobs->countAllUserNotDoneJobs($id),
-                'pageTitle'             => "Perfil - " . $_SESSION['NAME'],
+                'pageTitle'             => "Perfil - " . $userData->NAME,
                 'pager'                 => $jobs->pager,
 
             ];

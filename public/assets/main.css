@@ -6,7 +6,8 @@
 
 :root {
     --maingrey: rgb(247, 247, 247);
-    --hovergrey: rgb(231, 231, 231)
+    --hovergrey: rgb(231, 231, 231);
+    --primary: #0D6EFD;
 }
 
 body {
@@ -19,6 +20,7 @@ body {
 .content {
     min-height: 100vh;
     border-inline: 1px solid var(--maingrey);
+    position:relative
 }
 
 .content p {
@@ -36,9 +38,8 @@ section {
 
 .page-title {
     display: flex;
-    border-bottom: 1px solid var(--maingrey);
+    border-bottom: 2px solid var(--maingrey);
     background: rgba(255, 255, 255, 0.26);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(7.1px);
     -webkit-backdrop-filter: blur(7.1px);
     min-height: 100px;
@@ -54,8 +55,17 @@ section {
 
 }
 
-.page-title div {
-    position: fixed;
+.page-title input {
+    background-color: rgba(0, 0, 0, 0);
+
+}
+
+.page-title input:focus {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.search-footer {
+    margin-top: 8%;
 }
 
 .header-post {
@@ -84,6 +94,21 @@ section {
 
 .header-post #job_desc {
     font-size: small;
+}
+
+.header-post select {
+    border-radius: 50px;
+    color: var(--primary);
+    border-color: var(--hovergrey);
+    outline: var(--hovergrey);
+    padding: .3rem;
+    font-weight: 500;
+
+}
+
+#privacy_select * {
+    font-weight: 500;
+    
 }
 
 .footer {
@@ -210,5 +235,38 @@ section {
 }
 
 .container-fluid {
-    margin-top: 35px;
+    margin-top: 10%;
+}
+
+.search button {
+    border-right: none;
+    border-radius: 50px 0px 0px 50px;
+    border-color: var(--primary);
+    color: var(--primary);
+    pointer-events: stroke;
+}
+
+.search button:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+
+}
+
+.search button:active {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+
+}
+
+.search input {
+    border-left: none;
+    border-radius: 0px 50px 50px 0px;
+    border-color: var(--primary);
+    margin-right: 5px;
+}
+
+.search input:focus {
+    outline: none;
+    border-color: var(--primary);
+    
 }

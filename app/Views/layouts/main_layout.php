@@ -215,8 +215,22 @@
             <?php if (!empty($pageTitle)) : ?>
                 <div class="row">
                     <div class="page-title col-6 offset-3 fixed-top">
-                        <a href="javascript:history.go(-1)" style="<?= ($pageTitle == 'Página Inicial') ? 'visibility:hidden' : '' ?>"><i class="fa fa-arrow-left me-3"></i></a>
-                        <p><?= isset($pageTitle) ? $pageTitle : "" ?></p>
+                        <div class="row">
+                            <div class="col-12 d-flex">
+                                <a href="javascript:history.go(-1)" style="<?= ($pageTitle == 'Página Inicial') ? 'visibility:hidden' : '' ?>"><i class="fa fa-arrow-left me-3"></i></a>
+                                <p><?= isset($pageTitle) ? $pageTitle : "" ?></p>
+                            </div>
+                                <?php if (isset($search)) : ?>
+                                    <form class="d-flex mt-1 search" role="search">
+                                        <button type="submit" class="btn btn-lg"><i class="fa fa-search"></i></button>
+                                        <input class="form-control shadow-none" type="search" value="<?= isset($search) ? $searchInput : '' ?>" name="search" aria-label="Search" />
+                                    </form>
+                                    <div class="search-footer d-flex justify-content-between">
+                                        <a href="<?=base_url('main/searchuser')?>">Tarefas</a>
+                                        <a href="<?=base_url('main/searchuser')?>">Pessoas</a>
+                                    </div>
+                                <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             <?php endif ?>
@@ -226,11 +240,13 @@
         </main>
 
         <footer class="col-3 d-flex flex-column justify-content-between right-panel">
-            <div>
-                <form class="d-flex mt-2" role="search">
-                    <input class="form-control me-1" type="search" name="search" aria-label="Search" />
-                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+            <?php if (!isset($search)) : ?>
+                <form class="d-flex mt-2 search" role="search">
+                    <button type="submit" class="btn btn-lg"><i class="fa fa-search"></i></button>
+                    <input class="form-control shadow-none" type="search" value="" name="search" aria-label="Search" />
                 </form>
+            <?php endif; ?>
+            <div>
                 <div class="footer mt-3">
                     <a href="<?= base_url('main/contact') ?>" class="text-decoration-none link-secondary fw-bolder">FEEDBACK</a>
                     <div class="footer-socials">
@@ -247,7 +263,7 @@
             </div>
         </footer>
     </div>
-    
+
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
 
