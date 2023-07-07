@@ -56,7 +56,7 @@ class Todo extends Model
                 'JOB'               => $post['job_desc'],
                 'DATETIME_CREATED'  => date('Y-m-d H:i:s'),
                 'USER_ID'           => $_SESSION['USER_ID'],
-                'PRIVACY'           => $post['privacy_select'],
+                'PRIVACY'           => ($post['privacy_select'] == 1)? 1 : 0,
             ];
             return $this->save($data) ? true : false;
         }

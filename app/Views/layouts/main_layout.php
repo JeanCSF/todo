@@ -189,34 +189,33 @@
     <!-- Toast Notification -->
 
     <div class="row">
-        <header class="col-3 d-flex flex-column justify-content-between p-3 mt-2 left-panel">
-            <div id="userActions" class="mx-3">
-                <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home"></i> Home</a>
-                <a href="<?= base_url('main/about') ?>" class="nav-link"><i class="fa fa-circle-info"></i> Sobre</a>
+        <header class="col-xxl-3 d-flex flex-column justify-content-between mt-2 left-panel col-xl-1">
+            <div id="userActions">
+                <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-list-check icon"></i></a>
+                <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i> <span class="side-text">Home</span></a>
+                <a href="<?= base_url('main/about') ?>" class="nav-link"><i class="fa fa-circle-info icon"></i> <span class="side-text">Sobre</span></a>
                 <?php if (isset($_SESSION['USER_ID'])) : ?>
                     <?php if ($_SESSION['SU'] == 1) : ?>
-                        <a href="<?= base_url('userscontroller/users/') ?>"><i class="fa fa-users"></i> Usuários</a>
+                        <a href="<?= base_url('userscontroller/users/') ?>"><i class="fa fa-users icon"></i> <span class="side-text">Usuários</span></a>
                     <?php endif; ?>
-                    <a href="<?= base_url('logincontroller/logout') ?>"><strong><i class="fa fa-right-from-bracket"></i></strong> Logout</a>
+                    <a href="<?= base_url('logincontroller/logout') ?>"><i class="fa fa-right-from-bracket icon"></i> <span class="side-text">Logout</span></a>
+                    <a id="sidebarTask" type="button" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"></a>
 
-                    <div class="row mt-5">
-                        <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()">Nova Tarefa</button>
-                    </div>
                     <div class="avatarDiv">
                         <a style="text-decoration: none;" href="<?= base_url('userscontroller/profile/' . base64_encode($_SESSION['USER_ID'])) ?>" class="link-secondary fs-4">
-                            <img class="rounded-circle border border-light-subtle" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt=""> <span class="ms-2"><?= $_SESSION['USER'] ?></span>
+                            <img class="rounded-circle border border-light-subtle" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt=""> <span class="ms-2 side-text"><?= $_SESSION['USER'] ?></span>
                         </a>
                     </div>
                 <?php endif; ?>
             </div>
         </header>
 
-        <main class="content col-6">
+        <main class="content col-xxl-6 col-xl-8">
             <?php if (!empty($pageTitle)) : ?>
                 <div class="row">
-                    <div class="page-title col-6 offset-3 fixed-top">
+                    <div class="page-title">
                         <div class="row">
-                            <div class="col-12 d-flex">
+                            <div class="d-flex">
                                 <a href="javascript:history.go(-1)" style="<?= ($pageTitle == 'Página Inicial') ? 'visibility:hidden' : '' ?>"><i class="fa fa-arrow-left me-3"></i></a>
                                 <p><?= isset($pageTitle) ? $pageTitle : "" ?></p>
                             </div>
@@ -239,7 +238,7 @@
             </section>
         </main>
 
-        <footer class="col-3 d-flex flex-column justify-content-between right-panel">
+        <footer class="col-xxl-3 d-flex flex-column justify-content-between right-panel col-xl-3">
             <?php if (!isset($search)) : ?>
                 <form class="d-flex mt-2 search" role="search">
                     <button type="submit" class="btn btn-lg"><i class="fa fa-search"></i></button>

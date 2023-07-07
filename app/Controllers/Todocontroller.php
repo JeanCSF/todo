@@ -72,7 +72,6 @@ class Todocontroller extends BaseController
                 ];
                 $this->session->setFlashdata('msg', $msg);
                 return redirect()->back();
-
             } else {
                 $msg = [
                     'msg' => 'Não foi possível concluir tarefa',
@@ -111,8 +110,8 @@ class Todocontroller extends BaseController
     {
         $job = new Todo();
         $post = $this->request->getPost();
-        
-        if(!empty($post)){
+
+        if (!empty($post)) {
             if ($job->changeJobPrivacy($post)) {
                 $msg = [
                     'msg' => 'Privacidade alterada com com sucesso',
@@ -129,6 +128,5 @@ class Todocontroller extends BaseController
                 return redirect()->back();
             }
         }
-
     }
 }

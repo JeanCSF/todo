@@ -17,10 +17,27 @@ body {
 
 }
 
+.side-text {
+    padding-inline: 60px;
+}
+
+#sidebarTask {
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    background-color: var(--primary);
+    color: #F2F2F2;
+}
+
+#sidebarTask::before {
+    content: "Nova Tarefa";
+
+}
+
 .content {
     min-height: 100vh;
     border-inline: 1px solid var(--maingrey);
-    position:relative
+    position:relative;
 }
 
 .content p {
@@ -45,7 +62,7 @@ section {
     min-height: 100px;
     font-weight: 900;
     color: #212121;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     padding: 1rem;
 }
 
@@ -160,19 +177,44 @@ section {
     text-decoration: none;
 }
 
-@media screen and (max-width: 40em) {
+#userActions a div span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+@media screen and (max-width: 1400px) {
     .content div {
         padding: 0.8rem;
     }
 
-    .post {
-        width: 100%;
-        padding: 0.5rem;
+    #userActions span{
+        display: none;
     }
 
-    #userActions {
-        display: none !important;
+    #userActions a{
+        border-radius: 5px;
     }
+
+    #sidebarTask::before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f31c";
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+    
+    }
+    #sidebarTask{
+        border-radius: 50% !important;
+
+    }
+
+    .left-panel .icon {
+        font-size: 2.5rem !important;
+    }
+
 }
 
 .post {
@@ -204,7 +246,7 @@ section {
 .left-panel a {
     text-decoration: none;
     display: block;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 900;
     color: #212121;
     padding: 1rem;
@@ -221,9 +263,14 @@ section {
     min-height: 90vh;
 }
 
-.right-panel div {
+.right-panel div,
+.right-panel form {
     position: fixed;
 
+}
+
+.left-panel .icon {
+    font-size: 2.5rem;
 }
 
 .avatarDiv {
@@ -231,6 +278,7 @@ section {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-direction: column;
 
 }
 
