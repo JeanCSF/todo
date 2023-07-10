@@ -189,7 +189,7 @@
     <!-- Toast Notification -->
 
     <div class="row">
-        <header class="col-xxl-3 d-flex flex-column justify-content-between mt-2 left-panel col-xl-1">
+        <header class="d-flex flex-column justify-content-between mt-2 left-panel">
             <div id="userActions">
                 <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-list-check icon"></i></a>
                 <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i> <span class="side-text">Home</span></a>
@@ -210,7 +210,7 @@
             </div>
         </header>
 
-        <main class="content col-xxl-6 col-xl-8">
+        <main class="content">
             <?php if (!empty($pageTitle)) : ?>
                 <div class="row">
                     <div class="page-title">
@@ -219,16 +219,16 @@
                                 <a href="javascript:history.go(-1)" style="<?= ($pageTitle == 'Página Inicial') ? 'visibility:hidden' : '' ?>"><i class="fa fa-arrow-left me-3"></i></a>
                                 <p><?= isset($pageTitle) ? $pageTitle : "" ?></p>
                             </div>
-                                <?php if (isset($search)) : ?>
-                                    <form class="d-flex mt-1 search" role="search">
-                                        <button type="submit" class="btn btn-lg"><i class="fa fa-search"></i></button>
-                                        <input class="form-control shadow-none" type="search" value="<?= isset($search) ? $searchInput : '' ?>" name="search" aria-label="Search" />
-                                    </form>
-                                    <div class="search-footer d-flex justify-content-between">
-                                        <a href="<?=base_url('main/searchuser')?>">Tarefas</a>
-                                        <a href="<?=base_url('main/searchuser')?>">Pessoas</a>
-                                    </div>
-                                <?php endif; ?>
+                            <?php if (isset($search)) : ?>
+                                <form class="d-flex mt-1 search" role="search">
+                                    <button type="submit" class="btn btn-lg"><i class="fa fa-search"></i></button>
+                                    <input class="form-control shadow-none" type="search" value="<?= isset($search) ? $searchInput : '' ?>" name="search" aria-label="Search" />
+                                </form>
+                                <div class="search-footer d-flex justify-content-between">
+                                    <a href="<?= base_url('main/searchuser') ?>">Tarefas</a>
+                                    <a href="<?= base_url('main/searchuser') ?>">Pessoas</a>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -237,8 +237,7 @@
                 <?= $this->renderSection('section') ?>
             </section>
         </main>
-
-        <footer class="col-xxl-3 d-flex flex-column justify-content-between right-panel col-xl-3">
+        <footer class="d-flex flex-column justify-content-between right-panel">
             <?php if (!isset($search)) : ?>
                 <form class="d-flex mt-2 search" role="search">
                     <button type="submit" class="btn btn-lg"><i class="fa fa-search"></i></button>
@@ -261,6 +260,16 @@
                 </div>
             </div>
         </footer>
+        <nav class="task-bar position-fixed">
+            <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i></a>
+            <a href="<?= base_url('main/about') ?>" class="nav-link"><i class="fa fa-circle-info icon"></i></a>
+            <?php if (isset($_SESSION['USER_ID'])) : ?>
+                <?php if ($_SESSION['SU'] == 1) : ?>
+                    <a href="<?= base_url('userscontroller/users/') ?>" class="nav-link"><i class="fa fa-users icon"></i></a>
+                <?php endif; ?>
+                <a href="<?= base_url('logincontroller/logout') ?>" class="nav-link"><i class="fa fa-right-from-bracket icon"></i></a>
+            <?php endif; ?>
+        </nav>
     </div>
 
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>

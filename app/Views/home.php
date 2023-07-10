@@ -14,7 +14,7 @@
             <input type="text" id="job_desc" name="job_desc" placeholder="Sobre a tarefa" required autocomplete="off">
         </div>
         <div class="text-end">
-            <button type="submit" class="btn btn-primary">Publicar</button>
+            <button type="submit" class="btn btn-sm btn-primary">Publicar</button>
         </div>
     </form>
 </div>
@@ -52,8 +52,7 @@
                     <p> </p>
                 <?php endif; ?>
             </div>
-            <p class="ms-5"><?= $job->JOB ?>
-            </p>
+            <p class="ms-5"><?= $job->JOB ?></p>
             <div class="d-flex justify-content-between">
                 <p style="font-size: 12px;" class="fst-italic text-muted ms-2"><?= date("d/m/Y", strtotime($job->DATETIME_CREATED)) ?></p>
                 <?php if (!empty($job->DATETIME_FINISHED)) : ?>

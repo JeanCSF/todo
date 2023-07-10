@@ -8,6 +8,7 @@
     --maingrey: rgb(247, 247, 247);
     --hovergrey: rgb(231, 231, 231);
     --primary: #0D6EFD;
+    --link-text: 1.5rem;
 }
 
 body {
@@ -15,6 +16,11 @@ body {
     flex-direction: column;
     overflow-x: hidden;
 
+}
+
+body,
+html {
+    height: 100%;
 }
 
 .side-text {
@@ -37,7 +43,7 @@ body {
 .content {
     min-height: 100vh;
     border-inline: 1px solid var(--maingrey);
-    position:relative;
+    width: 50%;
 }
 
 .content p {
@@ -59,11 +65,14 @@ section {
     background: rgba(255, 255, 255, 0.26);
     backdrop-filter: blur(7.1px);
     -webkit-backdrop-filter: blur(7.1px);
-    min-height: 100px;
+    min-height: 70px;
     font-weight: 900;
     color: #212121;
-    font-size: 1.8rem;
+    font-size: var(--link-text);
     padding: 1rem;
+    z-index: 999;
+    width: 50%;
+    position: fixed;
 }
 
 .page-title a {
@@ -125,7 +134,7 @@ section {
 
 #privacy_select * {
     font-weight: 500;
-    
+
 }
 
 .footer {
@@ -183,38 +192,8 @@ section {
     align-items: center;
 }
 
-
-
-@media screen and (max-width: 1400px) {
-    .content div {
-        padding: 0.8rem;
-    }
-
-    #userActions span{
-        display: none;
-    }
-
-    #userActions a{
-        border-radius: 5px;
-    }
-
-    #sidebarTask::before {
-        font-family: "Font Awesome 5 Free";
-        content: "\f31c";
-        font-weight: 900;
-        display: flex;
-        align-items: center;
-    
-    }
-    #sidebarTask{
-        border-radius: 50% !important;
-
-    }
-
-    .left-panel .icon {
-        font-size: 2.5rem !important;
-    }
-
+.task-bar {
+    display: none;
 }
 
 .post {
@@ -236,6 +215,8 @@ section {
 .left-panel {
     left: 0;
     min-height: 90vh;
+    width: 25%;
+
 }
 
 .left-panel div {
@@ -246,7 +227,7 @@ section {
 .left-panel a {
     text-decoration: none;
     display: block;
-    font-size: 2rem;
+    font-size: var(--link-text);
     font-weight: 900;
     color: #212121;
     padding: 1rem;
@@ -261,6 +242,8 @@ section {
 .right-panel {
     right: 0;
     min-height: 90vh;
+    width: 25%;
+
 }
 
 .right-panel div,
@@ -279,6 +262,7 @@ section {
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
+    position: relative;
 
 }
 
@@ -316,5 +300,94 @@ section {
 .search input:focus {
     outline: none;
     border-color: var(--primary);
-    
+
+}
+
+@media screen and (max-width: 1400px) {
+    .content {
+        width: 65%;
+    }
+
+    .left-panel {
+        width: 8% !important;
+    }
+
+    .right-panel {
+        width: 25% !important;
+    }
+
+    .page-title {
+        width: 65%;
+    }
+
+    .footer {
+        bottom: 10%;
+    }
+
+    #userActions span {
+        display: none;
+    }
+
+    #userActions a {
+        border-radius: 5px;
+    }
+
+    #sidebarTask::before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f31c";
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+
+    }
+
+    #sidebarTask {
+        border-radius: 50% !important;
+
+    }
+
+    .left-panel .icon {
+        font-size: 2.5rem !important;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+    .content {
+        width: 100% !important;
+        right: 0 !important;
+        margin-left: auto;
+    }
+
+    .page-title {
+        width: 100% !important;
+        right: 0;
+    }
+
+    .right-panel,
+    .left-panel {
+        display: none !important;
+    }
+
+    .task-bar {
+        display: flex;
+        justify-content: space-around;
+        position: fixed;
+    }
+
+    nav {
+        padding: .5rem;
+        overflow: hidden;
+        background: var(--primary);
+        color: #F2F2F2;
+        font-weight: 900;
+        font-size: 2rem;
+        width: 100%;
+        bottom: 0;
+        position: fixed;
+        right: 0;
+        z-index: 999;
+    }
+
+
 }
