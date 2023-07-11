@@ -46,17 +46,23 @@ class Todo extends Model
         return $result;
     }
 
+    public function fetch_data($limit, $start)
+    {
+        $result = $this->orderBy('ID_JOB')->limit($limit, $start)->findAll();
+        return $result;
+    }
+
     public function insertJob($post)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
         if (!empty($post)) {
             $data = [
-                'JOB_TITLE'         => $post['job_name'],
-                'JOB'               => $post['job_desc'],
+                'JOB_TITLE'         => isset($post['job_name']) ? $post['job_name'] : $post['header_job_name'],
+                'JOB'               => isset($post['job_desc']) ? $post['job_desc'] : $post['header_job_desc'],
                 'DATETIME_CREATED'  => date('Y-m-d H:i:s'),
                 'USER_ID'           => $_SESSION['USER_ID'],
-                'PRIVACY'           => ($post['privacy_select'] == 1)? 1 : 0,
+                'PRIVACY'           => ($post['privacy_select'] == 1) ? 1 : 0,
             ];
             return $this->save($data) ? true : false;
         }

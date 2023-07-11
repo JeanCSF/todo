@@ -274,8 +274,22 @@
 
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 
     <script>
+        $(document).ready(function(){
+            var limit = 7;
+            var start = 0;
+            var action = 'inactive';
+
+            function lazy_loader(limit){
+                var output = '';
+                for(var count = 0; count < limit; count++){
+                    output
+                }
+            }
+        });
+
         <?php
         if (isset($_SESSION['msg'])) {
             echo "msg = document.querySelector('#msgInfo');
@@ -334,6 +348,17 @@
         function fillModalPrivacy(id) {
             document.getElementById("privacy_id").setAttribute('value', id)
         }
+
+        [document.querySelector("#header_job_name"), document.querySelector("#header_job_desc"), document.querySelector("#privacy_select")].forEach(item => {
+            item.addEventListener("focus", event => {
+                document.querySelector("#privacy_select").removeAttribute("hidden")
+            })
+        })
+        document.querySelector("#privacy_select").addEventListener("focusout", event => {
+                setTimeout(() => {
+                    document.querySelector("#privacy_select").setAttribute("hidden", true)
+                },500)
+            })
     </script>
     <?= $this->renderSection("script"); ?>
 

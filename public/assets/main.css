@@ -133,7 +133,15 @@ section {
 }
 
 #privacy_select * {
-    font-weight: 500;
+    font-weight: 900 !important;
+    font-family: 'Font Awesome\ 5 Free';
+
+}
+
+#privacy_select {
+    font-weight: 900 !important;
+    font-family: 'Font Awesome\ 5 Free';
+    transition: all ease-in 5.5s;
 
 }
 
@@ -391,3 +399,54 @@ section {
 
 
 }
+
+
+
+@-webkit-keyframes placeHolderShimmer {
+    0% {
+      background-position: -468px 0;
+    }
+    100% {
+      background-position: 468px 0;
+    }
+  }
+
+  @keyframes placeHolderShimmer {
+    0% {
+      background-position: -468px 0;
+    }
+    100% {
+      background-position: 468px 0;
+    }
+  }
+
+  .content-placeholder {
+    display: inline-block;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-name: placeHolderShimmer;
+    animation-name: placeHolderShimmer;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    background: #f6f7f8;
+    background: -webkit-gradient(linear, left top, right top, color-stop(8%, #eeeeee), color-stop(18%, #dddddd), color-stop(33%, #eeeeee));
+    background: -webkit-linear-gradient(left, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+    background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+    -webkit-background-size: 800px 104px;
+    background-size: 800px 104px;
+    height: inherit;
+    position: relative;
+  }
+
+  .post_data
+  {
+    padding:24px;
+    border:1px solid #f9f9f9;
+    border-radius: 5px;
+    margin-bottom: 24px;
+    box-shadow: 10px 10px 5px #eeeeee;
+  }
