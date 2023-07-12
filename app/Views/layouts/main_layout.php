@@ -191,9 +191,17 @@
     <div class="row">
         <header class="d-flex flex-column justify-content-between mt-2 left-panel">
             <div id="userActions">
-                <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-list-check icon"></i></a>
+                <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-dashboard icon"></i></a>
                 <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i> <span class="side-text">Home</span></a>
-                <a href="<?= base_url('main/about') ?>" class="nav-link"><i class="fa fa-circle-info icon"></i> <span class="side-text">Sobre</span></a>
+                <a href="about" class="nav-link"><i class="fa fa-circle-info icon"></i> <span class="side-text">Sobre</span></a>
+                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
+                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
+                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
+                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
+                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
+                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
+                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
+                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
                 <?php if (isset($_SESSION['USER_ID'])) : ?>
                     <?php if ($_SESSION['SU'] == 1) : ?>
                         <a href="<?= base_url('userscontroller/users/') ?>"><i class="fa fa-users icon"></i> <span class="side-text">Usuários</span></a>
@@ -260,36 +268,22 @@
                 </div>
             </div>
         </footer>
-        <nav class="task-bar position-fixed">
-            <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i></a>
-            <a href="<?= base_url('main/about') ?>" class="nav-link"><i class="fa fa-circle-info icon"></i></a>
-            <?php if (isset($_SESSION['USER_ID'])) : ?>
-                <?php if ($_SESSION['SU'] == 1) : ?>
-                    <a href="<?= base_url('userscontroller/users/') ?>" class="nav-link"><i class="fa fa-users icon"></i></a>
-                <?php endif; ?>
-                <a href="<?= base_url('logincontroller/logout') ?>" class="nav-link"><i class="fa fa-right-from-bracket icon"></i></a>
-            <?php endif; ?>
-        </nav>
     </div>
+    <nav class="row task-bar">
+        <ul>
+            <li><a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i></a></li>
+            <li><a href="explore" class="nav-link"><i class="fa fa-search icon"></i></a></li>
+            <li><a href="about" class="nav-link"><i class="fa fa-circle-info icon"></i></a></li>
+            <li><a href="#" class="nav-link"><i class="fa fa-gear icon"></i></a></li>
+        </ul>
+        
+    </nav>
 
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 
     <script>
-        $(document).ready(function(){
-            var limit = 7;
-            var start = 0;
-            var action = 'inactive';
-
-            function lazy_loader(limit){
-                var output = '';
-                for(var count = 0; count < limit; count++){
-                    output
-                }
-            }
-        });
-
         <?php
         if (isset($_SESSION['msg'])) {
             echo "msg = document.querySelector('#msgInfo');
@@ -355,10 +349,10 @@
             })
         })
         document.querySelector("#privacy_select").addEventListener("focusout", event => {
-                setTimeout(() => {
-                    document.querySelector("#privacy_select").setAttribute("hidden", true)
-                },500)
-            })
+            setTimeout(() => {
+                document.querySelector("#privacy_select").setAttribute("hidden", true)
+            }, 500)
+        })
     </script>
     <?= $this->renderSection("script"); ?>
 

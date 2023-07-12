@@ -46,12 +46,6 @@ class Todo extends Model
         return $result;
     }
 
-    public function fetch_data($limit, $start)
-    {
-        $result = $this->orderBy('ID_JOB')->limit($limit, $start)->findAll();
-        return $result;
-    }
-
     public function insertJob($post)
     {
         date_default_timezone_set('America/Sao_Paulo');

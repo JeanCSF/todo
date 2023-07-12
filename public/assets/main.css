@@ -8,6 +8,7 @@
     --maingrey: rgb(247, 247, 247);
     --hovergrey: rgb(231, 231, 231);
     --primary: #0D6EFD;
+    --transparent: rgba(0, 0, 0, 0);
     --link-text: 1.5rem;
 }
 
@@ -41,9 +42,10 @@ html {
 }
 
 .content {
-    min-height: 100vh;
-    border-inline: 1px solid var(--maingrey);
+    top: 0;
+    bottom: 0;
     width: 50%;
+    margin: 0 auto;
 }
 
 .content p {
@@ -51,12 +53,13 @@ html {
 
 }
 
-section {
-    margin: 0;
-    padding: 0;
+.content section {
+    margin: 0 auto;
+    padding: .65rem;
     padding-block: 5rem;
-    min-width: 100%;
-    min-height: 100vh;
+    border-inline: 2px solid var(--maingrey);
+    right: 0;
+
 }
 
 .page-title {
@@ -73,6 +76,7 @@ section {
     z-index: 999;
     width: 50%;
     position: fixed;
+    margin-inline: 0.4%;
 }
 
 .page-title a {
@@ -205,7 +209,7 @@ section {
 }
 
 .post {
-    border-block: 1px solid var(--maingrey);
+    border-block: 2px solid var(--maingrey);
 }
 
 .post:hover {
@@ -221,14 +225,12 @@ section {
 }
 
 .left-panel {
+    top: 0;
+    bottom: 0;
     left: 0;
-    min-height: 90vh;
-    width: 25%;
-
-}
-
-.left-panel div {
     position: fixed;
+    overflow-y: scroll;
+    width: 25%;
 
 }
 
@@ -240,6 +242,7 @@ section {
     color: #212121;
     padding: 1rem;
     border-radius: 50px;
+
 }
 
 .left-panel a:hover {
@@ -249,19 +252,16 @@ section {
 
 .right-panel {
     right: 0;
-    min-height: 90vh;
-    width: 25%;
-
-}
-
-.right-panel div,
-.right-panel form {
+    top: 0;
+    bottom: 0;
     position: fixed;
+    width: 25%;
 
 }
 
 .left-panel .icon {
     font-size: 2.5rem;
+
 }
 
 .avatarDiv {
@@ -312,24 +312,33 @@ section {
 }
 
 @media screen and (max-width: 1400px) {
+    .row {
+        display: inline;
+    }
+
     .content {
-        width: 65%;
+        margin-inline: 10%;
+
     }
 
     .left-panel {
-        width: 8% !important;
+        width: fit-content !important;
     }
 
     .right-panel {
         width: 25% !important;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+
+    .side-text {
+        padding: 0;
     }
 
     .page-title {
-        width: 65%;
-    }
-
-    .footer {
-        bottom: 10%;
+        width: 50%;
+        margin: 0;
     }
 
     #userActions span {
@@ -361,15 +370,28 @@ section {
 }
 
 @media screen and (max-width: 768px) {
+    body {
+        display: flex;
+        flex-direction: column;
+  
+    }
     .content {
-        width: 100% !important;
-        right: 0 !important;
-        margin-left: auto;
+        width: 100%;
+        bottom: 0;
+        top: 0;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        position: fixed;
+        overflow-y: scroll;
+    }
+
+    section {
+        width: 100%;
     }
 
     .page-title {
-        width: 100% !important;
-        right: 0;
+        width: 100%;
     }
 
     .right-panel,
@@ -378,75 +400,29 @@ section {
     }
 
     .task-bar {
-        display: flex;
-        justify-content: space-around;
+        background: var(--primary);
         position: fixed;
+        bottom: 0;
+        right: 0;
+        left: 0;
     }
 
-    nav {
-        padding: .5rem;
-        overflow: hidden;
-        background: var(--primary);
+    .task-bar ul {
+        vertical-align: middle;
+        display: flex;
+        list-style-type: none;
+        align-items: center;
+        gap: 2rem;
+
+    }
+
+    .task-bar a {
         color: #F2F2F2;
         font-weight: 900;
         font-size: 2rem;
-        width: 100%;
-        bottom: 0;
-        position: fixed;
-        right: 0;
-        z-index: 999;
+        margin-inline: 1rem;
     }
+
 
 
 }
-
-
-
-@-webkit-keyframes placeHolderShimmer {
-    0% {
-      background-position: -468px 0;
-    }
-    100% {
-      background-position: 468px 0;
-    }
-  }
-
-  @keyframes placeHolderShimmer {
-    0% {
-      background-position: -468px 0;
-    }
-    100% {
-      background-position: 468px 0;
-    }
-  }
-
-  .content-placeholder {
-    display: inline-block;
-    -webkit-animation-duration: 1s;
-    animation-duration: 1s;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-    -webkit-animation-iteration-count: infinite;
-    animation-iteration-count: infinite;
-    -webkit-animation-name: placeHolderShimmer;
-    animation-name: placeHolderShimmer;
-    -webkit-animation-timing-function: linear;
-    animation-timing-function: linear;
-    background: #f6f7f8;
-    background: -webkit-gradient(linear, left top, right top, color-stop(8%, #eeeeee), color-stop(18%, #dddddd), color-stop(33%, #eeeeee));
-    background: -webkit-linear-gradient(left, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
-    background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
-    -webkit-background-size: 800px 104px;
-    background-size: 800px 104px;
-    height: inherit;
-    position: relative;
-  }
-
-  .post_data
-  {
-    padding:24px;
-    border:1px solid #f9f9f9;
-    border-radius: 5px;
-    margin-bottom: 24px;
-    box-shadow: 10px 10px 5px #eeeeee;
-  }

@@ -46,29 +46,6 @@ class Main extends BaseController
         }
     }
 
-    public function testeIndex()
-    {
-        echo view('teste');
-    }
-    public function testeScroll()
-    {
-        $output = '';
-        $job = new Todo();
-        $data = $job->fetch_data($this->request->getPost('limit'), $this->request->getPost('start'));
-        if ($data->num_rows() > 0) {
-            foreach ($data->result() as $row) {
-                $output .= '
-    <div class="post_data">
-     <h3 class="text-danger">' . $row->ID_JOB . '</h3>
-     <p>' . $row->JOB_TITLE . '</p>
-    </div>
-    ';
-            }
-        }
-        echo $output;
-    }
-
-
     public function home()
     {
         $session = session();

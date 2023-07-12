@@ -11,7 +11,7 @@
         <br>
         <div class="row mt-1 ms-3">
             <input type="text" id="header_job_name" name="header_job_name" placeholder="Tarefa" required autocomplete="off"><br>
-            <input type="text" id="header_job_desc" name="header_job_desc" placeholder="Sobre a tarefa" required autocomplete="off">
+            <textarea type="text" id="header_job_desc" name="header_job_desc" placeholder="Sobre a tarefa" required autocomplete="off"></textarea>
         </div>
         <div class="text-end">
             <button type="submit" class="btn btn-sm btn-primary">Publicar</button>
@@ -28,7 +28,7 @@
         <div class="row d-flex justify-content-between post">
             <div class="d-flex justify-content-between">
                 <p>
-                    <a style="text-decoration: none;" href="<?= base_url('userscontroller/profile/' . base64_encode($job->USER_ID)) ?>" class="link-secondary fs-4">
+                    <a style="text-decoration: none;" href="<?= site_url('userscontroller/profile/' . base64_encode($job->USER_ID)) ?>" class="link-secondary fs-4">
                         <img class="rounded-circle border border-light-subtle" height="48" width="48" src="<?= !empty($job->PROFILE_PIC) ? base_url('../../assets/img/profiles_pics/' . $job->USER . '/' . $job->PROFILE_PIC) : base_url('/assets/logo.png') ?>" alt="Profile pic"> <?= $job->USER ?>
                     </a>
                     <br>
