@@ -8,6 +8,8 @@
     --maingrey: rgb(247, 247, 247);
     --hovergrey: rgb(231, 231, 231);
     --primary: #0D6EFD;
+    --white: #F2F2F2;
+    --black: #212121;
     --transparent: rgba(0, 0, 0, 0);
     --link-text: 1.5rem;
 }
@@ -33,7 +35,7 @@ html {
     display: flex;
     justify-content: center;
     background-color: var(--primary);
-    color: #F2F2F2;
+    color: var(--white);
 }
 
 #sidebarTask::before {
@@ -48,17 +50,13 @@ html {
     margin: 0 auto;
 }
 
-.content p {
-    word-break: break-all;
-
-}
-
 .content section {
     margin: 0 auto;
     padding: .65rem;
     padding-block: 5rem;
     border-inline: 2px solid var(--maingrey);
     right: 0;
+    min-height: 100vh;
 
 }
 
@@ -70,7 +68,6 @@ html {
     -webkit-backdrop-filter: blur(7.1px);
     min-height: 70px;
     font-weight: 900;
-    color: #212121;
     font-size: var(--link-text);
     padding: 1rem;
     z-index: 999;
@@ -80,18 +77,18 @@ html {
 }
 
 .page-title a {
-    color: #212121;
+    color: var(--black);
     font-weight: 900;
 
 }
 
 .page-title input {
-    background-color: rgba(0, 0, 0, 0);
+    background-color: var(--transparent);
 
 }
 
 .page-title input:focus {
-    background-color: rgba(0, 0, 0, 0);
+    background-color: var(--transparent);
 }
 
 .search-footer {
@@ -111,19 +108,25 @@ html {
     right: 0;
     border: none;
     padding: 0.5rem;
-    background: rgba(0, 0, 0, 0);
+    background: var(--transparent);
 }
 
 .header-post input:focus {
     outline: none;
 }
 
-.header-post #job_name {
-    font-size: large;
+.header-post input[type="text"] {
+    font-size: 3rem;
 }
 
-.header-post #job_desc {
-    font-size: small;
+.header-post textarea {
+    min-width: 350px;
+    resize: none;
+    outline: none;
+    right: 0;
+    border: none;
+    background: var(--transparent);
+    font-size: 1.5rem;
 }
 
 .header-post select {
@@ -239,7 +242,7 @@ html {
     display: block;
     font-size: var(--link-text);
     font-weight: 900;
-    color: #212121;
+    color: var(--black);
     padding: 1rem;
     border-radius: 50px;
 
@@ -311,7 +314,12 @@ html {
 
 }
 
-@media screen and (max-width: 1400px) {
+
+.task-bar {
+    visibility: hidden;
+}
+
+@media screen and (max-width: 1200px) {
     .row {
         display: inline;
     }
@@ -400,6 +408,7 @@ html {
     }
 
     .task-bar {
+        visibility: visible;
         background: var(--primary);
         position: fixed;
         bottom: 0;
@@ -412,6 +421,7 @@ html {
         display: flex;
         list-style-type: none;
         align-items: center;
+        justify-content: space-around;
         gap: 2rem;
 
     }
