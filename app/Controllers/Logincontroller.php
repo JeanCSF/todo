@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\login;
+use App\Models\Login;
 
 class Logincontroller extends BaseController
 {
@@ -10,7 +10,7 @@ class Logincontroller extends BaseController
     public function signUp()
     {
         $email = \Config\Services::email();
-        $login = new login();
+        $login = new Login();
         $post = $this->request->getPost();
         if (!empty($post)) {
             $img = $this->request->getFile('userpic');
@@ -81,7 +81,7 @@ class Logincontroller extends BaseController
     public function emailConfirm()
     {
         $key = htmlspecialchars($_GET['key']);
-        $login = new login();
+        $login = new Login();
         if (!empty($key)) {
             $row = $login->getUserIdByKey($key);
             if (isset($row)) {
@@ -115,7 +115,7 @@ class Logincontroller extends BaseController
 
     public function login()
     {
-        $login = new login();
+        $login = new Login();
 
         $post = $this->request->getPost();
         if (!empty($post)) {

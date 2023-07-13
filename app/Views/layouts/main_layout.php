@@ -31,7 +31,7 @@
                 <div class="modal-body">
                     <div class="container">
                         <div class="row">
-                            <div class="col-8 offset-2">
+                            <div class="p-4 mb-3">
                                 <form action="<?= url_to('upload') ?>" id="formProfilePic" method="post" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <?php if (session()->has('errors')) : ?>
@@ -42,7 +42,7 @@
                                         <?php endif; ?>
                                         <input type="file" name="userfile" id="userfile" class="form-control-file">
                                     </div>
-                                    <div class="modal-footer">
+                                    <div class="modal-footer d-flex justify-content-between">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                         <input type="submit" value="Salvar Imagem" id="btnUpload" onclick="" class="btn btn-success">
                                     </div>
@@ -67,20 +67,18 @@
                 <div class="modal-body">
                     <div class="container">
                         <div class="row">
-                            <div class="p-4 col-10 offset-1 mb-3">
+                            <div class="p-4 mb-3">
                                 <form action="" id="form" method="post">
-                                    <div class="row form-floating mb-3">
+                                    <div class="row mb-3">
                                         <input type="text" placeholder="Nome da tarefa" name="job_name" id="job_name" value="" class="form-control" autofocus required>
-                                        <label for="job_name">Nome da tarefa</label>
                                     </div>
-                                    <div class="row form-floating mb-3">
-                                        <textarea style="height: 150px;" name="job_desc" id="job_desc" value="" class="form-control" required></textarea>
-                                        <label for="job_desc">Descrição</label>
+                                    <div class="row mb-3">
+                                        <textarea style="height: 150px;" name="job_desc" id="job_desc" value="" class="form-control" placeholder="Descrição" required></textarea>
                                     </div>
                                     <input type="hidden" name="id_job" id="id_job" value="">
                                     <input type="hidden" id="editar" value="">
                             </div>
-                            <div class="modal-footer">
+                            <div class="modal-footer d-flex justify-content-between">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                 <input type="submit" value="" id="btnSubmit" onclick="" class="btn btn-success">
                             </div>
@@ -108,7 +106,7 @@
                 </div>
                 <form action="" id="formDelete" method="post">
                     <input type="hidden" name="id" id="id" value="">
-                    <div class="modal-footer">
+                    <div class="modal-footer d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <input type="submit" class="btn btn-danger" id="btnDeletar" value="Sim, Deletar">
                     </div>
@@ -126,28 +124,28 @@
                     <h5 class="modal-title">Privacidade</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body col-8 offset-2 p-4">
+                <div class="modal-body p-4 mb-3">
                     <form action="<?= base_url('todocontroller/changeprivacy') ?>" id="formPrivacy" method="post">
                         <div class="row">
-                            <div class="row mb-3">
+                            <div class="row mb-3 d-flex">
                                 <div class="col-1">
                                     <input type="radio" name="privacyRb" id="privacyRb" value="<?= true ?>">
                                 </div>
-                                <div class="col">
+                                <div class="col-11">
                                     <label for="privacyRb">Visível para todos</label>
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row mb-3 d-flex">
                                 <div class="col-1">
                                     <input type="radio" name="privacyRb" id="privacyRb" value="<?= false ?>">
                                 </div>
-                                <div class="col">
+                                <div class="col-11">
                                     <label for="privacyRb">Somente eu</label>
                                 </div>
                             </div>
                         </div>
                         <input type="hidden" name="privacy_id" id="privacy_id" value="">
-                        <div class="modal-footer">
+                        <div class="modal-footer d-flex justify-content-between">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                             <input type="submit" class="btn btn-primary" id="btnPrivacy" value="Salvar Alterações">
                         </div>

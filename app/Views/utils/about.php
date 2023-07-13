@@ -2,7 +2,7 @@
 
 <?= $this->section('section') ?>
 
-<div class="container-fluid">
+<div class="container-fluid mt-5 p-4">
         <div class="about">
             <p>Este projeto é uma aplicação full-stack, o que significa que eu desenvolvi tanto o front-end quanto o back-end da aplicação, usando diversas tecnologias que aprendi até o momento. </p>
             <p>No front-end foi utilizado Bootstrap 5 e FontAwesome 6 para criar um design responsivo e moderno para a aplicação. Também utilizei JavaScript e CSS para dar mais funcionalidades e estilizações.</p>
