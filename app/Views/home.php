@@ -9,9 +9,9 @@
             <option value="0">Somente eu &#xf023;</option>
         </select>
         <br>
-        <div class="row mt-1 ms-3">
+        <div class="mt-1 ms-3">
             <input type="text" id="header_job_name" name="header_job_name" placeholder="Tarefa" required autocomplete="off"><br>
-            <textarea class="ms-3" type="text" id="header_job_desc" name="header_job_desc" placeholder="Sobre a tarefa" required autocomplete="off"></textarea>
+            <textarea oninput="auto_grow(this)" class="ms-3" type="text" id="header_job_desc" name="header_job_desc" placeholder="Sobre a tarefa" required autocomplete="off"></textarea>
         </div>
         <div class="text-end mt-1">
             <button type="submit" class="btn btn-sm btn-primary">Publicar</button>
@@ -25,45 +25,65 @@
     </div>
 <?php else : ?>
     <?php foreach ($jobs as $job) : ?>
-        <div class="row d-flex justify-content-between post">
-            <div class="d-flex justify-content-between">
-                <p>
-                    <a style="text-decoration: none;" href="<?= site_url('userscontroller/profile/' . base64_encode($job->USER_ID)) ?>" class="link-secondary fs-4">
-                        <img class="rounded-circle border border-light-subtle" height="48" width="48" src="<?= !empty($job->PROFILE_PIC) ? base_url('../../assets/img/profiles_pics/' . $job->USER . '/' . $job->PROFILE_PIC) : base_url('/assets/logo.png') ?>" alt="Profile pic"> <?= $job->USER ?>
+        <article class="row post">
+            <div class="post-container">
+                <div class="user-img">
+                    <a href="<?= base_url('profile/' . base64_encode($job->USER_ID)) ?>">
+                        <img height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt="Profile pic">
                     </a>
-                    <br>
-                </p>
-                <p <?= !empty($job->DATETIME_FINISHED) ? "style='text-decoration: line-through;'" : "" ?> class="fs-3"><?= $job->JOB_TITLE ?></p>
-                <?php if ($_SESSION['USER_ID'] == $job->USER_ID) : ?>
-                    <div class="dropdown">
-                        <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-ellipsis"></i>
-                        </button>
-                        <ul class="dropdown-menu post-it-dropdown">
-                            <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(`<?= $job->ID_JOB ?>`)">Privacidade <?= $job->PRIVACY == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>' ?></a></li>
-                            <?php if (empty($job->DATETIME_FINISHED)) : ?>
-                                <li><a class="dropdown-item" href="<?= site_url('todocontroller/jobdone/' . $job->ID_JOB) ?>" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
-                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit(`<?= $job->ID_JOB ?>`,  `<?= $job->JOB_TITLE ?>`, `<?= $job->JOB ?>`)">Editar <i class="fa fa-pencil text-primary"></i></a></li>
-                            <?php endif; ?>
-                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(<?= $job->ID_JOB ?>)">Excluír <i class="fa fa-trash text-danger"></i></a></li>
-                        </ul>
-                    </div>
-                <?php else : ?>
-                    <p> </p>
-                <?php endif; ?>
+                </div>
+                <div class="user-info">
+                    <a href="<?= base_url('profile/' . base64_encode($job->USER_ID)) ?>" class="user-name"><?= $job->NAME ?> &#8226; <span class="text-muted fst-italic">@<?= $job->USER ?></span></a>
+                    <span>
+                        <?php if ($_SESSION['USER_ID'] == $job->USER_ID) : ?>
+                            <div class="dropdown">
+                                <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-ellipsis"></i>
+                                </button>
+                                <ul class="dropdown-menu post-it-dropdown">
+                                    <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(`<?= $job->ID_JOB ?>`)">Privacidade <?= $job->PRIVACY == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>' ?></a></li>
+                                    <?php if (empty($job->DATETIME_FINISHED)) : ?>
+                                        <li><a class="dropdown-item" href="<?= site_url('todocontroller/jobdone/' . $job->ID_JOB) ?>" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
+                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit(`<?= $job->ID_JOB ?>`,  `<?= $job->JOB_TITLE ?>`, `<?= $job->JOB ?>`)">Editar <i class="fa fa-pencil text-primary"></i></a></li>
+                                    <?php endif; ?>
+                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(<?= $job->ID_JOB ?>)">Excluír <i class="fa fa-trash text-danger"></i></a></li>
+                                </ul>
+                            </div>
+                        <?php else : ?>
+                            <p> </p>
+                        <?php endif; ?>
+                    </span>
+                </div>
+                <div class="user-post-text">
+                    <span class="fst-italic text-center d-block fs-5" style="<?= isset($job->DATETIME_FINISHED)? "text-decoration: line-through;" : ""?>"><?= $job->JOB_TITLE ?></span>
+                    <span><?= nl2br($job->JOB) ?></span>
+                </div>
+                <div class="user-post-footer fst-italic text-muted mt-3">
+                    <p><?= date("d/m/Y", strtotime($job->DATETIME_CREATED)) ?></p>
+                    <p><?= !empty($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) . " <i class='fa fa-check-double'></i>" : "" ?></p>
+                </div>
             </div>
-            <p class="ms-5"><?= $job->JOB ?></p>
-            <div class="d-flex justify-content-between">
-                <p style="font-size: 12px;" class="fst-italic text-muted ms-2"><?= date("d/m/Y", strtotime($job->DATETIME_CREATED)) ?></p>
-                <?php if (!empty($job->DATETIME_FINISHED)) : ?>
-                    <p style="font-size: 12px;" class="fst-italic text-muted ms-2">Finalizada - <?= date("d/m/Y", strtotime($job->DATETIME_FINISHED)) ?> <i class='fa fa-check-double'></i></p>
-                <?php endif; ?>
-            </div>
-        </div>
+        </article>
     <?php endforeach; ?>
 <?php endif; ?>
 
 <?= $this->endSection() ?>
+<?= $this->section('script') ?>
 <script>
-    
+    [document.querySelector("#header_job_name"), document.querySelector("#header_job_desc"), document.querySelector("#privacy_select")].forEach(item => {
+        item.addEventListener("focus", event => {
+            document.querySelector("#privacy_select").removeAttribute("hidden")
+        })
+    })
+    document.querySelector("#privacy_select").addEventListener("focusout", event => {
+        setTimeout(() => {
+            document.querySelector("#privacy_select").setAttribute("hidden", true)
+        }, 500)
+    })
+
+    function auto_grow(element) {
+        element.style.height = "5px";
+        element.style.height = (element.scrollHeight) + "px";
+    }
 </script>
+<?= $this->endSection() ?>

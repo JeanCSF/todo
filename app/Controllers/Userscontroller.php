@@ -64,7 +64,7 @@ class Userscontroller extends BaseController
                 'alltasks'              => $jobs->countAllUserJobs($id),
                 'alldone'               => $jobs->countAllUserDoneJobs($id),
                 'notdone'               => $jobs->countAllUserNotDoneJobs($id),
-                'pageTitle'             => "Perfil - " . $userData->NAME,
+                'pageTitle'             => $userData->NAME,
                 'pager'                 => $jobs->pager,
 
             ];

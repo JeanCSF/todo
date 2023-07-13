@@ -17,13 +17,13 @@
 body {
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
 
 }
 
 body,
 html {
     height: 100%;
+
 }
 
 .side-text {
@@ -46,16 +46,15 @@ html {
 .content {
     top: 0;
     bottom: 0;
-    width: 50%;
     margin: 0 auto;
 }
 
 .content section {
+    width: 50%;
     margin: 0 auto;
     padding: .65rem;
     padding-block: 5rem;
     border-inline: 2px solid var(--maingrey);
-    right: 0;
     min-height: 100vh;
 
 }
@@ -70,10 +69,9 @@ html {
     font-weight: 900;
     font-size: var(--link-text);
     padding: 1rem;
-    z-index: 999;
-    width: 50%;
     position: fixed;
-    margin-inline: 0.4%;
+    width: 49.9%;
+    top: 0;
 }
 
 .page-title a {
@@ -97,6 +95,8 @@ html {
 
 .header-post {
     margin-top: 35px;
+    border-bottom: 2px solid var(--maingrey);
+    padding-bottom: 5px;
 }
 
 .header-post button {
@@ -104,7 +104,7 @@ html {
 }
 
 .header-post input {
-    min-width: 350px;
+    max-width: 350px;
     right: 0;
     border: none;
     padding: 0.5rem;
@@ -120,13 +120,13 @@ html {
 }
 
 .header-post textarea {
-    min-width: 350px;
     resize: none;
     outline: none;
     right: 0;
     border: none;
     background: var(--transparent);
     font-size: 1.5rem;
+    overflow: hidden;
 }
 
 .header-post select {
@@ -211,20 +211,60 @@ html {
     display: none;
 }
 
-.post {
-    border-block: 2px solid var(--maingrey);
+article {
+    border-bottom: 2px solid var(--maingrey) !important;
+
+}
+
+.post-container img {
+    border-radius: 50%;
+    display: inline;
+}
+
+.post-container .user-img {
+    float: left;
+}
+
+.post-container .user-info {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.post-container .user-post-text {
+    margin-left: 55px;
+    padding-right: .5rem;
+    font-family: Consolas, monaco, monospace;
+
+}
+
+.post-container .user-post-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: .7rem;
+    bottom: 0;
+
 }
 
 .post:hover {
     background: var(--maingrey);
 }
 
-.post p {
-    max-width: fit-content;
+.post-container span {
+    max-width: 80ch;
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+.post-container .user-name {
+    color: var(--black);
+    text-decoration: none;
+    font-weight: 500;
 }
 
 .post div {
-    padding: 0.3rem;
+    padding: 0.1rem;
 }
 
 .left-panel {
@@ -319,14 +359,106 @@ html {
     visibility: hidden;
 }
 
+#navbarTask {
+    visibility: hidden;
+    position: absolute;
+    z-index: 999;
+}
+
+@media screen and (max-width: 1400px) {
+    .row {
+        display: inline;
+    }
+
+    .header-post {
+        margin-top: 55px;
+    }
+
+    .content section {
+        width: 65%;
+        bottom: 0;
+        top: 0;
+        padding: 0;
+        position: fixed;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        right: 24%;
+    }
+
+    .left-panel {
+        width: 10% !important;
+    }
+
+    .right-panel {
+        width: 25% !important;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+
+    .side-text {
+        padding: 0;
+    }
+
+    .page-title {
+        width: 64.7%;
+    }
+
+    #userActions span {
+        display: none;
+    }
+    #userActions {
+        bottom: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        position: relative;
+    }
+
+    #userActions a {
+        border-radius: 5px;
+    }
+
+    #sidebarTask::before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f31c";
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+    }
+
+    #sidebarTask {
+        background: var(--transparent);
+        color: var(--primary);
+        border-radius: 50% !important;
+        font-size: 2.5rem;
+
+    }
+
+    .left-panel .icon {
+        font-size: 2.5rem !important;
+    }
+}
+
 @media screen and (max-width: 1200px) {
     .row {
         display: inline;
     }
 
-    .content {
-        margin-inline: 10%;
+    .header-post {
+        margin-top: 55px;
+    }
 
+    .content section {
+        width: 65%;
+        bottom: 0;
+        top: 0;
+        padding: 0;
+        position: fixed;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        right: 24%;
     }
 
     .left-panel {
@@ -345,8 +477,7 @@ html {
     }
 
     .page-title {
-        width: 50%;
-        margin: 0;
+        width: 63.70%;
     }
 
     #userActions span {
@@ -355,6 +486,15 @@ html {
 
     #userActions a {
         border-radius: 5px;
+    }
+
+    #userActions {
+        bottom: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        position: relative;
     }
 
     #sidebarTask::before {
@@ -377,25 +517,80 @@ html {
 
 }
 
-@media screen and (max-width: 768px) {
-    body {
-        display: flex;
-        flex-direction: column;
-  
+@media screen and (max-width: 992px) {
+    .post-container {
+        border-bottom: 2px solid var(--maingrey) !important;
+
     }
-    .content {
+
+    .page-title {
+        width: 64.6%;
+    }
+
+    .content section {
+        width: 65%;
+        bottom: 0;
+        top: 0;
+        padding: 0;
+        position: fixed;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        right: 24%;
+    }
+
+    .left-panel {
+        width: 10% !important;
+    }
+
+    .right-panel {
+        width: 25% !important;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .post-container {
+        border-bottom: 2px solid var(--maingrey) !important;
+
+    }
+
+    .post-container .user-post-footer {
+        margin-bottom: 17px;
+
+    }
+
+    .header-post {
+        margin-top: 60px !important;
+    }
+
+    .post-container .user-name {
+        font-weight: 500;
+        color: var(--black);
+        white-space: nowrap;
+        max-width: 15ch;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .header-post input,
+    .header-post textarea {
+        width: 250px;
+    }
+
+    .content section {
         width: 100%;
         bottom: 0;
         top: 0;
         left: 0;
-        margin: 0;
         padding: 0;
         position: fixed;
         overflow-y: scroll;
-    }
+        overflow-x: hidden;
+        margin-bottom: 50% !important;
 
-    section {
-        width: 100%;
+
     }
 
     .page-title {
@@ -417,7 +612,6 @@ html {
     }
 
     .task-bar ul {
-        vertical-align: middle;
         display: flex;
         list-style-type: none;
         align-items: center;
@@ -426,12 +620,32 @@ html {
 
     }
 
+    .task-bar ul li {
+        display: flex;
+        align-items: center;
+        vertical-align: middle;
+    }
+
     .task-bar a {
         color: #F2F2F2;
         font-weight: 900;
         font-size: 2rem;
         margin-inline: 1rem;
     }
+
+    #navbarTask {
+        visibility: visible;
+        background: var(--transparent);
+        color: var(--primary);
+        border-radius: 50% !important;
+        font-size: 2rem;
+        position: absolute;
+        bottom: 10%;
+        z-index: 999;
+        right: 3%;        
+
+    }
+
 
 
 

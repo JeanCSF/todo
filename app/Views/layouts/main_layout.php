@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, minimum-scale=1">
     <title>Tome Nota!</title>
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/main.css') ?>">
@@ -206,11 +206,11 @@
                     <?php if ($_SESSION['SU'] == 1) : ?>
                         <a href="<?= base_url('userscontroller/users/') ?>"><i class="fa fa-users icon"></i> <span class="side-text">Usuários</span></a>
                     <?php endif; ?>
-                    <a href="<?= base_url('logincontroller/logout') ?>"><i class="fa fa-right-from-bracket icon"></i> <span class="side-text">Logout</span></a>
+                    <a href="logout"><i class="fa fa-right-from-bracket icon"></i> <span class="side-text">Logout</span></a>
                     <a id="sidebarTask" type="button" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"></a>
 
                     <div class="avatarDiv">
-                        <a style="text-decoration: none;" href="<?= base_url('userscontroller/profile/' . base64_encode($_SESSION['USER_ID'])) ?>" class="link-secondary fs-4">
+                        <a style="text-decoration: none;" href="<?= base_url('profile/' . base64_encode($_SESSION['USER_ID'])) ?>" class="link-secondary fs-4">
                             <img class="rounded-circle border border-light-subtle" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt=""> <span class="ms-2 side-text"><?= $_SESSION['USER'] ?></span>
                         </a>
                     </div>
@@ -219,29 +219,30 @@
         </header>
 
         <main class="content">
-            <?php if (!empty($pageTitle)) : ?>
-                <div class="row">
-                    <div class="page-title">
-                        <div class="row">
-                            <div class="d-flex">
-                                <a href="javascript:history.go(-1)" style="<?= ($pageTitle == 'Página Inicial') ? 'visibility:hidden' : '' ?>"><i class="fa fa-arrow-left me-3"></i></a>
-                                <p><?= isset($pageTitle) ? $pageTitle : "" ?></p>
-                            </div>
-                            <?php if (isset($search)) : ?>
-                                <form class="d-flex mt-1 search" role="search">
-                                    <button type="submit" class="btn btn-lg"><i class="fa fa-search"></i></button>
-                                    <input class="form-control shadow-none" type="search" value="<?= isset($search) ? $searchInput : '' ?>" name="search" aria-label="Search" />
-                                </form>
-                                <div class="search-footer d-flex justify-content-between">
-                                    <a href="<?= base_url('main/searchuser') ?>">Tarefas</a>
-                                    <a href="<?= base_url('main/searchuser') ?>">Pessoas</a>
+            <section>
+                <?php if (!empty($pageTitle)) : ?>
+                    <div class="row">
+                        <div class="page-title">
+                            <div class="row">
+                                <div class="d-flex justify-content-between">
+                                    <a href="javascript:history.go(-1)" style="<?= ($pageTitle == 'Página Inicial') ? 'visibility:hidden' : '' ?>"><i class="fa fa-arrow-left me-3"></i></a>
+                                    <p><?= isset($pageTitle) ? $pageTitle : "" ?></p>
+                                    <a style="<?= ($pageTitle != 'Página Inicial') ? 'visibility:hidden' : '' ?>" id="navbarTask" type="button" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"><i class="fa fa-pencil"></i><i style="font-size: small;" class="fa fa-circle-plus"></i></a>
                                 </div>
-                            <?php endif; ?>
+                                <?php if (isset($search)) : ?>
+                                    <form class="d-flex mt-1 search" role="search">
+                                        <button type="submit" class="btn btn-lg"><i class="fa fa-search"></i></button>
+                                        <input class="form-control shadow-none" type="search" value="<?= isset($search) ? $searchInput : '' ?>" name="search" aria-label="Search" />
+                                    </form>
+                                    <div class="search-footer d-flex justify-content-between">
+                                        <a href="<?= base_url('main/searchuser') ?>">Tarefas</a>
+                                        <a href="<?= base_url('main/searchuser') ?>">Pessoas</a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php endif ?>
-            <section>
+                <?php endif ?>
                 <?= $this->renderSection('section') ?>
             </section>
         </main>
@@ -254,7 +255,7 @@
             <?php endif; ?>
             <div>
                 <div class="footer mt-3">
-                    <a href="<?= base_url('main/contact') ?>" class="text-decoration-none link-secondary fw-bolder">FEEDBACK</a>
+                    <a href="contact" class="text-decoration-none link-secondary fw-bolder">FEEDBACK</a>
                     <div class="footer-socials">
                         <a class="link-secondary me-4" href="https://github.com/JeanCSF" target="_blank">GitHub</a>
                         <a class="link-secondary me-4" href="https://facebook.com/fookinselfish" target="_blank">Facebook</a>
@@ -276,7 +277,7 @@
             <li><a href="about" class="nav-link"><i class="fa fa-circle-info icon"></i></a></li>
             <li><a href="#" class="nav-link"><i class="fa fa-gear icon"></i></a></li>
         </ul>
-        
+
     </nav>
 
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
@@ -342,17 +343,6 @@
         function fillModalPrivacy(id) {
             document.getElementById("privacy_id").setAttribute('value', id)
         }
-
-        [document.querySelector("#header_job_name"), document.querySelector("#header_job_desc"), document.querySelector("#privacy_select")].forEach(item => {
-            item.addEventListener("focus", event => {
-                document.querySelector("#privacy_select").removeAttribute("hidden")
-            })
-        })
-        document.querySelector("#privacy_select").addEventListener("focusout", event => {
-            setTimeout(() => {
-                document.querySelector("#privacy_select").setAttribute("hidden", true)
-            }, 500)
-        })
     </script>
     <?= $this->renderSection("script"); ?>
 
