@@ -35,7 +35,7 @@ class Main extends BaseController
 
             $data = [
                 'jobs'          => $job->select('login.PROFILE_PIC, login.USER, login.NAME, login.USER_ID, jobs.ID_JOB, jobs.USER_ID, jobs.JOB_TITLE, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED, jobs.PRIVACY')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->paginate(5),
-                'alljobs'       => $job->select('jobs.ID_JOB')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.PRIVACY', true)->countAllResults(),
+                'pager'         => $job->pager,
                 'pageTitle'     => "Página Inicial",
 
             ];
@@ -45,6 +45,21 @@ class Main extends BaseController
             $this->home();
         }
     }
+
+    public function loadMoreUsers(){
+        $limit = 5; 
+        $page = $limit * $this->request->getVar('page');
+        $data['jobs'] = $this->fetchData($page);
+        return view('load_more', $data);
+   }
+   
+   function fetchData($limit){
+        $db = new Todo();
+ 
+        $dbQuery = $db->select('login.PROFILE_PIC, login.USER, login.NAME, login.USER_ID, jobs.ID_JOB, jobs.USER_ID, jobs.JOB_TITLE, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED, jobs.PRIVACY')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->limit($limit)->get();
+        
+        return $dbQuery->getResult();
+   }
 
     public function home()
     {

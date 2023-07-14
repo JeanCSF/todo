@@ -38,9 +38,10 @@ $routes->setAutoRoute(true);
  * --------------------------------------------------------------------
  */
 $routes->get('/', 'Main::index');
-$routes->post('/upload', 'Userscontroller::upload', ['as' => 'upload']);
 $routes->get('/about', 'Main::about');
 $routes->get('/contact', 'Main::contact');
+$routes->match(['get', 'post'], '/posts', 'Main::loadMoreUsers');
+// $routes->match(['get', 'post'], 'Main/fetchData', 'Main::fetchData');
 
 /*
  * --------------------------------------------------------------------
@@ -57,6 +58,7 @@ $routes->get('/logout', 'Logincontroller::logout');
  * --------------------------------------------------------------------
  */
 $routes->get('profile/(:any)', 'Userscontroller::profile/$1');
+$routes->post('/upload', 'Userscontroller::upload', ['as' => 'upload']);
 
 
 /*

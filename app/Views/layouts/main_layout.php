@@ -12,11 +12,9 @@
     <title>Tome Nota!</title>
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/main.css') ?>">
-    <!-- FontAwesome 6.2.0 CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" integrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- (Optional) Use CSS or JS implementation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js" integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
@@ -192,14 +190,6 @@
                 <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-dashboard icon"></i></a>
                 <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i> <span class="side-text">Home</span></a>
                 <a href="about" class="nav-link"><i class="fa fa-circle-info icon"></i> <span class="side-text">Sobre</span></a>
-                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
-                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
-                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
-                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
-                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
-                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
-                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
-                <a href="<?= base_url('explore') ?>" class="nav-link"><i class="fa fa-hashtag icon"></i> <span class="side-text">Explorar</span></a>
                 <?php if (isset($_SESSION['USER_ID'])) : ?>
                     <?php if ($_SESSION['SU'] == 1) : ?>
                         <a href="<?= base_url('userscontroller/users/') ?>"><i class="fa fa-users icon"></i> <span class="side-text">Usuários</span></a>
@@ -267,16 +257,17 @@
                 </div>
             </div>
         </footer>
+        <div class="row">
+            <nav class="task-bar">
+                <ul>
+                    <li><a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i></a></li>
+                    <li><a href="explore" class="nav-link"><i class="fa fa-search icon"></i></a></li>
+                    <li><a href="about" class="nav-link"><i class="fa fa-circle-info icon"></i></a></li>
+                    <li><a href="#" class="nav-link"><i class="fa fa-gear icon"></i></a></li>
+                </ul>
+            </nav>
+        </div>
     </div>
-    <nav class="row task-bar">
-        <ul>
-            <li><a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i></a></li>
-            <li><a href="explore" class="nav-link"><i class="fa fa-search icon"></i></a></li>
-            <li><a href="about" class="nav-link"><i class="fa fa-circle-info icon"></i></a></li>
-            <li><a href="#" class="nav-link"><i class="fa fa-gear icon"></i></a></li>
-        </ul>
-
-    </nav>
 
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Likes;
 use App\Models\Todo;
 use CodeIgniter\Controller;
 
@@ -127,6 +128,30 @@ class Todocontroller extends BaseController
                 $this->session->setFlashdata('msg', $msg);
                 return redirect()->back();
             }
+        }
+    }
+
+    public function likeJob($id_job)
+    {
+        $like = new Likes();
+        
+        if (!empty($id_job)) {
+            if ($like->newLikeJob($id_job)) {
+                $msg = [
+                    'msg' => 'Like',
+                    'type' => 'alert-success',
+                ];
+                $this->session->setFlashdata('msg', $msg);
+                return redirect()->back();
+            } else {
+                $msg = [
+                    'msg' => 'Não foi possível concluir tarefa',
+                    'type' => 'alert-danger',
+                ];
+                $this->session->setFlashdata('msg', $msg);
+                return redirect()->back();
+            }
+
         }
     }
 }

@@ -356,7 +356,7 @@ article {
 
 
 .task-bar {
-    visibility: hidden;
+    display: none;
 }
 
 #navbarTask {
@@ -365,32 +365,44 @@ article {
     z-index: 999;
 }
 
-@media screen and (max-width: 1400px) {
-    .row {
-        display: inline;
-    }
+.post-actions {
+    margin-bottom: 5px;
+    padding: .5rem;
+    display: flex;
+    justify-content: space-evenly;
+}
 
+.post-actions a {
+    font-size: 1.8rem;
+    text-decoration: none;
+    font-weight: 900;
+    margin: 0;
+    padding: 0;
+}
+
+.post-actions span {
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+    font-size: .7rem;
+}
+
+@media screen and (max-width: 1400px) {
     .header-post {
         margin-top: 55px;
     }
 
     .content section {
         width: 65%;
-        bottom: 0;
-        top: 0;
-        padding: 0;
-        position: fixed;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        right: 24%;
+        margin-left: 9%;
     }
 
     .left-panel {
-        width: 10% !important;
+        width: 8% !important;
     }
 
     .right-panel {
-        width: 25% !important;
+        width: 27% !important;
         right: 0;
         top: 0;
         bottom: 0;
@@ -401,12 +413,14 @@ article {
     }
 
     .page-title {
-        width: 64.7%;
+        width: 64.8%;
+        margin: 0;
     }
 
     #userActions span {
         display: none;
     }
+
     #userActions {
         bottom: 0;
         display: flex;
@@ -442,9 +456,6 @@ article {
 }
 
 @media screen and (max-width: 1200px) {
-    .row {
-        display: inline;
-    }
 
     .header-post {
         margin-top: 55px;
@@ -452,13 +463,7 @@ article {
 
     .content section {
         width: 65%;
-        bottom: 0;
-        top: 0;
-        padding: 0;
-        position: fixed;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        right: 24%;
+        margin-left: 9%;
     }
 
     .left-panel {
@@ -477,7 +482,7 @@ article {
     }
 
     .page-title {
-        width: 63.70%;
+        width: 64.8%;
     }
 
     #userActions span {
@@ -529,13 +534,7 @@ article {
 
     .content section {
         width: 65%;
-        bottom: 0;
-        top: 0;
-        padding: 0;
-        position: fixed;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        right: 24%;
+        margin-left: 9%;
     }
 
     .left-panel {
@@ -553,11 +552,6 @@ article {
 @media screen and (max-width: 768px) {
     .post-container {
         border-bottom: 2px solid var(--maingrey) !important;
-
-    }
-
-    .post-container .user-post-footer {
-        margin-bottom: 17px;
 
     }
 
@@ -581,16 +575,8 @@ article {
 
     .content section {
         width: 100%;
-        bottom: 0;
-        top: 0;
-        left: 0;
-        padding: 0;
-        position: fixed;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        margin-bottom: 50% !important;
-
-
+        margin: 0;
+        height: 60vh !important;
     }
 
     .page-title {
@@ -603,12 +589,12 @@ article {
     }
 
     .task-bar {
-        visibility: visible;
+        display: block;
         background: var(--primary);
         position: fixed;
         bottom: 0;
         right: 0;
-        left: 0;
+        z-index: 999;
     }
 
     .task-bar ul {
@@ -616,8 +602,7 @@ article {
         list-style-type: none;
         align-items: center;
         justify-content: space-around;
-        gap: 2rem;
-
+        margin-right: 2rem;
     }
 
     .task-bar ul li {
@@ -630,7 +615,7 @@ article {
         color: #F2F2F2;
         font-weight: 900;
         font-size: 2rem;
-        margin-inline: 1rem;
+        padding-top: .7rem;
     }
 
     #navbarTask {
@@ -642,7 +627,7 @@ article {
         position: absolute;
         bottom: 10%;
         z-index: 999;
-        right: 3%;        
+        right: 3%;
 
     }
 
