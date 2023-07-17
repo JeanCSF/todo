@@ -1,5 +1,4 @@
 <?= $this->extend('layouts/main_layout') ?>
-
 <?= $this->section('section') ?>
 <div id="post_div" class="header-post mb-2" style="<?= isset($search) ? 'visibility:hidden;' : '' ?>" tabindex="0">
     <img class="mt-2 rounded-circle border border-light-subtle float-start" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt="Profile pic">
@@ -29,7 +28,7 @@
             <div class="post-container">
                 <div class="user-img">
                     <a href="<?= base_url('profile/' . base64_encode($job->USER_ID)) ?>">
-                        <img height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt="Profile pic">
+                        <img height="48" width="48" src="<?= !empty($job->PROFILE_PIC) ? base_url('../../assets/img/profiles_pics/' . $job->USER . '/' . $job->PROFILE_PIC) : base_url('/assets/logo.png') ?>" alt="Profile pic">
                     </a>
                 </div>
                 <div class="user-info">
@@ -63,7 +62,7 @@
                     <p><?= !empty($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) . " <i class='fa fa-check-double'></i>" : "" ?></p>
                 </div>
                 <div class="post-actions">
-                    <a href="<?= site_url('todocontroller/likejob/' . $job->ID_JOB) ?>" role="button"><span class="fst-italic text-muted">{elapsed_time}</span><br><i class="fa-regular fa-heart"></i></a>
+                    <a href="<?= site_url('todocontroller/likejob/' . $job->ID_JOB) ?>" role="button"><span class="fst-italic text-muted"></span><br><i class="<?= ($job->LIKED_USER_ID == $_SESSION['USER_ID'])? 'fa fa-heart' : 'fa-regular fa-heart'?>"></i></a>
                     <a href="#" role="button"><span class="fst-italic text-muted">{elapsed_time}</span><br><i class="fa-regular fa-comment"></i></a>
                     <a href="#" role="button"><span class="fst-italic text-muted"> </span><br><i class="fa fa-arrow-up-from-bracket"></i></a>
                 </div>

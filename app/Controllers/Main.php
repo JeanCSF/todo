@@ -34,7 +34,23 @@ class Main extends BaseController
             }
 
             $data = [
-                'jobs'          => $job->select('login.PROFILE_PIC, login.USER, login.NAME, login.USER_ID, jobs.ID_JOB, jobs.USER_ID, jobs.JOB_TITLE, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED, jobs.PRIVACY')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->paginate(5),
+                'jobs'          => $job->select('login.PROFILE_PIC
+                                                ,login.USER
+                                                ,login.NAME
+                                                ,login.USER_ID
+                                                ,jobs.ID_JOB
+                                                ,jobs.USER_ID
+                                                ,jobs.JOB_TITLE
+                                                ,jobs.JOB
+                                                ,jobs.DATETIME_CREATED
+                                                ,jobs.DATETIME_UPDATED
+                                                ,jobs.DATETIME_FINISHED
+                                                ,jobs.PRIVACY
+                                                ,likes.USER_ID      AS LIKED_USER_ID
+                                                ,likes.ID_JOB       AS LIKED_ID_JOB')
+                                        ->join('login', 'login.USER_ID = jobs.USER_ID')
+                                        ->join('likes', 'likes.ID_JOB = jobs.ID_JOB', 'left')
+                                        ->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->paginate(5),
                 'pager'         => $job->pager,
                 'pageTitle'     => "Página Inicial",
 
