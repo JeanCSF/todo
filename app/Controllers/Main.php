@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Likes;
 use App\Models\Todo;
 use App\Models\Users;
 
@@ -11,6 +12,7 @@ class Main extends BaseController
     public function index()
     {
         $job = new Todo();
+        $like = new Likes();
         if ($this->session->has('USER_ID')) {
             $id = $_SESSION['USER_ID'];
             if ($this->request->getGet('search')) {
@@ -45,11 +47,8 @@ class Main extends BaseController
                                                 ,jobs.DATETIME_CREATED
                                                 ,jobs.DATETIME_UPDATED
                                                 ,jobs.DATETIME_FINISHED
-                                                ,jobs.PRIVACY
-                                                ,likes.USER_ID      AS LIKED_USER_ID
-                                                ,likes.ID_JOB       AS LIKED_ID_JOB')
+                                                ,jobs.PRIVACY')
                                         ->join('login', 'login.USER_ID = jobs.USER_ID')
-                                        ->join('likes', 'likes.ID_JOB = jobs.ID_JOB', 'left')
                                         ->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->paginate(5),
                 'pager'         => $job->pager,
                 'pageTitle'     => "Página Inicial",

@@ -6,21 +6,13 @@ use CodeIgniter\Model;
 
 class Likes extends Model
 {
-    protected $DBGroup          = 'default';
     protected $table            = 'likes';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
-    protected $returnType       = 'array';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = ['LIKE_ID', 'USER_ID', 'ID_JOB', 'DATETIME_LIKED'];
-
-    // Dates
-    protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
 
     // Validation
     protected $validationRules      = [];
@@ -57,4 +49,5 @@ class Likes extends Model
             return $this->where('LIKE_ID', $checkLike[0])->delete() ? true : false;
         }
     }
+
 }

@@ -1,3 +1,13 @@
+<?php use App\Models\Likes;
+function checkLiked($user_id, $id_job)
+{
+
+    $like = new Likes();
+    $result = $like->select('*')->where('USER_ID', $user_id)->where('ID_JOB',$id_job)->countAll();
+    return $result;
+}
+?>
+
 <?= $this->extend('layouts/main_layout') ?>
 <?= $this->section('section') ?>
 <div id="post_div" class="header-post mb-2" style="<?= isset($search) ? 'visibility:hidden;' : '' ?>" tabindex="0">
@@ -17,7 +27,6 @@
         </div>
     </form>
 </div>
-
 <?php if (count($jobs) == 0) : ?>
     <div class="row mt-2">
         <p class="fs-3 alert alert-warning text-center"><?= isset($search) ? 'Não existem tarefas para esta pesquisa' : 'Não existem tarefas' ?></p>
@@ -54,7 +63,7 @@
                     </span>
                 </div>
                 <div class="user-post-text">
-                    <span class="fst-italic text-center d-block fs-5" style="<?= isset($job->DATETIME_FINISHED)? "text-decoration: line-through;" : ""?>"><?= $job->JOB_TITLE ?></span>
+                    <span class="fst-italic text-center d-block fs-5" style="<?= isset($job->DATETIME_FINISHED) ? "text-decoration: line-through;" : "" ?>"><?= $job->JOB_TITLE ?></span>
                     <span><?= nl2br($job->JOB) ?></span>
                 </div>
                 <div class="user-post-footer fst-italic text-muted mt-3">
@@ -62,7 +71,7 @@
                     <p><?= !empty($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) . " <i class='fa fa-check-double'></i>" : "" ?></p>
                 </div>
                 <div class="post-actions">
-                    <a href="<?= site_url('todocontroller/likejob/' . $job->ID_JOB) ?>" role="button"><span class="fst-italic text-muted"></span><br><i class="<?= ($job->LIKED_USER_ID == $_SESSION['USER_ID'])? 'fa fa-heart' : 'fa-regular fa-heart'?>"></i></a>
+                    <a href="<?= site_url('todocontroller/likejob/' . $job->ID_JOB) ?>" role="button"><span class="fst-italic text-muted"></span><br><i class="<?= (checkLiked($job->ID_JOB, $_SESSION['USER_ID'])) ? 'fa fa-heart' : 'fa-regular fa-heart' ?>"></i></a>
                     <a href="#" role="button"><span class="fst-italic text-muted">{elapsed_time}</span><br><i class="fa-regular fa-comment"></i></a>
                     <a href="#" role="button"><span class="fst-italic text-muted"> </span><br><i class="fa fa-arrow-up-from-bracket"></i></a>
                 </div>
@@ -75,14 +84,13 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script>
-
-var BASEURL = '<?= base_url()?>';
+    var BASEURL = '<?= base_url() ?>';
     var page = 1;
     var isDataLoading = true;
     var isLoading = false;
     $(window).scroll(function() {
-        if($(window).scrollTop() + $(window).height() >= $(document).height() - 500){
-            if (isLoading == false){
+        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 500) {
+            if (isLoading == false) {
                 isLoading = true;
                 page++;
                 if (isDataLoading) {
@@ -91,12 +99,13 @@ var BASEURL = '<?= base_url()?>';
             }
         }
     });
+
     function load_more(page) {
         $.ajax({
-            url: BASEURL+'/posts?page=' + page,
+            url: BASEURL + '/posts?page=' + page,
             type: 'GET',
             dataType: 'html',
-        }).done(function (data) {
+        }).done(function(data) {
             isLoading = false;
             if (data.length == 0) {
                 isDataLoading = false;
@@ -105,7 +114,7 @@ var BASEURL = '<?= base_url()?>';
             }
             $('#loader').hide();
             $('#main').append(data).show('slow');
-        }).fail(function (jqXHR, ajaxOptions, thrownError){
+        }).fail(function(jqXHR, ajaxOptions, thrownError) {
             console.log('No response');
         });
     }
@@ -127,8 +136,7 @@ var BASEURL = '<?= base_url()?>';
     }
 
     setTimeout(function() {
-  document.querySelector('#loadingImage').style.display='none'
-}, 10*1000);
-
+        document.querySelector('#loadingImage').style.display = 'none'
+    }, 10 * 1000);
 </script>
 <?= $this->endSection() ?>
