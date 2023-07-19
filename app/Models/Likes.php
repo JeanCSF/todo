@@ -14,6 +14,8 @@ class Likes extends Model
     protected $protectFields    = true;
     protected $allowedFields    = ['LIKE_ID', 'USER_ID', 'ID_JOB', 'DATETIME_LIKED'];
 
+
+
     // Validation
     protected $validationRules      = [];
     protected $validationMessages   = [];
@@ -35,7 +37,7 @@ class Likes extends Model
     {
         date_default_timezone_set('America/Sao_Paulo');
         $checkLike = $this->select('LIKE_ID')->where("ID_JOB = {$id_job} AND USER_ID = {$_SESSION['USER_ID']}")->find();
-
+        // dd($checkLike);
         if (empty($checkLike)) {
             $data = [
                 'LIKE_ID'           => $_SESSION['USER'] . "_" . date("Y-m-d H:i:s"),
@@ -46,7 +48,7 @@ class Likes extends Model
             return $this->save($data) ? true : false;
         }
         if (!empty($checkLike)) {
-            return $this->where('LIKE_ID', $checkLike[0])->delete() ? true : false;
+            return $this->where('LIKE_ID',$checkLike[0]->LIKE_ID)->delete() ? true : false;
         }
     }
 

@@ -1,11 +1,7 @@
-<?php use App\Models\Likes;
-function checkLiked($user_id, $id_job)
-{
+<?php
 
-    $like = new Likes();
-    $result = $like->select('*')->where('USER_ID', $user_id)->where('ID_JOB',$id_job)->countAll();
-    return $result;
-}
+use App\Models\Likes;
+
 ?>
 
 <?= $this->extend('layouts/main_layout') ?>
@@ -32,7 +28,11 @@ function checkLiked($user_id, $id_job)
         <p class="fs-3 alert alert-warning text-center"><?= isset($search) ? 'Não existem tarefas para esta pesquisa' : 'Não existem tarefas' ?></p>
     </div>
 <?php else : ?>
-    <?php foreach ($jobs as $job) : ?>
+    <?php foreach ($jobs as $job) :
+        $likes = new Likes();
+        $total_likes = $likes->select('LIKE_ID')->where('ID_JOB', $job->ID_JOB)->countAllResults();
+        $check_like = $likes->where('ID_JOB', $job->ID_JOB)->where('USER_ID', $_SESSION['USER_ID'])->countAllResults();
+    ?>
         <article class="row post">
             <div class="post-container">
                 <div class="user-img">
@@ -71,7 +71,7 @@ function checkLiked($user_id, $id_job)
                     <p><?= !empty($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) . " <i class='fa fa-check-double'></i>" : "" ?></p>
                 </div>
                 <div class="post-actions">
-                    <a href="<?= site_url('todocontroller/likejob/' . $job->ID_JOB) ?>" role="button"><span class="fst-italic text-muted"></span><br><i class="<?= (checkLiked($job->ID_JOB, $_SESSION['USER_ID'])) ? 'fa fa-heart' : 'fa-regular fa-heart' ?>"></i></a>
+                    <a href="<?= site_url('todocontroller/likejob/' . $job->ID_JOB) ?>" role="button"><span id="likes" class="fst-italic text-muted"><?= ($total_likes != 0)? $total_likes : "" ?></span><br><i class="<?= (!empty($check_like)) ? 'fa fa-heart' : 'fa-regular fa-heart' ?>"></i></a>
                     <a href="#" role="button"><span class="fst-italic text-muted">{elapsed_time}</span><br><i class="fa-regular fa-comment"></i></a>
                     <a href="#" role="button"><span class="fst-italic text-muted"> </span><br><i class="fa fa-arrow-up-from-bracket"></i></a>
                 </div>
@@ -88,6 +88,7 @@ function checkLiked($user_id, $id_job)
     var page = 1;
     var isDataLoading = true;
     var isLoading = false;
+
     $(window).scroll(function() {
         if ($(window).scrollTop() + $(window).height() >= $(document).height() - 500) {
             if (isLoading == false) {
@@ -134,9 +135,5 @@ function checkLiked($user_id, $id_job)
         element.style.height = "5px";
         element.style.height = (element.scrollHeight) + "px";
     }
-
-    setTimeout(function() {
-        document.querySelector('#loadingImage').style.display = 'none'
-    }, 10 * 1000);
 </script>
 <?= $this->endSection() ?>
