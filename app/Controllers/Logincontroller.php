@@ -144,7 +144,7 @@ class Logincontroller extends BaseController
                     ];
                     $msg['msg'] = 'Bem vindo ' . $_SESSION['NAME'] . '!';
                     $this->session->setFlashdata('msg', $msg);
-                    return redirect()->to(base_url('/'));
+                    return redirect()->to(base_url('/home'));
                 }
             } else {
                 $msg['msg'] = 'Usuário ou senha inválido';

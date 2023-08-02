@@ -188,6 +188,7 @@
         <header class="d-flex flex-column justify-content-between mt-2 left-panel">
             <div id="userActions">
                 <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-dashboard icon"></i></a>
+                <a href="<?= base_url('/test') ?>" class="nav-link"><i class="fa fa-pen icon"></i></a>
                 <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i> <span class="side-text">Home</span></a>
                 <a href="about" class="nav-link"><i class="fa fa-circle-info icon"></i> <span class="side-text">Sobre</span></a>
                 <?php if (isset($_SESSION['USER_ID'])) : ?>
@@ -231,7 +232,7 @@
                         </div>
                     </div>
                 <?php endif ?>
-                <?= $this->renderSection('section') ?>
+                <span id="teste"><?= $this->renderSection('section') ?></span>
             </section>
         </main>
         <footer class="d-flex flex-column justify-content-between right-panel">

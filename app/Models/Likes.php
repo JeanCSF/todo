@@ -52,4 +52,18 @@ class Likes extends Model
         }
     }
 
+    public function getJobLikes($id_job)
+    {
+        $result = $this->select('LIKE_ID')->where('ID_JOB', $id_job)->countAllResults();
+
+        return $result;
+    }
+
+    public function checkUserLikedJob($id_job, $user_id)
+    {
+        $result = $this->where('ID_JOB', $id_job)->where('USER_ID', $user_id)->countAllResults();
+
+        return $result;
+    }
+
 }

@@ -71,9 +71,12 @@ use App\Models\Likes;
                     <p><?= !empty($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) . " <i class='fa fa-check-double'></i>" : "" ?></p>
                 </div>
                 <div class="post-actions">
-                    <a href="<?= site_url('todocontroller/likejob/' . $job->ID_JOB) ?>" role="button"><span id="likes" class="fst-italic text-muted"><?= ($total_likes != 0)? $total_likes : "" ?></span><br><i class="<?= (!empty($check_like)) ? 'fa fa-heart' : 'fa-regular fa-heart' ?>"></i></a>
-                    <a href="#" role="button"><span class="fst-italic text-muted">{elapsed_time}</span><br><i class="fa-regular fa-comment"></i></a>
-                    <a href="#" role="button"><span class="fst-italic text-muted"> </span><br><i class="fa fa-arrow-up-from-bracket"></i></a>
+                    <a href="#" role="button" on>
+                        <i class="<?= (!empty($check_like)) ? 'fa fa-heart' : 'fa-regular fa-heart' ?>"></i>
+                        <span id="likes<?= $job->ID_JOB ?>" class="ms-1 fst-italic text-muted"></span>
+                    </a>
+                    <a href="#" role="button"><i class="fa-regular fa-comment"></i><span class="ms-1 fst-italic text-muted">{elapsed_time}</span></a>
+                    <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
                 </div>
             </div>
         </article>
@@ -84,56 +87,74 @@ use App\Models\Likes;
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script>
-    var BASEURL = '<?= base_url() ?>';
-    var page = 1;
-    var isDataLoading = true;
-    var isLoading = false;
-
-    $(window).scroll(function() {
-        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 500) {
-            if (isLoading == false) {
-                isLoading = true;
-                page++;
-                if (isDataLoading) {
-                    load_more(page);
-                }
-            }
-        }
-    });
-
-    function load_more(page) {
+    function getLikes(id_job) {
+        var likesSpan = document.querySelector("#likes" + id_job);
+        var url = '<?= base_url('job_likes') ?>';
+        var Likes = [];
+        var dataToSend = {
+            term: id_job
+        };
         $.ajax({
-            url: BASEURL + '/posts?page=' + page,
-            type: 'GET',
-            dataType: 'html',
-        }).done(function(data) {
-            isLoading = false;
-            if (data.length == 0) {
-                isDataLoading = false;
-                $('#loader').hide();
-                return;
+            url: url,
+            type: "POST",
+            data: dataToSend,
+            error: function(xhr, status, error) {
+                console.error("Erro na requisição:", error);
             }
-            $('#loader').hide();
-            $('#main').append(data).show('slow');
-        }).fail(function(jqXHR, ajaxOptions, thrownError) {
-            console.log('No response');
+        }).done(function(response) {
+            likesSpan.innerHTML = response.likes;
         });
     }
+    document.addEventListener("DOMContentLoaded", function() {
+        var BASEURL = '<?= base_url() ?>';
+        var page = 1;
+        var isDataLoading = true;
+        var isLoading = false;
+        $(window).scroll(function() {
+            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 500) {
+                if (isLoading == false) {
+                    isLoading = true;
+                    page++;
+                    if (isDataLoading) {
+                        load_more(page);
+                    }
+                }
+            }
+        });
 
-    [document.querySelector("#header_job_name"), document.querySelector("#header_job_desc"), document.querySelector("#privacy_select")].forEach(item => {
-        item.addEventListener("focus", event => {
-            document.querySelector("#privacy_select").removeAttribute("hidden")
+        function load_more(page) {
+            $.ajax({
+                url: BASEURL + '/posts?page=' + page,
+                type: 'GET',
+                dataType: 'html',
+            }).done(function(data) {
+                isLoading = false;
+                if (data.length == 0) {
+                    isDataLoading = false;
+                    $('#loader').hide();
+                    return;
+                }
+                $('#loader').hide();
+                $('#main').append(data).show('slow');
+            }).fail(function(jqXHR, ajaxOptions, thrownError) {
+                console.log('No response');
+            });
+        }
+        [document.querySelector("#header_job_name"), document.querySelector("#header_job_desc"), document.querySelector("#privacy_select")].forEach(item => {
+            item.addEventListener("focus", event => {
+                document.querySelector("#privacy_select").removeAttribute("hidden")
+            })
         })
-    })
-    document.querySelector("#privacy_select").addEventListener("focusout", event => {
-        setTimeout(() => {
-            document.querySelector("#privacy_select").setAttribute("hidden", true)
-        }, 500)
-    })
+        document.querySelector("#privacy_select").addEventListener("focusout", event => {
+            setTimeout(() => {
+                document.querySelector("#privacy_select").setAttribute("hidden", true)
+            }, 500)
+        })
 
-    function auto_grow(element) {
-        element.style.height = "5px";
-        element.style.height = (element.scrollHeight) + "px";
-    }
+        function auto_grow(element) {
+            element.style.height = "5px";
+            element.style.height = (element.scrollHeight) + "px";
+        }
+    });
 </script>
 <?= $this->endSection() ?>

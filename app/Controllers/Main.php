@@ -48,8 +48,8 @@ class Main extends BaseController
                                                 ,jobs.DATETIME_UPDATED
                                                 ,jobs.DATETIME_FINISHED
                                                 ,jobs.PRIVACY')
-                                        ->join('login', 'login.USER_ID = jobs.USER_ID')
-                                        ->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->paginate(5),
+                    ->join('login', 'login.USER_ID = jobs.USER_ID')
+                    ->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->paginate(5),
                 'pager'         => $job->pager,
                 'pageTitle'     => "Página Inicial",
 
@@ -61,26 +61,78 @@ class Main extends BaseController
         }
     }
 
-    public function loadMoreUsers(){
-        $limit = 5; 
+    public function indexAjax()
+    {
+        $job = new Todo();
+        $like = new Likes();
+
+        $jobs = $job->select('login.PROFILE_PIC
+                            ,login.USER
+                            ,login.NAME
+                            ,login.USER_ID
+                            ,jobs.ID_JOB
+                            ,jobs.USER_ID
+                            ,jobs.JOB_TITLE
+                            ,jobs.JOB
+                            ,jobs.DATETIME_CREATED
+                            ,jobs.DATETIME_UPDATED
+                            ,jobs.DATETIME_FINISHED
+                            ,jobs.PRIVACY')
+            ->join('login', 'login.USER_ID = jobs.USER_ID')
+            ->where('jobs.PRIVACY', true)->get()->getResultArray();
+        // dd($jobs);
+
+        foreach ($jobs as $key => $post) {
+            $result[] = [
+                'profile_pic'           => $post['PROFILE_PIC'],
+                'user'                  => $post['USER'],
+                'name'                  => $post['NAME'],
+                'user_id'               => $post['USER_ID'],
+                'job_id'                => $post['ID_JOB'],
+                'job_title'             => $post['JOB_TITLE'],
+                'job'                   => $post['JOB'],
+                'job_created'           => isset($post['DATETIME_CREATED']) ? date("d/m/Y", strtotime($post['DATETIME_CREATED'])) : "",
+                'job_updated'           => isset($post['DATETIME_UPDATED']) ? date("d/m/Y", strtotime($post['DATETIME_UPDATED'])) : "",
+                'job_finished'          => isset($post['DATETIME_FINISHED']) ? date("d/m/Y", strtotime($post['DATETIME_FINISHED'])) : "",
+                'job_privacy'           => $post['PRIVACY'],
+                'job_likes'             => $like->getJobLikes($post['ID_JOB']),
+                'user_liked'            => $like->checkUserLikedJob($post['ID_JOB'], $_SESSION['USER_ID']),
+            ];
+        }
+
+        return $this->response->setJSON($result);
+    }
+
+    public function newHome()
+    {
+        $data = [
+            'pageTitle'     => "Página Inicial",
+        ];
+        return view('teste', $data);
+    }
+
+    public function loadMoreUsers()
+    {
+        $limit = 5;
         $page = $limit * $this->request->getVar('page');
         $data['jobs'] = $this->fetchData($page);
         return view('load_more', $data);
-   }
-   
-   function fetchData($limit){
+    }
+
+    function fetchData($limit)
+    {
         $db = new Todo();
- 
+
         $dbQuery = $db->select('login.PROFILE_PIC, login.USER, login.NAME, login.USER_ID, jobs.ID_JOB, jobs.USER_ID, jobs.JOB_TITLE, jobs.JOB, jobs.DATETIME_CREATED, jobs.DATETIME_UPDATED, jobs.DATETIME_FINISHED, jobs.PRIVACY')->join('login', 'login.USER_ID = jobs.USER_ID')->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->limit($limit)->get();
-        
+
         return $dbQuery->getResult();
-   }
+    }
 
     public function home()
     {
         $session = session();
         if ($session->has('USER_ID')) {
-            redirect()->to(base_url('/'));
+            redirect()->to(base_url('/home'));
         } else {
             echo view('main');
         }
@@ -118,7 +170,7 @@ class Main extends BaseController
                 $msg['msg'] = 'Feedback enviado com sucesso, muito obrigado! ;)';
                 $msg['type'] = 'alert-success';
                 $this->session->setFlashdata('msg', $msg);
-                return redirect()->to(base_url('/'));
+                return redirect()->to(base_url('/home'));
             }
         }
         $data['pageTitle'] = "Contato";

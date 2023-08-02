@@ -37,10 +37,12 @@ $routes->setAutoRoute(true);
  * Main Controller Routes
  * --------------------------------------------------------------------
  */
-$routes->get('/', 'Main::index');
+$routes->get('/home', 'Main::index');
+$routes->get('/test', 'Main::newHome');
 $routes->get('/about', 'Main::about');
 $routes->get('/contact', 'Main::contact');
 $routes->match(['get', 'post'], '/posts', 'Main::loadMoreUsers');
+$routes->match(['get', 'post'], '/all', 'Main::indexAjax');
 // $routes->match(['get', 'post'], 'Main/fetchData', 'Main::fetchData');
 
 /*
@@ -60,6 +62,12 @@ $routes->get('/logout', 'Logincontroller::logout');
 $routes->get('profile/(:any)', 'Userscontroller::profile/$1');
 $routes->post('/upload', 'Userscontroller::upload', ['as' => 'upload']);
 
+/*
+ * --------------------------------------------------------------------
+ * Todo Controller Routes
+ * --------------------------------------------------------------------
+ */
+$routes->match(['get', 'post'], 'job_likes', 'Todocontroller::countJobLikes');
 
 /*
  * --------------------------------------------------------------------

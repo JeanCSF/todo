@@ -134,7 +134,7 @@ class Todocontroller extends BaseController
     public function likeJob($id_job)
     {
         $like = new Likes();
-        
+
         if (!empty($id_job)) {
             if ($like->newLikeJob($id_job)) {
                 $msg = [
@@ -151,7 +151,20 @@ class Todocontroller extends BaseController
                 $this->session->setFlashdata('msg', $msg);
                 return redirect()->back();
             }
+        }
+    }
 
+    public function countJobLikes()
+    {
+        $post = $this->request->getPost();
+        if (!empty($post)) {
+            $likes = new Likes();
+            $term = filter_input(INPUT_POST, 'term', FILTER_SANITIZE_STRING);
+            $total_likes = $likes->select('LIKE_ID')->where('ID_JOB', $term)->countAllResults();
+            $result = [
+                'likes'     => $total_likes,
+            ];
+            return $this->response->setJSON($result);
         }
     }
 }
