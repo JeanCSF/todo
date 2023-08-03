@@ -33,25 +33,6 @@ class Likes extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function newLikeJob($id_job)
-    {
-        date_default_timezone_set('America/Sao_Paulo');
-        $checkLike = $this->select('LIKE_ID')->where("ID_JOB = {$id_job} AND USER_ID = {$_SESSION['USER_ID']}")->find();
-        // dd($checkLike);
-        if (empty($checkLike)) {
-            $data = [
-                'LIKE_ID'           => $_SESSION['USER'] . "_" . date("Y-m-d H:i:s"),
-                'USER_ID'           => $_SESSION['USER_ID'],
-                'ID_JOB'            => $id_job,
-                'DATETIME_LIKED'    => date("Y-m-d H:i:s"),
-            ];
-            return $this->save($data) ? true : false;
-        }
-        if (!empty($checkLike)) {
-            return $this->where('LIKE_ID',$checkLike[0]->LIKE_ID)->delete() ? true : false;
-        }
-    }
-
     public function getJobLikes($id_job)
     {
         $result = $this->select('LIKE_ID')->where('ID_JOB', $id_job)->countAllResults();
@@ -61,9 +42,15 @@ class Likes extends Model
 
     public function checkUserLikedJob($id_job, $user_id)
     {
-        $result = $this->where('ID_JOB', $id_job)->where('USER_ID', $user_id)->countAllResults();
+        $result = $this->select('LIKE_ID')->where('ID_JOB', $id_job)->where('USER_ID', $user_id)->countAllResults();
 
         return $result;
     }
 
+    public function checkUserLiked($id_job, $user_id)
+    {
+        $result = $this->select('LIKE_ID')->where('ID_JOB', $id_job)->where('USER_ID', $user_id)->find();
+
+        return $result;
+    }
 }

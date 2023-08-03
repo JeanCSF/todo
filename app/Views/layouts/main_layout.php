@@ -187,15 +187,14 @@
     <div class="row">
         <header class="d-flex flex-column justify-content-between mt-2 left-panel">
             <div id="userActions">
-                <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-dashboard icon"></i></a>
-                <a href="<?= base_url('/test') ?>" class="nav-link"><i class="fa fa-pen icon"></i></a>
-                <a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i> <span class="side-text">Home</span></a>
-                <a href="about" class="nav-link"><i class="fa fa-circle-info icon"></i> <span class="side-text">Sobre</span></a>
+                <a href="<?=base_url('home')?>" class="nav-link"><i class="fa fa-dashboard icon"></i></a>
+                <a href="<?=base_url('home')?>" class="nav-link"><i class="fa fa-home icon"></i> <span class="side-text">Home</span></a>
+                <a href="<?=base_url('about')?>" class="nav-link"><i class="fa fa-circle-info icon"></i> <span class="side-text">Sobre</span></a>
                 <?php if (isset($_SESSION['USER_ID'])) : ?>
                     <?php if ($_SESSION['SU'] == 1) : ?>
-                        <a href="<?= base_url('userscontroller/users/') ?>"><i class="fa fa-users icon"></i> <span class="side-text">Usuários</span></a>
+                        <a href="<?= base_url('users') ?>"><i class="fa fa-users icon"></i> <span class="side-text">Usuários</span></a>
                     <?php endif; ?>
-                    <a href="logout"><i class="fa fa-right-from-bracket icon"></i> <span class="side-text">Logout</span></a>
+                    <a href="<?=base_url('logout')?>"><i class="fa fa-right-from-bracket icon"></i> <span class="side-text">Logout</span></a>
                     <a id="sidebarTask" type="button" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"></a>
 
                     <div class="avatarDiv">
@@ -232,7 +231,7 @@
                         </div>
                     </div>
                 <?php endif ?>
-                <span id="teste"><?= $this->renderSection('section') ?></span>
+                <?= $this->renderSection('section') ?>
             </section>
         </main>
         <footer class="d-flex flex-column justify-content-between right-panel">

@@ -34,15 +34,23 @@ $routes->setAutoRoute(true);
 
 /*
  * --------------------------------------------------------------------
+ * Api Controller Routes
+ * --------------------------------------------------------------------
+ */
+$routes->get('all_jobs', 'Api::index');
+$routes->match(['get', 'post'], 'like_job', 'Api::likeJob');
+$routes->get('job/(:any)', 'Api::show/$1');
+
+/*
+ * --------------------------------------------------------------------
  * Main Controller Routes
  * --------------------------------------------------------------------
  */
-$routes->get('/home', 'Main::index');
-$routes->get('/test', 'Main::newHome');
-$routes->get('/about', 'Main::about');
-$routes->get('/contact', 'Main::contact');
-$routes->match(['get', 'post'], '/posts', 'Main::loadMoreUsers');
-$routes->match(['get', 'post'], '/all', 'Main::indexAjax');
+$routes->get('/', 'Main::main');
+$routes->get('home', 'Main::index');
+$routes->get('about', 'Main::about');
+$routes->get('contact', 'Main::contact');
+
 // $routes->match(['get', 'post'], 'Main/fetchData', 'Main::fetchData');
 
 /*
@@ -50,9 +58,9 @@ $routes->match(['get', 'post'], '/all', 'Main::indexAjax');
  * Login Controller Routes
  * --------------------------------------------------------------------
  */
-$routes->get('/signup', 'Logincontroller::signup');
-$routes->get('/login', 'Logincontroller::login');
-$routes->get('/logout', 'Logincontroller::logout');
+$routes->get('signup', 'Logincontroller::signup');
+$routes->get('login', 'Logincontroller::login');
+$routes->get('logout', 'Logincontroller::logout');
 
 /*
  * --------------------------------------------------------------------
@@ -60,6 +68,7 @@ $routes->get('/logout', 'Logincontroller::logout');
  * --------------------------------------------------------------------
  */
 $routes->get('profile/(:any)', 'Userscontroller::profile/$1');
+$routes->get('users', 'Userscontroller::users');
 $routes->post('/upload', 'Userscontroller::upload', ['as' => 'upload']);
 
 /*
