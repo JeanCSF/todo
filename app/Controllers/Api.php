@@ -11,6 +11,7 @@ class Api extends ResourceController
     private $mainController;
     private $jobsModel;
     private $likesModel;
+    private $commentsModel;
     private $token = 'ihgfedcba987654321';
 
     public function __construct()
@@ -18,6 +19,7 @@ class Api extends ResourceController
         $this->mainController = new \App\Controllers\Main();
         $this->jobsModel = new \App\Models\Todo();
         $this->likesModel = new \App\Models\Likes();
+        $this->commentsModel = new \App\Models\Comments();
         $this->session = \Config\Services::session();
     }
 
@@ -48,7 +50,7 @@ class Api extends ResourceController
                             ,jobs.DATETIME_FINISHED
                             ,jobs.PRIVACY')
                 ->join('login', 'login.USER_ID = jobs.USER_ID')
-                ->where('jobs.PRIVACY', true)->orderBy('jobs.DATETIME_CREATED DESC')->paginate(10, '', $currentPage);
+                ->where('jobs.PRIVACY', true)->orderBy('jobs.ID_JOB ASC')->paginate(10, '', $currentPage);
 
             foreach ($jobs as $key => $job) {
                 $response[] = [
@@ -64,7 +66,9 @@ class Api extends ResourceController
                     'job_finished'          => isset($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) : "",
                     'job_privacy'           => $job->PRIVACY,
                     'job_likes'             => $this->likesModel->getJobLikes($job->ID_JOB),
+                    'job_num_comments'      => $this->commentsModel->countJobComments($job->ID_JOB),
                     'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, $this->session->USER_ID),
+
                 ];
             }
 
@@ -119,6 +123,49 @@ class Api extends ResourceController
         return $this->response->setJson($response);
     }
 
+    public function commentJob()
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+        $response = [];
+        if ($this->_tokenValidate()) {
+            $newComment = [
+                'COMMENT_ID'            =>  $this->session->USER . date("Y-m-d H:i:s"),
+                'USER_ID'               =>  $this->request->getPost('user_id'),
+                'ID_JOB'                =>  $this->request->getPost('job_id'),
+                'COMMENT'               =>  $this->request->getPost('job_comment'),
+                'DATETIME_COMMENTED'    =>  date("Y-m-d H:i:s"),
+            ];
+            try {
+                if (!empty($newComment)) {
+                    $response = [
+                        'response'  =>  'success',
+                        'msg'       =>  'Commented Post'
+                    ];
+                    $this->commentsModel->save($newComment);
+                } else {
+                    $response = [
+                        'response'  =>  'error',
+                        'msg'       =>  'Erro ao comentar no post'
+                    ];
+                }
+            } catch (Exception $e) {
+                $response = [
+                    'response'  =>  'error',
+                    'msg'       =>  'Erro inesperado',
+                    'errors'    =>  [
+                        'exception' =>  $e->getMessage()
+                    ],
+                ];
+            }
+        } else {
+            $response = [
+                'response'  =>  'error',
+                'msg'       =>  'Token inválido',
+            ];
+        }
+        return $this->response->setJson($response);
+    }
+
     /**
      * Return the properties of a resource object
      *
@@ -127,7 +174,7 @@ class Api extends ResourceController
     public function show($id = null)
     {
         if (isset($this->session->USER_ID)) {
-            if ($this->_tokenValidate() && $id != null) {
+            if ($id != null) {
                 $response = [];
 
                 $jobs = $this->jobsModel->select('login.PROFILE_PIC
@@ -165,7 +212,9 @@ class Api extends ResourceController
                                 'job_finished'          => isset($job['DATETIME_FINISHED']) ? date("d/m/Y", strtotime($job['DATETIME_FINISHED'])) : "",
                                 'job_privacy'           => $job['PRIVACY'],
                                 'job_likes'             => $this->likesModel->getJobLikes($job['ID_JOB']),
+                                'job_num_comments'      => $this->commentsModel->countJobComments($job['ID_JOB']),
                                 'user_liked'            => $this->likesModel->checkUserLikedJob($job['ID_JOB'], $this->session->USER_ID),
+                                'job_comments'          => $this->commentsModel->where('ID_JOB',$job['ID_JOB'])->findAll(),
                             ];
                         }
                     } else {

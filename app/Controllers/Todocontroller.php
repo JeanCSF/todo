@@ -154,17 +154,18 @@ class Todocontroller extends BaseController
         }
     }
 
-    public function countJobLikes()
+    public function job($job_id)
     {
-        $post = $this->request->getPost();
-        if (!empty($post)) {
-            $likes = new Likes();
-            $term = filter_input(INPUT_POST, 'term', FILTER_SANITIZE_STRING);
-            $total_likes = $likes->select('LIKE_ID')->where('ID_JOB', $term)->countAllResults();
-            $result = [
-                'likes'     => $total_likes,
+        $jobs = new Todo();
+        $job = $jobs->find($job_id);
+        if (isset($_SESSION['USER_ID'])) {
+            $data = [
+                'pageTitle'     => $job->JOB_TITLE,
+                'job_id'        => $job_id,
             ];
-            return $this->response->setJSON($result);
+            return view('post', $data);
+        } else {
+            $this->main();
         }
     }
 }

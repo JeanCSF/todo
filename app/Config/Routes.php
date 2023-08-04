@@ -38,8 +38,9 @@ $routes->setAutoRoute(true);
  * --------------------------------------------------------------------
  */
 $routes->get('all_jobs', 'Api::index');
-$routes->match(['get', 'post'], 'like_job', 'Api::likeJob');
 $routes->get('job/(:any)', 'Api::show/$1');
+$routes->match(['get', 'post'], 'like_job', 'Api::likeJob');
+$routes->match(['get', 'post'], 'comment_job', 'Api::commentJob');
 
 /*
  * --------------------------------------------------------------------
@@ -77,6 +78,7 @@ $routes->post('/upload', 'Userscontroller::upload', ['as' => 'upload']);
  * --------------------------------------------------------------------
  */
 $routes->match(['get', 'post'], 'job_likes', 'Todocontroller::countJobLikes');
+$routes->get('post/(:any)', 'Todocontroller::job/$1');
 
 /*
  * --------------------------------------------------------------------
