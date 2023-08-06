@@ -136,14 +136,18 @@ class Todocontroller extends BaseController
     {
         $jobs = new Todo();
         $job = $jobs->find($job_id);
-        if (isset($_SESSION['USER_ID'])) {
-            $data = [
-                'pageTitle'     =>  $job->JOB_TITLE,
-                'job_id'        =>  $job_id,
-            ];
-            return view('post', $data);
+        if ($job) {
+            if (isset($_SESSION['USER_ID'])) {
+                $data = [
+                    'pageTitle'     =>  $job->JOB_TITLE,
+                    'job_id'        =>  $job_id,
+                ];
+                return view('post', $data);
+            } else {
+                $this->main();
+            }
         } else {
-            $this->main();
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
     }
 
@@ -151,14 +155,18 @@ class Todocontroller extends BaseController
     {
         $replies = new Replies();
         $replie = $replies->find($reply_id);
-        if (isset($_SESSION['USER_ID'])) {
-            $data = [
-                'pageTitle'     =>  $replie->REPLY,
-                'reply_id'      =>  $reply_id,
-            ];
-            return view('reply', $data);
+        if ($replie) {
+            if (isset($_SESSION['USER_ID'])) {
+                $data = [
+                    'pageTitle'     =>  $replie->REPLY,
+                    'reply_id'      =>  $reply_id,
+                ];
+                return view('reply', $data);
+            } else {
+                $this->main();
+            }
         } else {
-            $this->main();
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
     }
 }
