@@ -171,8 +171,8 @@
             }).done(function(response) {
 
                 likeButton.innerHTML += `
-                        <i id="likeButton${response.job_id}" class="${response.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
-                        <span id="likes${response.job_id}" class="ms-1 fst-italic text-muted">${response.job_likes}</span>
+                        <i id="likeButton${response.job.job_id}" class="${response.job.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
+                        <span id="likes${response.job.job_id}" class="ms-1 fst-italic text-muted">${response.job.job_likes}</span>
                 `;
             });
         });

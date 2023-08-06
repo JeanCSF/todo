@@ -1,24 +1,24 @@
 <?= $this->extend('layouts/main_layout') ?>
 <?= $this->section('section') ?>
 
-<article id="postContainer" class="row mt-2">
+<article id="replyContainer" class="row mt-2">
 </article>
 <hr>
-<div id="post_comment_div" class="header-post mb-2">
+<div id="reply_comment_div" class="header-post mb-2">
     <img class="rounded-circle border border-light-subtle float-start" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt="Profile pic">
-    <form method="post" class="d-flex justify-content-between align-items-center" id="frmComment">
+    <form method="post" class="d-flex justify-content-between align-items-center" id="frmReply">
         <div class="ms-3 text-center">
-            <textarea oninput="auto_grow(this)" id="post_comment" name="post_comment" placeholder="Comente esta tarefa" required autocomplete="off" style="width: 600px;"></textarea>
+            <textarea oninput="auto_grow(this)" id="reply_comment" name="reply_comment" placeholder="Responder Comentário" required autocomplete="off" style="width: 600px;"></textarea>
         </div>
         <div class="pb-4">
-            <button type="submit" class="btn btn-primary fw-bolder">Comentar</button>
+            <button type="submit" class="btn btn-primary fw-bolder">Responder</button>
         </div>
     </form>
 </div>
 <hr>
-<article id="newComment" class="row">
+<article id="newReply" class="row">
 </article>
-<article id="commentsContainer" class="row">
+<article id="repliesContainer" class="row">
 </article>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
@@ -27,19 +27,20 @@
     var session_profile_pic = '<?= $_SESSION['IMG'] ?>';
     var session_user = '<?= $_SESSION['USER'] ?>'
     const BASEURL = '<?= base_url() ?>';
-    var job_id = '<?= $job_id ?>';
+    var reply_id = '<?= $reply_id ?>';
 
-    var mainContainer = document.querySelector("#postContainer");
-    var commentsContainer = document.querySelector("#commentsContainer");
-    var newComment = document.querySelector("#newComment");
+    var mainContainer = document.querySelector("#replyContainer");
+    var commentsContainer = document.querySelector("#repliesContainer");
+    var newComment = document.querySelector("#newReply");
+
     mainContainer.innerHTML = '';
     commentsContainer.innerHTML = '';
     newComment.innerHTML = '';
 
-    var comment = document.querySelector('#post_comment');
-    var frmComment = document.querySelector('#frmComment');
+    var comment = document.querySelector('#reply_comment');
+    var frmComment = document.querySelector('#frmReply');
     frmComment.addEventListener('submit', function(e) {
-        commentJob(session_user_id, job_id, comment.value);
+        commentReply(session_user_id, reply_id, comment.value);
         e.preventDefault();
         comment.value = '';
 
@@ -50,7 +51,7 @@
     }
 
     $.ajax({
-        url: BASEURL + '/job/' + job_id,
+        url: BASEURL + '/comment/' + reply_id,
         type: "GET",
         headers: {
             'token': 'ihgfedcba987654321'
@@ -60,29 +61,25 @@
         }
     }).done(function(response) {
         let Comments = [];
-        Comments = response.job_comments;
+        Comments = response.reply_comments;
         mainContainer.innerHTML += `
                         <div class="post-container post">
                             <div class="user-img">
-                                <a href="${BASEURL}/profile/${btoa(response.job.user_id)}">
-                                    <img height="48" width="48" src="${!response.job.profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.job.user + '/' + response.job.profile_pic }" alt="Profile pic">
+                                <a href="${BASEURL}/profile/${btoa(response.reply.user_id)}">
+                                    <img height="48" width="48" src="${!response.reply.profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.reply.user + '/' + response.reply.profile_pic }" alt="Profile pic">
                                 </a>
                             </div>
                             <div class="user-info">
-                                <a href="${BASEURL}/profile/${btoa(response.job.user_id)}" class="user-name">${response.job.name} &#8226; <span class="text-muted fst-italic">@${response.job.user}</span></a>
+                                <a href="${BASEURL}/profile/${btoa(response.reply.user_id)}" class="user-name">${response.reply.name} &#8226; <span class="text-muted fst-italic">@${response.reply.user}</span></a>
                                 <span>
-                                    ${session_user_id == response.job.user_id? 
+                                    ${session_user_id == response.reply.user_id? 
                                         `<div class="dropdown">
                                             <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa fa-ellipsis"></i>
                                             </button>
                                             <ul class="dropdown-menu post-it-dropdown">
-                                                <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(${response.job.job_id})">Privacidade ${response.job.job_privacy == 1? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>' }</a></li>
-                                                    ${!response.job.job_finished?
-                                                    `<li><a class="dropdown-item" href="${BASEURL + '/todocontroller/jobdone/' + response.job.job_id}" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
-                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('${response.job.job_id}', '${response.job.job_title}', '${response.job.job}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>`
-                                                    : ``}                                        
-                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${response.job.job_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
+                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Comentário" role="edit" onclick="fillModalEdit('${response.reply.reply_id}', '${response.reply.reply}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
+                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDelete(${response.reply.reply_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                             </ul>
                                         </div>` 
                                         :
@@ -91,19 +88,17 @@
                                 </span>
                             </div>
                             <div class="user-post-text">
-                                <span class="fst-italic text-center d-block fs-5" style="${!response.job.job_finished? "" : "text-decoration: line-through;" }">${response.job.job_title}</span>
-                                <span id="jobTextContent">${response.job.job = response.job.job.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                                <span id="jobTextContent">${response.reply.reply.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">
-                                <p>${response.job.job_created}</p>
-                                <p>${!response.job.job_finished? "" : response.job.job_finished + " <i class='fa fa-check-double'></i>" }</p>
+                                <p>${response.reply.reply_created}</p>
                             </div>
-                            <div class="post-actions" id="postActions_${response.job.job_id}">
-                                <a id="likeButton${response.job.job_id}" href="javascript:void(0)" role="button" onClick="likeJob(${session_user_id},${response.job.job_id})">
-                                    <i class="${response.job.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
-                                    <span id="likes${response.job.job_id}" class="ms-1 fst-italic text-muted">${response.job.job_likes}</span>
+                            <div class="post-actions" id="postActions_${response.reply.reply_id}">
+                                <a id="likeButton${response.reply.reply_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${response.reply.reply_id})">
+                                    <i class="${response.reply.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
+                                    <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted">${response.reply.reply_likes}</span>
                                 </a>
-                                <a href="javascript:void(0)" style="pointer-events: none;" role="button"><i class="fa-regular fa-comment"></i><span class="ms-1 fst-italic text-muted">${response.job.job_num_comments}</span></a>
+                                <a href="javascript:void(0)" style="pointer-events: none;" role="button"><i class="fa-regular fa-comment"></i><span class="ms-1 fst-italic text-muted">${response.reply.reply_num_comments}</span></a>
                                 <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
                             </div>
                         </div>
@@ -154,46 +149,6 @@
         });
     });
 
-    function likeJob(user_id, job_id) {
-        var dataToSend = {
-            user_id: user_id,
-            job_id: job_id
-        };
-        $.ajax({
-            url: '<?= base_url('like_job') ?>',
-            type: "POST",
-            headers: {
-                'token': 'ihgfedcba987654321'
-            },
-            data: dataToSend,
-            error: function(xhr, status, error) {
-                console.error("Erro na requisição:", error);
-            }
-        }).done(function(resp) {
-            var likeButton = document.querySelector(`#likeButton${job_id}`);
-            var session_user_id = '<?= $_SESSION['USER_ID'] ?>';
-            const BASEURL = '<?= base_url() ?>';
-            likeButton.innerHTML = '';
-            let Posts = [];
-            $.ajax({
-                url: BASEURL + '/job/' + job_id,
-                type: "GET",
-                headers: {
-                    'token': 'ihgfedcba987654321'
-                },
-                error: function(xhr, status, error) {
-                    console.error("Erro na requisição:", error);
-                }
-            }).done(function(response) {
-
-                likeButton.innerHTML += `
-                        <i id="likeButton${response.job.job_id}" class="${response.job.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
-                        <span id="likes${response.job.job_id}" class="ms-1 fst-italic text-muted">${response.job.job_likes}</span>
-                `;
-            });
-        });
-    }
-
     function likeComment(user_id, comment_id) {
         var dataToSend = {
             user_id: user_id,
@@ -234,12 +189,12 @@
         });
     }
 
-    function commentJob(user_id, job_id, job_comment) {
+    function commentReply(user_id, reply_id, reply_comment) {
         var dataToSend = {
             user_id: user_id,
-            job_id: job_id,
-            job_comment: job_comment,
-            reply: 0
+            reply_id: reply_id,
+            reply_comment: reply_comment,
+            reply: 1
         };
         $.ajax({
             url: '<?= base_url('comment_job') ?>',
@@ -255,7 +210,7 @@
             var session_user_id = '<?= $_SESSION['USER_ID'] ?>';
             const BASEURL = '<?= base_url() ?>';
             $.ajax({
-                url: BASEURL + '/job/' + job_id,
+                url: BASEURL + '/comment/' + reply_id,
                 type: "GET",
                 headers: {
                     'token': 'ihgfedcba987654321'
@@ -267,21 +222,21 @@
                 newComment.innerHTML += `
                 <div class="post-container post p-2">
                             <div class="user-img">
-                                <a href="${BASEURL}/profile/${btoa(response.job_comments[0].user_id)}">
-                                    <img height="48" width="48" src="${!response.job_comments[0].profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.job_comments[0].user + '/' + response.job_comments[0].profile_pic }" alt="Profile pic">
+                                <a href="${BASEURL}/profile/${btoa(response.reply_comments[0].user_id)}">
+                                    <img height="48" width="48" src="${!response.reply_comments[0].profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.reply_comments[0].user + '/' + response.reply_comments[0].profile_pic }" alt="Profile pic">
                                 </a>
                             </div>
                             <div class="user-info">
-                                <a href="${BASEURL}/profile/${btoa(response.job_comments[0].user_id)}" class="user-name">${response.job_comments[0].name} &#8226; <span class="text-muted fst-italic">@${response.job_comments[0].user}</span></a>
+                                <a href="${BASEURL}/profile/${btoa(response.reply_comments[0].user_id)}" class="user-name">${response.reply_comments[0].name} &#8226; <span class="text-muted fst-italic">@${response.reply_comments[0].user}</span></a>
                                 <span>
-                                    ${session_user_id == response.job_comments[0].user_id? 
+                                    ${session_user_id == response.reply_comments[0].user_id? 
                                         `<div class="dropdown">
                                             <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa fa-ellipsis"></i>
                                             </button>
                                             <ul class="dropdown-menu post-it-dropdown">
-                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Comentário" role="edit" onclick="fillModalEdit('${response.job_comments[0].comment_id}', '${response.job_comments[0].comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
-                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDelete(${response.job_comments[0].comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
+                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Comentário" role="edit" onclick="fillModalEdit('${response.reply_comments[0].comment_id}', '${response.reply_comments[0].comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
+                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDelete(${response.reply_comments[0].comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                             </ul>
                                         </div>` 
                                         :
@@ -290,17 +245,17 @@
                                 </span>
                             </div>
                             <div class="user-post-text">
-                                <span id="jobTextContent" onclick="commentPage(${response.job_comments[0].comment_id})">${(response.job_comments[0].comment.replace(/(?:\r\n|\r|\n)/g, '<br>'))}</span>
+                                <span id="jobTextContent" onclick="commentPage(${response.reply_comments[0].comment_id})">${(response.reply_comments[0].comment.replace(/(?:\r\n|\r|\n)/g, '<br>'))}</span>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">
-                                <p>${response.job_comments[0].comment_created}</p>
+                                <p>${response.reply_comments[0].comment_created}</p>
                             </div>
-                            <div class="post-actions" id="postActions_${response.job_comments[0].comment_id}">
-                                <a id="likeButton${response.job_comments[0].comment_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${response.job_comments[0].comment_id})">
-                                    <i class="${response.job_comments[0].user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
-                                    <span id="likes${response.job_comments[0].comment_id}" class="ms-1 fst-italic text-muted">${response.job_comments[0].comment_likes}</span>
+                            <div class="post-actions" id="postActions_${response.reply_comments[0].comment_id}">
+                                <a id="likeButton${response.reply_comments[0].comment_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${response.reply_comments[0].comment_id})">
+                                    <i class="${response.reply_comments[0].user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
+                                    <span id="likes${response.reply_comments[0].comment_id}" class="ms-1 fst-italic text-muted">${response.reply_comments[0].comment_likes}</span>
                                 </a>
-                                <a href="javascript:void(0)" style="pointer-events: none;" role="button"><i class="fa-regular fa-comment"></i><span class="ms-1 fst-italic text-muted" onclick="commentPage(${response.job_comments[0].comment_id})">${response.job_comments[0].comment_num_comments}</span></a>
+                                <a href="javascript:void(0)" style="pointer-events: none;" role="button"><i class="fa-regular fa-comment"></i><span class="ms-1 fst-italic text-muted" onclick="commentPage(${response.reply_comments[0].comment_id})">${response.reply_comments[0].comment_num_comments}</span></a>
                                 <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
                             </div>
                         </div>

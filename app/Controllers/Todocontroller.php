@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Likes;
+use App\Models\Replies;
 use App\Models\Todo;
 use CodeIgniter\Controller;
 
@@ -131,39 +132,31 @@ class Todocontroller extends BaseController
         }
     }
 
-    public function likeJob($id_job)
-    {
-        $like = new Likes();
-
-        if (!empty($id_job)) {
-            if ($like->newLikeJob($id_job)) {
-                $msg = [
-                    'msg' => 'Like',
-                    'type' => 'alert-success',
-                ];
-                $this->session->setFlashdata('msg', $msg);
-                return redirect()->back();
-            } else {
-                $msg = [
-                    'msg' => 'Não foi possível concluir tarefa',
-                    'type' => 'alert-danger',
-                ];
-                $this->session->setFlashdata('msg', $msg);
-                return redirect()->back();
-            }
-        }
-    }
-
     public function job($job_id)
     {
         $jobs = new Todo();
         $job = $jobs->find($job_id);
         if (isset($_SESSION['USER_ID'])) {
             $data = [
-                'pageTitle'     => $job->JOB_TITLE,
-                'job_id'        => $job_id,
+                'pageTitle'     =>  $job->JOB_TITLE,
+                'job_id'        =>  $job_id,
             ];
             return view('post', $data);
+        } else {
+            $this->main();
+        }
+    }
+
+    public function reply($reply_id)
+    {
+        $replies = new Replies();
+        $replie = $replies->find($reply_id);
+        if (isset($_SESSION['USER_ID'])) {
+            $data = [
+                'pageTitle'     =>  $replie->REPLY,
+                'reply_id'      =>  $reply_id,
+            ];
+            return view('reply', $data);
         } else {
             $this->main();
         }

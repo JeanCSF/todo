@@ -4,16 +4,17 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Comments extends Model
+class Replies extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'comments';
+    protected $table            = 'replies';
+    protected $primaryKey       = 'REPLY_ID';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['COMMENT_ID', 'USER_ID', 'ID_JOB', 'COMMENT', 'DATETIME_COMMENTED'];
+    protected $allowedFields    = ['PARENT_REPLY_ID', 'USER_ID', 'ID_JOB', 'REPLY', 'DATETIME_REPLIED'];
 
     // Validation
     protected $validationRules      = [];
@@ -32,16 +33,30 @@ class Comments extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getJobComments($id_job)
+    public function getJobReplies($id_job)
     {
-        $result = $this->select('COMMENT')->where('ID_JOB', $id_job)->get()->getResultObject();
+        $result = $this->select('REPLY')->where('ID_JOB', $id_job)->get()->getResultObject();
 
         return $result;
     }
 
-    public function countJobComments($id_job)
+    public function countJobReplies($id_job)
     {
-        $result = $this->select('COMMENT_ID')->where('ID_JOB', $id_job)->countAllResults();
+        $result = $this->select('REPLY_ID')->where('ID_JOB', $id_job)->countAllResults();
+
+        return $result;
+    }
+
+    public function getRepliesOfThisReply($reply_id)
+    {
+        $result = $this->select('REPLY')->where('PARENT_REPLY_ID', $reply_id)->get()->getResultObject();
+
+        return $result;
+    }
+
+    public function countRepliesOfThisReply($reply_id)
+    {
+        $result = $this->select('REPLY_ID')->where('PARENT_REPLY_ID', $reply_id)->countAllResults();
 
         return $result;
     }

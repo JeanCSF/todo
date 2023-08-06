@@ -12,7 +12,7 @@ class Likes extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['LIKE_ID', 'USER_ID', 'ID_JOB', 'DATETIME_LIKED'];
+    protected $allowedFields    = ['LIKE_ID', 'USER_ID', 'CONTENT_ID', 'DATETIME_LIKED', 'TYPE'];
 
 
 
@@ -35,21 +35,42 @@ class Likes extends Model
 
     public function getJobLikes($id_job)
     {
-        $result = $this->select('LIKE_ID')->where('ID_JOB', $id_job)->countAllResults();
+        $result = $this->select('LIKE_ID')->where('CONTENT_ID', $id_job)->where("TYPE = 'POST' ")->countAllResults();
 
         return $result;
     }
 
     public function checkUserLikedJob($id_job, $user_id)
     {
-        $result = $this->select('LIKE_ID')->where('ID_JOB', $id_job)->where('USER_ID', $user_id)->countAllResults();
+        $result = $this->select('LIKE_ID')->where('CONTENT_ID', $id_job)->where('USER_ID', $user_id)->where("TYPE = 'POST' ")->countAllResults();
 
         return $result;
     }
 
-    public function checkUserLiked($id_job, $user_id)
+    public function getInfoIfAlreadyLikedJob($id_job, $user_id)
     {
-        $result = $this->select('LIKE_ID')->where('ID_JOB', $id_job)->where('USER_ID', $user_id)->find();
+        $result = $this->select('LIKE_ID')->where('CONTENT_ID', $id_job)->where('USER_ID', $user_id)->where("TYPE = 'POST' ")->find();
+
+        return $result;
+    }
+
+    public function getReplyLikes($reply_id)
+    {
+        $result = $this->select('LIKE_ID')->where('CONTENT_ID', $reply_id)->where("TYPE = 'REPLY' ")->countAllResults();
+
+        return $result;
+    }
+
+    public function checkUserLikedReply($reply_id, $user_id)
+    {
+        $result = $this->select('LIKE_ID')->where('CONTENT_ID', $reply_id)->where('USER_ID', $user_id)->where("TYPE = 'REPLY' ")->countAllResults();
+
+        return $result;
+    }
+
+    public function getInfoIfAlreadyLikedReply($reply_id, $user_id)
+    {
+        $result = $this->select('LIKE_ID')->where('CONTENT_ID', $reply_id)->where('USER_ID', $user_id)->where("TYPE = 'REPLY' ")->find();
 
         return $result;
     }
