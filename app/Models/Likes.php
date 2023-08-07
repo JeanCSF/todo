@@ -33,13 +33,6 @@ class Likes extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getJobLikes($id_job)
-    {
-        $result = $this->select('LIKE_ID')->where('CONTENT_ID', $id_job)->where("TYPE = 'POST' ")->countAllResults();
-
-        return $result;
-    }
-
     public function checkUserLikedJob($id_job, $user_id)
     {
         $result = $this->select('LIKE_ID')->where('CONTENT_ID', $id_job)->where('USER_ID', $user_id)->where("TYPE = 'POST' ")->countAllResults();

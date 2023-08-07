@@ -34,15 +34,15 @@ $routes->setAutoRoute(true);
 
 /*
  * --------------------------------------------------------------------
- * Api Controller Routes
+ * Jobs Api Controller Routes
  * --------------------------------------------------------------------
  */
-$routes->get('all_jobs', 'Api::index');
-$routes->get('job/(:any)', 'Api::show/$1');
-$routes->get('comment/(:any)', 'Api::showComment/$1');
-$routes->match(['get', 'post'], 'like_job', 'Api::likeJob');
-$routes->match(['get', 'post'], 'like_comment', 'Api::likeComment');
-$routes->match(['get', 'post'], 'comment_job', 'Api::commentJob');
+$routes->get('all_jobs', 'Api_jobs::index');
+$routes->get('job/(:any)', 'Api_jobs::show/$1');
+$routes->get('comment/(:any)', 'Api_jobs::showComment/$1');
+$routes->match(['get', 'post'], 'like_job', 'Api_jobs::likeJob');
+$routes->match(['get', 'post'], 'like_comment', 'Api_jobs::likeComment');
+$routes->match(['get', 'post'], 'comment_job', 'Api_jobs::commentJob');
 
 /*
  * --------------------------------------------------------------------

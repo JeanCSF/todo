@@ -78,7 +78,7 @@
                                                 <i class="fa fa-ellipsis"></i>
                                             </button>
                                             <ul class="dropdown-menu post-it-dropdown">
-                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Comentário" role="edit" onclick="fillModalEdit('${response.reply.reply_id}', '${response.reply.reply}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
+                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#replyModal" title="Editar Resposta" role="edit" onclick="fillModalEditReply('${response.reply.reply_id}', '${response.reply.reply}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
                                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDelete(${response.reply.reply_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                             </ul>
                                         </div>` 
@@ -88,13 +88,13 @@
                                 </span>
                             </div>
                             <div class="user-post-text">
-                                <span id="jobTextContent">${response.reply.reply.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                                <span id="replyContent${response.reply.reply_id}">${response.reply.reply.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">
                                 <p>${response.reply.reply_created}</p>
                             </div>
                             <div class="post-actions" id="postActions_${response.reply.reply_id}">
-                                <a id="likeButton${response.reply.reply_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${response.reply.reply_id})">
+                                <a id="likeReplyButton${response.reply.reply_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${response.reply.reply_id})">
                                     <i class="${response.reply.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
                                     <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted">${response.reply.reply_likes}</span>
                                 </a>
@@ -120,7 +120,7 @@
                                                 <i class="fa fa-ellipsis"></i>
                                             </button>
                                             <ul class="dropdown-menu post-it-dropdown">
-                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Comentário" role="edit" onclick="fillModalEdit('${post.comment_id}', '${post.comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
+                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#replyModal" title="Editar Resposta" role="edit" onclick="fillModalEditReply('${post.comment_id}', '${post.comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
                                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDelete(${post.comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                             </ul>
                                         </div>` 
@@ -130,13 +130,13 @@
                                 </span>
                             </div>
                             <div class="user-post-text" onclick="commentPage(${post.comment_id})">
-                                <span id="jobTextContent">${post.comment = post.comment.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                                <span id="replyCommentContent${post.comment_id}">${post.comment = post.comment.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">
                                 <p>${post.comment_created}</p>
                             </div>
                             <div class="post-actions" id="postActions_${post.comment_id}">
-                                <a id="likeButton${post.comment_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${post.comment_id})">
+                                <a id="likeReplyButton${post.comment_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${post.comment_id})">
                                     <i class="${post.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
                                     <span id="likes${post.comment_id}" class="ms-1 fst-italic text-muted">${post.comment_likes}</span>
                                 </a>
@@ -165,7 +165,7 @@
                 console.error("Erro na requisição:", error);
             }
         }).done(function(resp) {
-            var likeButton = document.querySelector(`#likeButton${comment_id}`);
+            var likeButton = document.querySelector(`#likeReplyButton${comment_id}`);
             var session_user_id = '<?= $_SESSION['USER_ID'] ?>';
             const BASEURL = '<?= base_url() ?>';
             likeButton.innerHTML = '';

@@ -1,7 +1,16 @@
 * {
     margin: 0;
     padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+.reply-textarea {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 :root {
@@ -17,6 +26,7 @@
 body {
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 
 }
 
@@ -211,7 +221,7 @@ html {
     display: none;
 }
 
-article {
+.post-container {
     border-bottom: 2px solid var(--maingrey) !important;
 
 }
@@ -318,7 +328,7 @@ article {
 }
 
 .container-fluid {
-    margin-top: 10%;
+    margin-top: 15%;
 }
 
 .search button {

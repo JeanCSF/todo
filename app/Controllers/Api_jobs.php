@@ -6,7 +6,7 @@ use CodeIgniter\Debug\Exceptions;
 use CodeIgniter\RESTful\ResourceController;
 use Exception;
 
-class Api extends ResourceController
+class Api_jobs extends ResourceController
 {
     private $mainController;
     private $jobsModel;
@@ -35,7 +35,7 @@ class Api extends ResourceController
      */
     public function index()
     {
-        if (isset($this->session->USER_ID) && $this->_tokenValidate()) {
+        if (isset($this->session->USER_ID)) {
             $currentPage = $this->request->getVar('page');
             $jobs = $this->jobsModel->select('login.PROFILE_PIC
                             ,login.USER
@@ -49,8 +49,12 @@ class Api extends ResourceController
                             ,jobs.DATETIME_UPDATED
                             ,jobs.DATETIME_FINISHED
                             ,jobs.PRIVACY')
+                ->select('COALESCE(likes.NUM_LIKES, 0) AS NUM_LIKES', false)
+                ->select('COALESCE(replies.NUM_REPLIES, 0) AS NUM_REPLIES', false)
                 ->join('login', 'login.USER_ID = jobs.USER_ID')
-                ->where('jobs.PRIVACY', true)->orderBy('jobs.ID_JOB ASC')->paginate(10, '', $currentPage);
+                ->join('(SELECT CONTENT_ID, COUNT(LIKE_ID) AS NUM_LIKES FROM likes GROUP BY CONTENT_ID) AS likes', 'likes.CONTENT_ID = jobs.ID_JOB', 'left')
+                ->join('(SELECT ID_JOB, COUNT(REPLY_ID) AS NUM_REPLIES FROM replies GROUP BY ID_JOB) AS replies', 'replies.ID_JOB = jobs.ID_JOB', 'left')
+                ->where('jobs.PRIVACY', true)->orderBy('NUM_LIKES DESC, NUM_REPLIES DESC, jobs.DATETIME_CREATED DESC')->paginate(10, '', $currentPage);
 
             foreach ($jobs as $key => $job) {
                 $response[] = [
@@ -65,8 +69,8 @@ class Api extends ResourceController
                     'job_updated'           => isset($job->DATETIME_UPDATED) ? date("d/m/Y", strtotime($job->DATETIME_UPDATED)) : "",
                     'job_finished'          => isset($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) : "",
                     'job_privacy'           => $job->PRIVACY,
-                    'job_likes'             => $this->likesModel->getJobLikes($job->ID_JOB),
-                    'job_num_comments'      => $this->repliesModel->countJobReplies($job->ID_JOB),
+                    'job_likes'             => $job->NUM_LIKES,
+                    'job_num_comments'      => $job->NUM_REPLIES,
                     'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, $this->session->USER_ID),
 
                 ];
@@ -122,7 +126,7 @@ class Api extends ResourceController
                 'msg'       =>  'Token inválido',
             ];
         }
-        return $this->response->setJson($response);
+        return $this->respond($response);
     }
 
     public function commentJob()
@@ -179,7 +183,7 @@ class Api extends ResourceController
                 'msg'       =>  'Token inválido',
             ];
         }
-        return $this->response->setJson($response);
+        return $this->respond($response);
     }
 
     /**
@@ -205,7 +209,11 @@ class Api extends ResourceController
                             ,jobs.DATETIME_UPDATED
                             ,jobs.DATETIME_FINISHED
                             ,jobs.PRIVACY')
+                    ->select('COALESCE(likes.NUM_LIKES, 0) AS NUM_LIKES', false)
+                    ->select('COALESCE(replies.NUM_REPLIES, 0) AS NUM_REPLIES', false)
                     ->join('login', 'login.USER_ID = jobs.USER_ID')
+                    ->join('(SELECT CONTENT_ID, COUNT(LIKE_ID) AS NUM_LIKES FROM likes GROUP BY CONTENT_ID) AS likes', 'likes.CONTENT_ID = jobs.ID_JOB', 'left')
+                    ->join('(SELECT ID_JOB, COUNT(REPLY_ID) AS NUM_REPLIES FROM replies GROUP BY ID_JOB) AS replies', 'replies.ID_JOB = jobs.ID_JOB', 'left')
                     ->where('jobs.PRIVACY', true)->where('jobs.ID_JOB', $id)->get()->getResultArray();
 
                 $comments = $this->repliesModel->select('login.PROFILE_PIC              AS profile_pic
@@ -234,8 +242,8 @@ class Api extends ResourceController
                                 'job_updated'           => isset($job['DATETIME_UPDATED']) ? date("d/m/Y", strtotime($job['DATETIME_UPDATED'])) : "",
                                 'job_finished'          => isset($job['DATETIME_FINISHED']) ? date("d/m/Y", strtotime($job['DATETIME_FINISHED'])) : "",
                                 'job_privacy'           => $job['PRIVACY'],
-                                'job_likes'             => $this->likesModel->getJobLikes($job['ID_JOB']),
-                                'job_num_comments'      => $this->repliesModel->countJobReplies($job['ID_JOB']),
+                                'job_likes'             => $job['NUM_LIKES'],
+                                'job_num_comments'      => $job['NUM_REPLIES'],
                                 'user_liked'            => $this->likesModel->checkUserLikedJob($job['ID_JOB'], $this->session->USER_ID),
                             ];
                         }
@@ -330,7 +338,7 @@ class Api extends ResourceController
                 'msg'       =>  'Token inválido',
             ];
         }
-        return $this->response->setJson($response);
+        return $this->respond($response);
     }
 
     public function showComment($id = null)

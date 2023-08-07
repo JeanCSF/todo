@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, minimum-scale=1">
-    <title>Tome Nota!</title>
+    <title>Anti Social Social Network</title>
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/main.css') ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -18,6 +18,37 @@
 </head>
 
 <body>
+    <!-- Reply Modal -->
+    <div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="replyModalLabel">Editar Resposta</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="p-4 mb-3">
+                                <form action="" id="formReply" method="post">
+                                    <div class="row mb-3">
+                                        <textarea style="height: 150px;" name="reply_content" id="reply_content" value="" class="form-control" required></textarea>
+                                    </div>
+                                    <input type="hidden" name="reply_id" id="reply_id" value="">
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <input type="submit" value="Salvar" id="btnReply" onclick="" class="btn btn-success">
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Reply Modal -->
+
     <!-- Profile Modal -->
     <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -75,12 +106,12 @@
                                     </div>
                                     <input type="hidden" name="id_job" id="id_job" value="">
                                     <input type="hidden" id="editar" value="">
+                                    <div class="modal-footer d-flex justify-content-between">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <input type="submit" value="" id="btnSubmit" onclick="" class="btn btn-success">
+                                    </div>
+                                </form>
                             </div>
-                            <div class="modal-footer d-flex justify-content-between">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <input type="submit" value="" id="btnSubmit" onclick="" class="btn btn-success">
-                            </div>
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -187,14 +218,14 @@
     <div class="row">
         <header class="d-flex flex-column justify-content-between mt-2 left-panel">
             <div id="userActions">
-                <a href="<?=base_url('home')?>" class="nav-link"><i class="fa fa-dashboard icon"></i></a>
-                <a href="<?=base_url('home')?>" class="nav-link"><i class="fa fa-home icon"></i> <span class="side-text">Home</span></a>
-                <a href="<?=base_url('about')?>" class="nav-link"><i class="fa fa-circle-info icon"></i> <span class="side-text">Sobre</span></a>
+                <a href="<?= base_url('home') ?>" class="nav-link"><i class="fa fa-dashboard icon"></i></a>
+                <a href="<?= base_url('home') ?>" class="nav-link"><i class="fa fa-home icon"></i> <span class="side-text">Home</span></a>
+                <a href="<?= base_url('about') ?>" class="nav-link"><i class="fa fa-circle-info icon"></i> <span class="side-text">Sobre</span></a>
                 <?php if (isset($_SESSION['USER_ID'])) : ?>
                     <?php if ($_SESSION['SU'] == 1) : ?>
                         <a href="<?= base_url('users') ?>"><i class="fa fa-users icon"></i> <span class="side-text">Usuários</span></a>
                     <?php endif; ?>
-                    <a href="<?=base_url('logout')?>"><i class="fa fa-right-from-bracket icon"></i> <span class="side-text">Logout</span></a>
+                    <a href="<?= base_url('logout') ?>"><i class="fa fa-right-from-bracket icon"></i> <span class="side-text">Logout</span></a>
                     <a id="sidebarTask" type="button" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"></a>
 
                     <div class="avatarDiv">
@@ -269,6 +300,7 @@
         </div>
     </div>
 
+    <script defer src="<?= base_url('assets/home.js') ?>"></script>
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
@@ -295,6 +327,15 @@
             document.getElementById("job_name").setAttribute('value', job);
             document.getElementById("job_desc").setAttribute('value', desc);
             document.getElementById("job_desc").textContent = '' + desc;
+
+        }
+
+        function fillModalEditReply(id, reply) {
+            document.getElementById("btnSubmit").setAttribute('value', 'Atualizar');
+            document.getElementById("reply_id").setAttribute('value', id);
+            document.getElementById("reply_content").setAttribute('value', reply);
+            document.getElementById("reply_content").textContent = reply;
+        
 
         }
 

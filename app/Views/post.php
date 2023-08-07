@@ -1,25 +1,34 @@
 <?= $this->extend('layouts/main_layout') ?>
 <?= $this->section('section') ?>
-
-<article id="postContainer" class="row mt-2">
-</article>
-<hr>
-<div id="post_comment_div" class="header-post mb-2">
-    <img class="rounded-circle border border-light-subtle float-start" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt="Profile pic">
-    <form method="post" class="d-flex justify-content-between align-items-center" id="frmComment">
-        <div class="ms-3 text-center">
-            <textarea oninput="auto_grow(this)" id="post_comment" name="post_comment" placeholder="Comente esta tarefa" required autocomplete="off" style="width: 600px;"></textarea>
-        </div>
-        <div class="pb-4">
-            <button type="submit" class="btn btn-primary fw-bolder">Comentar</button>
-        </div>
-    </form>
+<style>
+    .reply-textarea {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        max-width: 180px !important;
+    }
+</style>
+<div class="container-fluid">
+    <article id="postContainer" class="row mt-2">
+    </article>
+    <hr>
+    <div id="post_comment_div" class="header-post mb-2">
+        <img class="rounded-circle border border-light-subtle float-start" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt="Profile pic">
+        <form method="post" class="d-flex justify-content-between align-items-center" id="frmComment">
+            <div class="ms-3 text-center">
+                <textarea oninput="auto_grow(this)" id="post_comment" name="post_comment" class="reply-textarea" placeholder="Comente esta tarefa" required autocomplete="off"></textarea>
+            </div>
+            <div class="pb-4">
+                <button type="submit" class="btn btn-primary fw-bolder">Comentar</button>
+            </div>
+        </form>
+    </div>
+    <hr>
+    <article id="newComment" class="row">
+    </article>
+    <article id="commentsContainer" class="row">
+    </article>
 </div>
-<hr>
-<article id="newComment" class="row">
-</article>
-<article id="commentsContainer" class="row">
-</article>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script>
@@ -125,7 +134,7 @@
                                                 <i class="fa fa-ellipsis"></i>
                                             </button>
                                             <ul class="dropdown-menu post-it-dropdown">
-                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Comentário" role="edit" onclick="fillModalEdit('${post.comment_id}', '${post.comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
+                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#replyModal" title="Editar Comentário" role="edit" onclick="fillModalEditReply('${post.comment_id}', '${post.comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
                                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDelete(${post.comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                             </ul>
                                         </div>` 
@@ -135,13 +144,13 @@
                                 </span>
                             </div>
                             <div class="user-post-text" onclick="commentPage(${post.comment_id})">
-                                <span id="jobTextContent">${post.comment = post.comment.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                                <span id="jobReplyContent${post.comment_id}">${post.comment = post.comment.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">
                                 <p>${post.comment_created}</p>
                             </div>
                             <div class="post-actions" id="postActions_${post.comment_id}">
-                                <a id="likeButton${post.comment_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${post.comment_id})">
+                                <a id="likeCommentButton${post.comment_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${post.comment_id})">
                                     <i class="${post.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
                                     <span id="likes${post.comment_id}" class="ms-1 fst-italic text-muted">${post.comment_likes}</span>
                                 </a>
@@ -210,7 +219,7 @@
                 console.error("Erro na requisição:", error);
             }
         }).done(function(resp) {
-            var likeButton = document.querySelector(`#likeButton${comment_id}`);
+            var likeButton = document.querySelector(`#likeCommentButton${comment_id}`);
             var session_user_id = '<?= $_SESSION['USER_ID'] ?>';
             const BASEURL = '<?= base_url() ?>';
             likeButton.innerHTML = '';
@@ -312,6 +321,8 @@
     function auto_grow(element) {
         element.style.height = "5px";
         element.style.height = (element.scrollHeight) + "px";
+        element.style.width = "5px";
+        element.style.width = (element.scrollHeight) + "px";
     }
 </script>
 <?= $this->endSection() ?>
