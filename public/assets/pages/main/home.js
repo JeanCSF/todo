@@ -37,7 +37,7 @@ function loadMorePosts(page) {
                 mainContainer.innerHTML += `
                         <div class="post-container post">
                             <div class="user-img">
-                                <a href="${BASEURL}/profile/${btoa(post.user_id)}">
+                                <a href="${BASEURL}/profile/${post.user}">
                                     <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic}" alt="Profile pic">
                                 </a>
                             </div>

@@ -51,27 +51,20 @@ class Userscontroller extends BaseController
     }
 
 
-    public function profile($id)
+    public function profile($user)
     {
-        if ($this->session->has('USER_ID')) {
-            $id = base64_decode($id);
-            $users = new Users();
-            $jobs = new Todo();
-            $userData = $users->getUser($id);
-            $data = [
-                'userData'              => $users->getUser($id),
-                'userTasks'             => (($_SESSION['USER_ID'] == $id) ? $jobs->getUserJobs($id) : $jobs->getJobsForProfile($id)),
-                'alltasks'              => $jobs->countAllUserJobs($id),
-                'alldone'               => $jobs->countAllUserDoneJobs($id),
-                'notdone'               => $jobs->countAllUserNotDoneJobs($id),
-                'pageTitle'             => $userData->NAME,
-                'pager'                 => $jobs->pager,
+        $users = new Users();
+        $jobs = new Todo();
+        $userData = $users->getUser($user);
+        // var_dump($userData);die;
+        $data = [
+            'pageTitle'     =>  $user
+        ];
+        echo view('users/profile', $data);
+    }
 
-            ];
-            echo view('users/profile', $data);
-        } else {
-            $this->login();
-        }
+    public function profilePage($user)
+    {
     }
 
     public function login()

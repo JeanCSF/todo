@@ -34,9 +34,9 @@ class Users extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getUser($id)
+    public function getUser($user)
     {
-        $result = $this->find($id);
+        $result = $this->select('*')->where('USER',$user)->get();
         return $result;
     }
 

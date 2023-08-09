@@ -22,6 +22,7 @@
 <div id="main"></div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
+<script defer src="<?= base_url('assets/pages/main/home.js') ?>"></script>
 <script>
     let Posts = [];
     var currentPage = 1;

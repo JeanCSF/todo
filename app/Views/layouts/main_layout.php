@@ -300,7 +300,6 @@
         </div>
     </div>
 
-    <script defer src="<?= base_url('assets/home.js') ?>"></script>
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
