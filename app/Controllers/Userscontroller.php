@@ -51,20 +51,15 @@ class Userscontroller extends BaseController
     }
 
 
-    public function profile($user)
+    public function userPage($user)
     {
         $users = new Users();
-        $jobs = new Todo();
         $userData = $users->getUser($user);
-        // var_dump($userData);die;
         $data = [
-            'pageTitle'     =>  $user
+            'pageTitle'     =>  $userData[0]->NAME,
+            'user'          => $user
         ];
         echo view('users/profile', $data);
-    }
-
-    public function profilePage($user)
-    {
     }
 
     public function login()

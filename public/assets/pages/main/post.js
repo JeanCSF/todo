@@ -24,12 +24,12 @@ $.ajax({
     mainContainer.innerHTML += `
                     <div class="post-container post">
                         <div class="user-img">
-                            <a href="${BASEURL}/profile/${btoa(response.job.user_id)}">
+                            <a href="${BASEURL}/user/${response.job.user}">
                                 <img height="48" width="48" src="${!response.job.profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.job.user + '/' + response.job.profile_pic }" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">
-                            <a href="${BASEURL}/profile/${btoa(response.job.user_id)}" class="user-name">${response.job.name} &#8226; <span class="text-muted fst-italic">@${response.job.user}</span></a>
+                            <a href="${BASEURL}/user/${response.job.user}" class="user-name">${response.job.name} &#8226; <span class="text-muted fst-italic">@${response.job.user}</span></a>
                             <span>
                                 ${session_user_id == response.job.user_id? 
                                     `<div class="dropdown">
@@ -72,12 +72,12 @@ $.ajax({
         commentsContainer.innerHTML += `
                 <div class="post-container post p-2">
                         <div class="user-img">
-                            <a href="${BASEURL}/profile/${btoa(post.user_id)}">
+                            <a href="${BASEURL}/user/${post.user}">
                                 <img height="48" width="48" src="${!post.profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic }" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">
-                            <a href="${BASEURL}/profile/${btoa(post.user_id)}" class="user-name">${post.name} &#8226; <span class="text-muted fst-italic">@${post.user}</span></a>
+                            <a href="${BASEURL}/user/${post.user}" class="user-name">${post.name} &#8226; <span class="text-muted fst-italic">@${post.user}</span></a>
                             <span>
                                 ${session_user_id == post.user_id? 
                                     `<div class="dropdown">
@@ -221,12 +221,12 @@ function commentJob(user_id, job_id, job_comment) {
             newComment.innerHTML += `
             <div class="post-container post p-2">
                         <div class="user-img">
-                            <a href="${BASEURL}/profile/${btoa(response.job_comments[0].user_id)}">
+                            <a href="${BASEURL}/user/${response.job_comments[0].user}">
                                 <img height="48" width="48" src="${!response.job_comments[0].profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.job_comments[0].user + '/' + response.job_comments[0].profile_pic }" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">
-                            <a href="${BASEURL}/profile/${btoa(response.job_comments[0].user_id)}" class="user-name">${response.job_comments[0].name} &#8226; <span class="text-muted fst-italic">@${response.job_comments[0].user}</span></a>
+                            <a href="${BASEURL}/user/${response.job_comments[0].user}" class="user-name">${response.job_comments[0].name} &#8226; <span class="text-muted fst-italic">@${response.job_comments[0].user}</span></a>
                             <span>
                                 ${session_user_id == response.job_comments[0].user_id? 
                                     `<div class="dropdown">

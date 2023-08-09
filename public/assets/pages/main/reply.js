@@ -24,12 +24,12 @@ $.ajax({
     mainContainer.innerHTML += `
                     <div class="post-container post">
                         <div class="user-img">
-                            <a href="${BASEURL}/profile/${btoa(response.reply.user_id)}">
+                            <a href="${BASEURL}/user/${response.reply.user}">
                                 <img height="48" width="48" src="${!response.reply.profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.reply.user + '/' + response.reply.profile_pic }" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">
-                            <a href="${BASEURL}/profile/${btoa(response.reply.user_id)}" class="user-name">${response.reply.name} &#8226; <span class="text-muted fst-italic">@${response.reply.user}</span></a>
+                            <a href="${BASEURL}/user/${response.reply.user}" class="user-name">${response.reply.name} &#8226; <span class="text-muted fst-italic">@${response.reply.user}</span></a>
                             <span>
                                 ${session_user_id == response.reply.user_id? 
                                     `<div class="dropdown">
@@ -66,12 +66,12 @@ $.ajax({
         commentsContainer.innerHTML += `
                 <div class="post-container post p-2">
                         <div class="user-img">
-                            <a href="${BASEURL}/profile/${btoa(post.user_id)}">
+                            <a href="${BASEURL}/user/${post.user}">
                                 <img height="48" width="48" src="${!post.profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic }" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">
-                            <a href="${BASEURL}/profile/${btoa(post.user_id)}" class="user-name">${post.name} &#8226; <span class="text-muted fst-italic">@${post.user}</span></a>
+                            <a href="${BASEURL}/user/${post.user}" class="user-name">${post.name} &#8226; <span class="text-muted fst-italic">@${post.user}</span></a>
                             <span>
                                 ${session_user_id == post.user_id? 
                                     `<div class="dropdown">
@@ -177,12 +177,12 @@ function commentReply(user_id, reply_id, reply_comment) {
             newComment.innerHTML += `
             <div class="post-container post p-2">
                         <div class="user-img">
-                            <a href="${BASEURL}/profile/${btoa(response.reply_comments[0].user_id)}">
+                            <a href="${BASEURL}/user/${response.reply_comments[0].user}">
                                 <img height="48" width="48" src="${!response.reply_comments[0].profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.reply_comments[0].user + '/' + response.reply_comments[0].profile_pic }" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">
-                            <a href="${BASEURL}/profile/${btoa(response.reply_comments[0].user_id)}" class="user-name">${response.reply_comments[0].name} &#8226; <span class="text-muted fst-italic">@${response.reply_comments[0].user}</span></a>
+                            <a href="${BASEURL}/user/${response.reply_comments[0].user}" class="user-name">${response.reply_comments[0].name} &#8226; <span class="text-muted fst-italic">@${response.reply_comments[0].user}</span></a>
                             <span>
                                 ${session_user_id == response.reply_comments[0].user_id? 
                                     `<div class="dropdown">

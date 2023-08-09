@@ -2,6 +2,10 @@ document.addEventListener("DOMContentLoaded", function () {
     loadMorePosts(currentPage);
 });
 
+function profilePage(user) {
+    window.location.href = BASEURL + '/user/' + user;
+}
+
 function postPage(job_id) {
     window.location.href = BASEURL + '/post/' + job_id;
 }
@@ -37,12 +41,12 @@ function loadMorePosts(page) {
                 mainContainer.innerHTML += `
                         <div class="post-container post">
                             <div class="user-img">
-                                <a href="${BASEURL}/profile/${post.user}">
+                                <a href="${BASEURL + '/user/' + post.user}">
                                     <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic}" alt="Profile pic">
                                 </a>
                             </div>
                             <div class="user-info">
-                                <a href="${BASEURL}/profile/${btoa(post.user_id)}" class="user-name">${post.name} &#8226; <span class="text-muted fst-italic">@${post.user}</span></a>
+                                <a href="${BASEURL + '/user/' + post.user}" class="user-name">${post.name} &#8226; <span class="text-muted fst-italic">@${post.user}</span></a>
                                 <span>
                                     ${session_user_id == post.user_id ?
                         `<div class="dropdown">

@@ -8,7 +8,6 @@
         max-width: 180px !important;
     }
 </style>
-<div class="container-fluid">
     <article id="postContainer" class="row mt-2">
     </article>
     <hr>
@@ -28,7 +27,6 @@
     </article>
     <article id="commentsContainer" class="row">
     </article>
-</div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script defer src="<?= base_url('assets/pages/main/post.js') ?>"></script>

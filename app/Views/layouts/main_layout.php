@@ -218,22 +218,20 @@
     <div class="row">
         <header class="d-flex flex-column justify-content-between mt-2 left-panel">
             <div id="userActions">
-                <a href="<?= base_url('home') ?>" class="nav-link"><i class="fa fa-dashboard icon"></i></a>
-                <a href="<?= base_url('home') ?>" class="nav-link"><i class="fa fa-home icon"></i> <span class="side-text">Home</span></a>
-                <a href="<?= base_url('about') ?>" class="nav-link"><i class="fa fa-circle-info icon"></i> <span class="side-text">Sobre</span></a>
+                <a href="<?= base_url('home') ?>" class="nav-link">ASSN</a>
+                <a href="<?= base_url('home') ?>" class="nav-link"><i class="fa fa-home icon"></i><span class="side-text">Home</span></a>
                 <?php if (isset($_SESSION['USER_ID'])) : ?>
-                    <?php if ($_SESSION['SU'] == 1) : ?>
-                        <a href="<?= base_url('users') ?>"><i class="fa fa-users icon"></i> <span class="side-text">Usuários</span></a>
-                    <?php endif; ?>
-                    <a href="<?= base_url('logout') ?>"><i class="fa fa-right-from-bracket icon"></i> <span class="side-text">Logout</span></a>
+                    <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="nav-link"><i class="fa fa-user icon"></i><span class="side-text">Perfil</span></a>
+                    <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="nav-link"><i class="fa fa-inbox icon"></i><span class="side-text">Mensagens</span></a>
+                    <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="nav-link"><i class="fa fa-bell icon"></i><span class="side-text">Notificações</span></a>
+                    <a href="<?= base_url('logout') ?>"><i class="fa fa-right-from-bracket icon"></i><span class="side-text">Logout</span></a>
                     <a id="sidebarTask" type="button" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"></a>
-
-                    <div class="avatarDiv">
-                        <a style="text-decoration: none;" href="<?= base_url('profile/' . base64_encode($_SESSION['USER_ID'])) ?>" class="link-secondary fs-4">
-                            <img class="rounded-circle border border-light-subtle" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt=""> <span class="ms-2 side-text"><?= $_SESSION['USER'] ?></span>
-                        </a>
-                    </div>
+                    <?php if ($_SESSION['SU'] == 1) : ?>
+                        <a href="<?= base_url('users') ?>" class="nav-link"><i class="fa fa-users icon"></i><span class="side-text">Usuários</span></a>
+                    <?php endif; ?>
                 <?php endif; ?>
+
+                <a href="<?= base_url('about') ?>" class="nav-link"><i class="fa fa-circle-info icon"></i><span class="side-text">Sobre</span></a>
             </div>
         </header>
 
@@ -334,7 +332,7 @@
             document.getElementById("reply_id").setAttribute('value', id);
             document.getElementById("reply_content").setAttribute('value', reply);
             document.getElementById("reply_content").textContent = reply;
-        
+
 
         }
 

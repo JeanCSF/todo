@@ -36,8 +36,8 @@ class Users extends Model
 
     public function getUser($user)
     {
-        $result = $this->select('*')->where('USER',$user)->get();
-        return $result;
+        $result = $this->select('*')->where('USER', $user)->get();
+        return $result->getResultObject();
     }
 
     public function getAll()

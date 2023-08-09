@@ -49,7 +49,8 @@ $routes->match(['get', 'post'], 'comment_job', 'Api_jobs::commentJob');
  * Users Api Controller Routes
  * --------------------------------------------------------------------
  */
-$routes->get('user/(:any)', 'Api_users::show/$1');
+$routes->get('profile/(:any)', 'Api_users::show/$1');
+$routes->get('user_comments/(:any)', 'Api_users::getReplies/$1');
 
 /*
  * --------------------------------------------------------------------
@@ -77,7 +78,7 @@ $routes->get('logout', 'Logincontroller::logout');
  * Users Controller Routes
  * --------------------------------------------------------------------
  */
-$routes->get('profile/(:any)', 'Userscontroller::profile/$1');
+$routes->get('user/(:any)', 'Userscontroller::userPage/$1');
 $routes->get('users', 'Userscontroller::users');
 $routes->post('/upload', 'Userscontroller::upload', ['as' => 'upload']);
 
