@@ -51,6 +51,7 @@ $routes->match(['get', 'post'], 'comment_job', 'Api_jobs::commentJob');
  */
 $routes->get('profile/(:any)', 'Api_users::show/$1');
 $routes->get('user_comments/(:any)', 'Api_users::getReplies/$1');
+$routes->get('user_likes/(:any)', 'Api_users::getLikes/$1');
 
 /*
  * --------------------------------------------------------------------

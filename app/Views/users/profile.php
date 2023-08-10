@@ -54,16 +54,17 @@
 </div>
 <div class="tabs row">
     <div class="text-center d-flex justify-content-evenly m-0 p-0">
-            <a href="javascript:void(0)" class="nav-link fw-bold" id="tasksTab">Tarefas</a>
-            <a href="javascript:void(0)" class="nav-link fw-bold" id="repliesTab">Respostas</a>
-            <a href="javascript:void(0)" class="nav-link fw-bold" id="likesTab">Curtidas</a>
+            <a href="javascript:void(0)" class="nav-link fw-bold" id="tasksTab" onclick="tasksTab(1, profile_user)">Tarefas</a>
+            <a href="javascript:void(0)" class="nav-link fw-bold" id="repliesTab" onclick="repliesTab(1, profile_user_id)">Respostas</a>
+            <a href="javascript:void(0)" class="nav-link fw-bold" id="likesTab" onclick="likesTab(1, profile_user_id)">Curtidas</a>
     </div>
 </div>
 
 <div id="postsContainer" class="row mt-2 profile-posts">
 
 </div>
-
+<div id="loadMore" class="row mt-2">
+</div>
 
 <?= $this->endSection() ?>
 
@@ -73,12 +74,14 @@
     const BASEURL = '<?= base_url() ?>';
     var session_user_id = '<?= $_SESSION['USER_ID'] ?>';
     var session_profile_pic = '<?= $_SESSION['IMG'] ?>';
-    var session_user = '<?= $_SESSION['USER'] ?>'
-    var profile_user = '<?= $user?>'
+    var session_user = '<?= $_SESSION['USER'] ?>';
+    var profile_user = '<?= $user ?>';
+    var profile_user_id = '<?= $user_id ?>';
     var currentPage = 1;
     var isLoading = false;
     var hasMoreData = true;
     var headerContainer = document.querySelector("#headerContainer");
     var postsContainer = document.querySelector("#postsContainer");
+    var loadMoreButton = document.querySelector("#loadMore");
 </script>
 <?= $this->endSection() ?>

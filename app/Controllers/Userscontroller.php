@@ -57,7 +57,8 @@ class Userscontroller extends BaseController
         $userData = $users->getUser($user);
         $data = [
             'pageTitle'     =>  $userData[0]->NAME,
-            'user'          => $user
+            'user'          =>  $user,
+            'user_id'       =>  $userData[0]->USER_ID
         ];
         echo view('users/profile', $data);
     }

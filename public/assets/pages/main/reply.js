@@ -53,11 +53,14 @@ $.ajax({
                             <p>${response.reply.reply_created}</p>
                         </div>
                         <div class="post-actions" id="postActions_${response.reply.reply_id}">
-                            <a id="likeReplyButton${response.reply.reply_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${response.reply.reply_id})">
-                                <i class="${response.reply.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
-                                <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted">${response.reply.reply_likes}</span>
+                            <a id="likeReplyButton${response.reply.reply_id}" href="javascript:void(0)" role="button" >
+                                <i class="${response.reply.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }" onClick="likeComment(${session_user_id},${response.reply.reply_id})"></i>
+                                <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${response.reply.reply_likes}</span>
                             </a>
-                            <a href="javascript:void(0)" style="pointer-events: none;" role="button"><i class="fa-regular fa-comment"></i><span class="ms-1 fst-italic text-muted">${response.reply.reply_num_comments}</span></a>
+                            <a href="javascript:void(0)" style="pointer-events: none;" role="button">
+                                <i class="fa-regular fa-comment"></i>
+                                <span class="ms-1 fst-italic text-muted fw-bold fs-6">${response.reply.reply_num_comments}</span>
+                            </a>
                             <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
                         </div>
                     </div>
@@ -95,11 +98,14 @@ $.ajax({
                             <p>${post.comment_created}</p>
                         </div>
                         <div class="post-actions" id="postActions_${post.comment_id}">
-                            <a id="likeReplyButton${post.comment_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${post.comment_id})">
-                                <i class="${post.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
-                                <span id="likes${post.comment_id}" class="ms-1 fst-italic text-muted">${post.comment_likes}</span>
+                            <a id="likeReplyButton${post.comment_id}" href="javascript:void(0)" role="button">
+                                <i class="${post.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }" onClick="likeComment(${session_user_id},${post.comment_id})"></i>
+                                <span id="likes${post.comment_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${post.comment_likes}</span>
                             </a>
-                            <a href="javascript:void(0)" role="button" onclick="commentPage(${post.comment_id})"><i class="fa-regular fa-comment"></i><span class="ms-1 fst-italic text-muted">${post.comment_num_comments}</span></a>
+                            <a href="javascript:void(0)" role="button" onclick="commentPage(${post.comment_id})">
+                                <i class="fa-regular fa-comment"></i>
+                                <span class="ms-1 fst-italic text-muted fw-bold fs-6">${post.comment_num_comments}</span>
+                            </a>
                             <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
                         </div>
                     </div>
@@ -139,8 +145,8 @@ function likeComment(user_id, comment_id) {
         }).done(function(response) {
 
             likeButton.innerHTML += `
-                    <i id="likeButton${response.reply.reply_id}" class="${response.reply.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
-                    <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted">${response.reply.reply_likes}</span>
+                    <i id="likeReplyButton${response.reply.reply_id}" class="${response.reply.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }" onClick="likeComment(${session_user_id},${response.reply.reply_id})"></i>
+                    <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${response.reply.reply_likes}</span>
             `;
         });
     });
@@ -190,7 +196,7 @@ function commentReply(user_id, reply_id, reply_comment) {
                                             <i class="fa fa-ellipsis"></i>
                                         </button>
                                         <ul class="dropdown-menu post-it-dropdown">
-                                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Comentário" role="edit" onclick="fillModalEdit('${response.reply_comments[0].comment_id}', '${response.reply_comments[0].comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
+                                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Comentário" role="edit" onclick="fillModalEditReply('${response.reply_comments[0].comment_id}', '${response.reply_comments[0].comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDelete(${response.reply_comments[0].comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                         </ul>
                                     </div>` 
@@ -206,11 +212,14 @@ function commentReply(user_id, reply_id, reply_comment) {
                             <p>${response.reply_comments[0].comment_created}</p>
                         </div>
                         <div class="post-actions" id="postActions_${response.reply_comments[0].comment_id}">
-                            <a id="likeButton${response.reply_comments[0].comment_id}" href="javascript:void(0)" role="button" onClick="likeComment(${session_user_id},${response.reply_comments[0].comment_id})">
-                                <i class="${response.reply_comments[0].user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }"></i>
-                                <span id="likes${response.reply_comments[0].comment_id}" class="ms-1 fst-italic text-muted">${response.reply_comments[0].comment_likes}</span>
+                            <a id="likeReplyButton${response.reply_comments[0].comment_id}" href="javascript:void(0)" role="button">
+                                <i class="${response.reply_comments[0].user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }" onClick="likeComment(${session_user_id},${response.reply_comments[0].comment_id})"></i>
+                                <span id="likes${response.reply_comments[0].comment_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${response.reply_comments[0].comment_likes}</span>
                             </a>
-                            <a href="javascript:void(0)" style="pointer-events: none;" role="button"><i class="fa-regular fa-comment" onclick="commentPage(${response.reply_comments[0].comment_id})"></i><span class="ms-1 fst-italic text-muted" onclick="commentPage(${response.reply_comments[0].comment_id})">${response.reply_comments[0].comment_num_comments}</span></a>
+                            <a href="javascript:void(0)" style="pointer-events: none;" role="button">
+                                <i class="fa-regular fa-comment" onclick="commentPage(${response.reply_comments[0].comment_id})"></i>
+                                <span class="ms-1 fst-italic text-muted fw-bold fs-6" onclick="commentPage(${response.reply_comments[0].comment_id})">${response.reply_comments[0].comment_num_comments}</span>
+                            </a>
                             <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
                         </div>
                     </div>
