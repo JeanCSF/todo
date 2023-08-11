@@ -10,21 +10,23 @@ function postPage(job_id) {
     window.location.href = BASEURL + '/post/' + job_id;
 }
 
-$(window).scroll(function () {
-    if (hasMoreData && !isLoading && $(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
-        debounce(loadMorePosts(currentPage), 500);
-    }
-});
-
-function debounce(func, wait) {
+function debounce(func, delay) {
     let timer;
-    return function (...args) {
-        clearTimeout(timeout);
+    return function () {
+        clearTimeout(timer);
         timer = setTimeout(() => {
-            func.apply(this, args);
-        }, wait);
+            func.apply(this, arguments);
+        }, delay);
     };
 }
+
+$(window).scroll(debounce(function () {
+    if (hasMoreData && !isLoading && $(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+        loadMorePosts(currentPage);
+    }
+}, 500));
+
+
 
 function loadPosts(page) {
     if (isLoading || !hasMoreData) {

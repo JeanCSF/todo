@@ -61,4 +61,23 @@ class Replies extends Model
         return $result;
     }
 
+    public function getRepliesDataAndPages($user_id, $currentPage = null)
+    {
+        if ($currentPage == null) {
+            $result = $this->select('replies.REPLY_ID
+                            ,replies.PARENT_REPLY_ID
+                            ,replies.ID_JOB
+                            ,replies.REPLY
+                            ,replies.DATETIME_REPLIED')
+                ->where('replies.USER_ID', $user_id)->countAllResults() / 10;
+            return ceil($result);
+        }
+        $result = $this->select('replies.REPLY_ID
+                                ,replies.PARENT_REPLY_ID
+                                ,replies.ID_JOB
+                                ,replies.REPLY
+                                ,replies.DATETIME_REPLIED')
+            ->where('replies.USER_ID', $user_id)->paginate(10, '', $currentPage);
+        return $result;
+    }
 }

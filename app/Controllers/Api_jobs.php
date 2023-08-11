@@ -216,7 +216,7 @@ class Api_jobs extends ResourceController
     public function show($id = null)
     {
         if (isset($this->session->USER_ID)) {
-            if ($this->_tokenValidate() && $id != null) {
+            if ($id != null) {
                 $response = [];
 
                 $jobs = $this->jobsModel->select('login.PROFILE_PIC
@@ -278,7 +278,7 @@ class Api_jobs extends ResourceController
                                 'comment_id'            => $comment['comment_id'],
                                 'comment'               => $comment['comment'],
                                 'comment_created'       => isset($comment['comment_created']) ? date("d/m/Y H:i:s", strtotime($comment['comment_created'])) : "",
-                                'comment_likes'         => $this->likesModel->getReplyLikes($comment['comment_id']),
+                                'comment_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'POST'),
                                 'comment_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
                                 'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], $this->session->USER_ID),
                             ];
@@ -401,7 +401,7 @@ class Api_jobs extends ResourceController
                                 'reply_id'              => $reply['REPLY_ID'],
                                 'reply'                 => $reply['REPLY'],
                                 'reply_created'         => isset($reply['DATETIME_REPLIED']) ? date("d/m/Y H:i:s", strtotime($reply['DATETIME_REPLIED'])) : "",
-                                'reply_likes'           => $this->likesModel->getReplyLikes($reply['REPLY_ID']),
+                                'reply_likes'           => $this->likesModel->getContentLikes($reply['REPLY_ID'], 'REPLY'),
                                 'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($reply['REPLY_ID']),
                                 'user_liked'            => $this->likesModel->checkUserLikedReply($reply['REPLY_ID'], $this->session->USER_ID),
                             ];
@@ -416,7 +416,7 @@ class Api_jobs extends ResourceController
                                 'comment_id'            => $comment['comment_id'],
                                 'comment'               => $comment['comment'],
                                 'comment_created'       => isset($comment['comment_created']) ? date("d/m/Y H:i:s", strtotime($comment['comment_created'])) : "",
-                                'comment_likes'         => $this->likesModel->getReplyLikes($comment['comment_id']),
+                                'comment_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
                                 'comment_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
                                 'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], $this->session->USER_ID),
                             ];
