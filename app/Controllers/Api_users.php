@@ -2,12 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Libraries\HTMLPurifierService;
 use CodeIgniter\Debug\Exceptions;
 use CodeIgniter\RESTful\ResourceController;
 use Exception;
 
 class Api_users extends ResourceController
 {
+    private $HTMLPurifier;
     private $mainController;
     private $jobsModel;
     private $likesModel;
@@ -23,6 +25,7 @@ class Api_users extends ResourceController
         $this->repliesModel = new \App\Models\Replies();
         $this->usersModel = new \App\Models\Users();
         $this->session = \Config\Services::session();
+        $this->HTMLPurifier = new HTMLPurifierService();
     }
 
     private function _tokenValidate()
@@ -66,8 +69,8 @@ class Api_users extends ResourceController
                     foreach ($userJobs as $job) {
                         $user_jobs[] = [
                             'job_id'                => $job->ID_JOB,
-                            'job_title'             => $job->JOB_TITLE,
-                            'job'                   => $job->JOB,
+                            'job_title'             => $this->HTMLPurifier->html_purify($job->JOB_TITLE),
+                            'job'                   => $this->HTMLPurifier->html_purify($job->JOB),
                             'job_created'           => isset($job->DATETIME_CREATED) ? date("d/m/Y", strtotime($job->DATETIME_CREATED)) : "",
                             'job_updated'           => isset($job->DATETIME_UPDATED) ? date("d/m/Y", strtotime($job->DATETIME_UPDATED)) : "",
                             'job_finished'          => isset($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) : "",
@@ -121,7 +124,7 @@ class Api_users extends ResourceController
                             'reply_id'              => $reply->REPLY_ID,
                             'parent_reply_id'       => $reply->PARENT_REPLY_ID,
                             'reply_id_job'          => $reply->ID_JOB,
-                            'reply'                 => $reply->REPLY,
+                            'reply'                 => $this->HTMLPurifier->html_purify($reply->REPLY),
                             'datetime_replied'      => isset($reply->DATETIME_REPLIED) ? date("d/m/Y H:i:s", strtotime($reply->DATETIME_REPLIED)) : "",
                             'reply_likes'           => $this->likesModel->getContentLikes($reply->REPLY_ID, 'REPLY'),
                             'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($reply->REPLY_ID),
@@ -173,8 +176,8 @@ class Api_users extends ResourceController
                             'content_liked_user'            =>  $like->TYPE == 'POST' ? $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('USER') : $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('USER'),
                             'content_liked_user_name'       =>  $like->TYPE == 'POST' ? $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('NAME') : $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('NAME'),
                             'content_liked_user_img'        =>  $like->TYPE == 'POST' ? $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('PROFILE_PIC') : $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('PROFILE_PIC'),
-                            'content_liked_title'           =>  $like->TYPE == 'POST' ? $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB_TITLE') : '',
-                            'content_liked_text'            =>  $like->TYPE == 'POST' ? $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB') : $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('REPLY'),
+                            'content_liked_title'           =>  $like->TYPE == 'POST' ? $this->HTMLPurifier->html_purify($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB_TITLE')) : '',
+                            'content_liked_text'            =>  $like->TYPE == 'POST' ? $this->HTMLPurifier->html_purify($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB')) : $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('REPLY'),
                             'content_liked_created'         =>  $like->TYPE == 'POST' ? date("d/m/Y", strtotime($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_CREATED'))) : date("d/m/Y H:i:s", strtotime($this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('DATETIME_REPLIED'))),
                             'content_liked_finished'        =>  $like->TYPE == 'POST' ? !empty($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_FINISHED'))? date("d/m/Y", strtotime($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_FINISHED'))) :'' : '',
                             'content_liked_privacy'         =>  $like->TYPE == 'POST' ? $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('PRIVACY') : '',

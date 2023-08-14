@@ -48,12 +48,13 @@ class Todo extends Model
 
     public function insertJob($post)
     {
+
         date_default_timezone_set('America/Sao_Paulo');
 
         if (!empty($post)) {
             $data = [
-                'JOB_TITLE'         => isset($post['job_name']) ? $post['job_name'] : $post['header_job_name'],
-                'JOB'               => isset($post['job_desc']) ? $post['job_desc'] : $post['header_job_desc'],
+                'JOB_TITLE'         => isset($post['job_name']) ? $post['job_name'] : $post['header_job_name'] ,
+                'JOB'               => isset($post['job_desc']) ? nl2br($post['job_desc']) : nl2br($post['header_job_desc']) ,
                 'DATETIME_CREATED'  => date('Y-m-d H:i:s'),
                 'USER_ID'           => $_SESSION['USER_ID'],
                 'PRIVACY'           => (isset($post['privacy_select'])) ? $post['privacy_select'] : 1,

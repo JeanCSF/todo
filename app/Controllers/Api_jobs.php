@@ -2,12 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Libraries\HTMLPurifierService;
 use CodeIgniter\Debug\Exceptions;
 use CodeIgniter\RESTful\ResourceController;
 use Exception;
 
 class Api_jobs extends ResourceController
 {
+    private $HTMLPurifier;
     private $mainController;
     private $jobsModel;
     private $likesModel;
@@ -21,6 +23,8 @@ class Api_jobs extends ResourceController
         $this->likesModel = new \App\Models\Likes();
         $this->repliesModel = new \App\Models\Replies();
         $this->session = \Config\Services::session();
+        $this->HTMLPurifier = new HTMLPurifierService();
+        
     }
 
     private function _tokenValidate()
@@ -82,8 +86,8 @@ class Api_jobs extends ResourceController
                     'name'                  => $job->NAME,
                     'user_id'               => $job->USER_ID,
                     'job_id'                => $job->ID_JOB,
-                    'job_title'             => $job->JOB_TITLE,
-                    'job'                   => $job->JOB,
+                    'job_title'             => $this->HTMLPurifier->html_purify($job->JOB_TITLE) ,
+                    'job'                   => $this->HTMLPurifier->html_purify($job->JOB),
                     'job_created'           => isset($job->DATETIME_CREATED) ? date("d/m/Y", strtotime($job->DATETIME_CREATED)) : "",
                     'job_updated'           => isset($job->DATETIME_UPDATED) ? date("d/m/Y", strtotime($job->DATETIME_UPDATED)) : "",
                     'job_finished'          => isset($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) : "",
@@ -258,8 +262,8 @@ class Api_jobs extends ResourceController
                                 'name'                  => $job['NAME'],
                                 'user_id'               => $job['USER_ID'],
                                 'job_id'                => $job['ID_JOB'],
-                                'job_title'             => $job['JOB_TITLE'],
-                                'job'                   => $job['JOB'],
+                                'job_title'             => $this->HTMLPurifier->html_purify($job['JOB_TITLE']),
+                                'job'                   => $this->HTMLPurifier->html_purify($job['JOB']),
                                 'job_created'           => isset($job['DATETIME_CREATED']) ? date("d/m/Y", strtotime($job['DATETIME_CREATED'])) : "",
                                 'job_updated'           => isset($job['DATETIME_UPDATED']) ? date("d/m/Y", strtotime($job['DATETIME_UPDATED'])) : "",
                                 'job_finished'          => isset($job['DATETIME_FINISHED']) ? date("d/m/Y", strtotime($job['DATETIME_FINISHED'])) : "",
@@ -276,7 +280,7 @@ class Api_jobs extends ResourceController
                                 'name'                  => $comment['name'],
                                 'user_id'               => $comment['user_id'],
                                 'comment_id'            => $comment['comment_id'],
-                                'comment'               => $comment['comment'],
+                                'comment'               => $this->HTMLPurifier->html_purify($comment['comment']),
                                 'comment_created'       => isset($comment['comment_created']) ? date("d/m/Y H:i:s", strtotime($comment['comment_created'])) : "",
                                 'comment_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'POST'),
                                 'comment_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
@@ -399,7 +403,7 @@ class Api_jobs extends ResourceController
                                 'name'                  => $reply['NAME'],
                                 'user_id'               => $reply['USER_ID'],
                                 'reply_id'              => $reply['REPLY_ID'],
-                                'reply'                 => $reply['REPLY'],
+                                'reply'                 => $this->HTMLPurifier->html_purify($reply['REPLY']),
                                 'reply_created'         => isset($reply['DATETIME_REPLIED']) ? date("d/m/Y H:i:s", strtotime($reply['DATETIME_REPLIED'])) : "",
                                 'reply_likes'           => $this->likesModel->getContentLikes($reply['REPLY_ID'], 'REPLY'),
                                 'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($reply['REPLY_ID']),
@@ -414,7 +418,7 @@ class Api_jobs extends ResourceController
                                 'name'                  => $comment['name'],
                                 'user_id'               => $comment['user_id'],
                                 'comment_id'            => $comment['comment_id'],
-                                'comment'               => $comment['comment'],
+                                'comment'               => $this->HTMLPurifier->html_purify($comment['comment']),
                                 'comment_created'       => isset($comment['comment_created']) ? date("d/m/Y H:i:s", strtotime($comment['comment_created'])) : "",
                                 'comment_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
                                 'comment_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),

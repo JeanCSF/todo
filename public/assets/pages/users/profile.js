@@ -166,7 +166,7 @@ function loadAll(page, user) {
                             </div>
                             <div class="user-post-text" onclick="postPage(${post.job_id})">
                                 <span class="fst-italic text-center d-block fs-5" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
-                                <span id="jobTextContent">${post.job = post.job.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                                <span id="jobTextContent">${post.job}</span>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">
                                 <p>${post.job_created}</p>
@@ -335,7 +335,7 @@ function tasksTab(page, user) {
                                 </div>
                                 <div class="user-post-text" onclick="postPage(${post.job_id})">
                                     <span class="fst-italic text-center d-block fs-5" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
-                                    <span id="jobTextContent">${post.job = post.job.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                                    <span id="jobTextContent">${post.job}</span>
                                 </div>
                                 <div class="user-post-footer fst-italic text-muted mt-3">
                                     <p>${post.job_created}</p>
@@ -412,7 +412,7 @@ function repliesTab(page, user_id) {
                                     </span>
                                 </div>
                                 <div class="user-post-text" onclick="commentPage(${post.reply_id})">
-                                    <span id="jobTextContent">${post.reply = post.reply.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                                    <span id="jobTextContent">${post.reply}</span>
                                 </div>
                                 <div class="user-post-footer fst-italic text-muted mt-3">
                                     <p>${post.datetime_replied}</p>
@@ -494,7 +494,7 @@ function likesTab(page, user_id) {
                                 </div>
                                 <div class="user-post-text" onclick="postPage(${post.content_id})">
                                     <span class="fst-italic text-center d-block fs-5" style="${!post.content_liked_finished ? "" : "text-decoration: line-through;"}">${post.content_liked_title}</span>
-                                    <span id="jobTextContent">${post.content_liked_text = post.content_liked_text.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                                    <span id="jobTextContent">${post.content_liked_text}</span>
                                 </div>
                                 <div class="user-post-footer fst-italic text-muted mt-3">
                                     <p>${post.content_liked_created}</p>
@@ -540,7 +540,7 @@ function likesTab(page, user_id) {
                                         </span>
                                     </div>
                                     <div class="user-post-text" onclick="commentPage(${post.content_id})">
-                                        <span id="jobTextContent">${post.content_liked_text = post.content_liked_text.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                                        <span id="jobTextContent">${post.content_liked_text}</span>
                                     </div>
                                     <div class="user-post-footer fst-italic text-muted mt-3">
                                         <p>${post.content_liked_created}</p>

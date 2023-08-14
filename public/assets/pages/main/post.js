@@ -52,7 +52,7 @@ $.ajax({
                         </div>
                         <div class="user-post-text">
                             <span class="fst-italic text-center d-block fs-5" style="${!response.job.job_finished? "" : "text-decoration: line-through;" }">${response.job.job_title}</span>
-                            <span id="jobTextContent">${response.job.job = response.job.job.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                            <span id="jobTextContent">${response.job.job}</span>
                         </div>
                         <div class="user-post-footer fst-italic text-muted mt-3">
                             <p>${response.job.job_created}</p>
@@ -98,7 +98,7 @@ $.ajax({
                             </span>
                         </div>
                         <div class="user-post-text" onclick="commentPage(${post.comment_id})">
-                            <span id="jobReplyContent${post.comment_id}">${post.comment = post.comment.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                            <span id="jobReplyContent${post.comment_id}">${post.comment}</span>
                         </div>
                         <div class="user-post-footer fst-italic text-muted mt-3">
                             <p>${post.comment_created}</p>
@@ -250,7 +250,7 @@ function commentJob(user_id, job_id, job_comment) {
                             </span>
                         </div>
                         <div class="user-post-text">
-                            <span id="jobTextContent" onclick="commentPage(${response.job_comments[0].comment_id})">${(response.job_comments[0].comment.replace(/(?:\r\n|\r|\n)/g, '<br>'))}</span>
+                            <span id="jobTextContent" onclick="commentPage(${response.job_comments[0].comment_id})">${response.job_comments[0].comment}</span>
                         </div>
                         <div class="user-post-footer fst-italic text-muted mt-3">
                             <p>${response.job_comments[0].comment_created}</p>

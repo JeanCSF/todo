@@ -81,7 +81,7 @@ function loadPosts(page) {
                             </div>
                             <div class="user-post-text" onclick="postPage(${post.job_id})">
                                 <span class="fst-italic text-center d-block fs-5" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
-                                <span id="jobTextContent">${post.job = post.job.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                                <span id="jobTextContent">${post.job}</span>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">
                                 <p>${post.job_created}</p>
@@ -161,7 +161,7 @@ function loadMorePosts(page) {
                             </div>
                             <div class="user-post-text" onclick="postPage(${post.job_id})">
                                 <span class="fst-italic text-center d-block fs-5" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
-                                <span id="jobTextContent">${post.job = post.job.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
+                                <span id="jobTextContent">${post.job}</span>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">
                                 <p>${post.job_created}</p>
