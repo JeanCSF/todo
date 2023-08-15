@@ -1,27 +1,19 @@
 @import url('https://fonts.cdnfonts.com/css/friz-quadrata-std');
+:root {
+    --maingrey: #F7F7F7;
+    --hovergrey: #E7E7E7;
+    --primary: #0D6EFD;
+    --white: #F2F2F2;
+    --black: #212121;
+    --transparent: #00000000;
+    --link-text: 1.5rem;
+}
 * {
     margin: 0;
     padding: 0;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-}
-
-.reply-textarea {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    width: 100%;
-}
-
-:root {
-    --maingrey: rgb(247, 247, 247);
-    --hovergrey: rgb(231, 231, 231);
-    --primary: #0D6EFD;
-    --white: #F2F2F2;
-    --black: #212121;
-    --transparent: rgba(0, 0, 0, 0);
-    --link-text: 1.5rem;
 }
 
 body {
@@ -33,8 +25,22 @@ body {
 
 body,
 html {
-    height: 100%;
+    height: 100vh;
 
+}
+
+.assn-text {
+    font-family: 'Friz Quadrata Std', sans-serif;
+    text-align: center;
+    font-weight: bolder;
+    font-style: italic;
+}
+
+.reply-textarea {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .side-text {

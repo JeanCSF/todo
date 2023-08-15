@@ -218,7 +218,7 @@
     <div class="row">
         <header class="d-flex flex-column justify-content-between mt-2 left-panel">
             <div id="userActions">
-                <a href="<?= base_url('home') ?>" class="nav-link">ASSN</a>
+                <a href="<?= base_url('home') ?>" class="nav-link assn-text">ASSN</a>
                 <a href="<?= base_url('home') ?>" class="nav-link"><i class="fa fa-home icon"></i><span class="side-text">Home</span></a>
                 <?php if (isset($_SESSION['USER_ID'])) : ?>
                     <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="nav-link"><i class="fa fa-user icon"></i><span class="side-text">Perfil</span></a>
