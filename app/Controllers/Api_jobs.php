@@ -24,7 +24,6 @@ class Api_jobs extends ResourceController
         $this->repliesModel = new \App\Models\Replies();
         $this->session = \Config\Services::session();
         $this->HTMLPurifier = new HTMLPurifierService();
-        
     }
 
     private function _tokenValidate()
@@ -79,27 +78,27 @@ class Api_jobs extends ResourceController
                 ->where('jobs.PRIVACY', true)->orderBy('NUM_LIKES DESC, NUM_REPLIES DESC, jobs.DATETIME_CREATED DESC')->countAllResults() / 10;
 
             foreach ($jobs as $key => $job) {
-                if($currentPage <= round($pages)){
-                $response[] = [
-                    'profile_pic'           => $job->PROFILE_PIC,
-                    'user'                  => $job->USER,
-                    'name'                  => $job->NAME,
-                    'user_id'               => $job->USER_ID,
-                    'job_id'                => $job->ID_JOB,
-                    'job_title'             => $this->HTMLPurifier->html_purify($job->JOB_TITLE) ,
-                    'job'                   => $this->HTMLPurifier->html_purify($job->JOB),
-                    'job_created'           => isset($job->DATETIME_CREATED) ? date("d/m/Y", strtotime($job->DATETIME_CREATED)) : "",
-                    'job_updated'           => isset($job->DATETIME_UPDATED) ? date("d/m/Y", strtotime($job->DATETIME_UPDATED)) : "",
-                    'job_finished'          => isset($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) : "",
-                    'job_privacy'           => $job->PRIVACY,
-                    'job_likes'             => $job->NUM_LIKES,
-                    'job_num_comments'      => $job->NUM_REPLIES,
-                    'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, $this->session->USER_ID),
+                if ($currentPage <= round($pages)) {
+                    $response[] = [
+                        'profile_pic'           => $job->PROFILE_PIC,
+                        'user'                  => $job->USER,
+                        'name'                  => $job->NAME,
+                        'user_id'               => $job->USER_ID,
+                        'job_id'                => $job->ID_JOB,
+                        'job_title'             => $this->HTMLPurifier->html_purify($job->JOB_TITLE),
+                        'job'                   => $this->HTMLPurifier->html_purify($job->JOB),
+                        'job_created'           => isset($job->DATETIME_CREATED) ? date("d/m/Y", strtotime($job->DATETIME_CREATED)) : "",
+                        'job_updated'           => isset($job->DATETIME_UPDATED) ? date("d/m/Y", strtotime($job->DATETIME_UPDATED)) : "",
+                        'job_finished'          => isset($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) : "",
+                        'job_privacy'           => $job->PRIVACY,
+                        'job_likes'             => $job->NUM_LIKES,
+                        'job_num_comments'      => $job->NUM_REPLIES,
+                        'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, $this->session->USER_ID),
 
-                ];
-            } else {
-                $response = [];
-            }
+                    ];
+                } else {
+                    $response = [];
+                }
             }
 
             return $this->respond($response);
@@ -505,6 +504,20 @@ class Api_jobs extends ResourceController
      */
     public function delete($id = null)
     {
-        //
+        if ($this->_tokenValidate()) {
+            $job = $this->jobsModel->find($id);
+
+            if (!$job) {
+                return $this->failNotFound('Item not found.');
+            }
+            if ($this->session->USER_ID == $job->USER_ID) {
+                $this->jobsModel->delete($id);
+                return $this->respondDeleted(['message' => 'Tarefa deletada com sucesso!']);
+            } else {
+                return $this->respondDeleted(['error' => 'Esta tarefa não pertence a você!']);
+            }
+        } else {
+            return $this->respondDeleted(['error' => 'Token inválido!']);
+        }
     }
 }

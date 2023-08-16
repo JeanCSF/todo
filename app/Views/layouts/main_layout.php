@@ -126,20 +126,17 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="modalTitle"></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeDeleteModal"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body text-center">
                     <h3 id="bodyMsg"></h3>
                     <h5 id="tarefa"></h5>
-                    <span class="text-danger">Esta ação é irreversível</span>
+                    <span class="text-danger fw-bold">Esta ação é irreversível</span>
                 </div>
-                <form action="" id="formDelete" method="post">
-                    <input type="hidden" name="id" id="id" value="">
-                    <div class="modal-footer d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <input type="submit" class="btn btn-danger" id="btnDeletar" value="Sim, Deletar">
-                    </div>
-                </form>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnDeletar" data-delete="">Sim, Deletar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -301,7 +298,36 @@
     <script src="<?= base_url('assets/popper.min.js') ?>"></script>
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script>
+        
+        $('#btnDeletar').on('click', function() {
+            var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
+            $.ajax({
+                url: '<?= base_url()?>' + '/job_delete/' + id,
+                type: 'delete',
+                headers: {
+                    'token': 'ihgfedcba987654321'
+                },
+                success: function(data) {
+                    msg = document.querySelector('#msgInfo');
+                    alerta = document.querySelector('#alerta');
+                    if (!data.error) {
+                        alerta.classList.add('alert-success');
+                        msg.textContent = data.msg;
+                        document.querySelector('#post' + id).remove();
+                        document.querySelector('#closeDeleteModal').click();
+                    } else {
+                        alerta.classList.add('alert-danger');
+                        msg.textContent = data.error;
+                    }
+                    new bootstrap.Toast(document.querySelector('#basicToast')).show();
 
+
+
+                }
+            });
+        });
+    </script>
     <script>
         <?php
         if (isset($_SESSION['msg'])) {
@@ -337,10 +363,9 @@
         }
 
         function fillModalDelete(id) {
-            document.getElementById("formDelete").setAttribute('action', '<?= site_url('todocontroller/delete') ?>');
             document.getElementById("modalTitle").textContent = "Deletar Tarefa";
             document.getElementById("bodyMsg").textContent = "Deseja realmente deletar esta tarefa?";
-            document.getElementById("id").setAttribute('value', id);
+            document.getElementById("btnDeletar").setAttribute('data-delete', id);
 
         }
 

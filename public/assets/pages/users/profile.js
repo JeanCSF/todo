@@ -101,11 +101,6 @@ function loadAll(page, user) {
     if (isLoading || !hasMoreData) {
         loadMoreButton.innerHTML = '';
         return;
-    } else {
-        loadMoreButton.innerHTML += `
-            <div class="text-center">
-                <a href="javascript:void(0)" class="nav-link fw-bold link-primary" onclick="loadMoreTasks(currentPage, profile_user)">Carregar mais tarefas...</a>
-            </div>`;
     }
     $.ajax({
         url: BASEURL + '/profile/' + user,
@@ -122,7 +117,13 @@ function loadAll(page, user) {
     }).done(function (response) {
         if (response.length === 0) {
             hasMoreData = false;
+            postsContainer.innerHTML = `<p class='text-center'>${User.user} não postou nada ainda!</p>`;
+            loadMoreButton.innerHTML = '';
         } else {
+            loadMoreButton.innerHTML = `
+            <div class="text-center">
+                <a href="javascript:void(0)" class="nav-link fw-bold link-primary" onclick="loadMoreTasks(currentPage, profile_user)">Carregar mais tarefas...</a>
+            </div>`;
             User = response.user_info;
             headerContainer.innerHTML += `
             <div class="banner">
@@ -279,6 +280,7 @@ function loadMoreTasks(page, user) {
 }
 
 function tasksTab(page, user) {
+    hasMoreData = true;
     document.querySelector("#likesTab").classList.remove("active");
     document.querySelector("#repliesTab").classList.remove("active");
     document.querySelector("#tasksTab").classList.add("active");
@@ -301,7 +303,13 @@ function tasksTab(page, user) {
     }).done(function (response) {
         if (response.length === 0) {
             hasMoreData = false;
+            postsContainer.innerHTML = `<p class='text-center'>${User.user} não postou nada ainda!</p>`;
+            loadMoreButton.innerHTML = '';
         } else {
+            loadMoreButton.innerHTML = `
+            <div class="text-center">
+                <a href="javascript:void(0)" class="nav-link fw-bold link-primary" onclick="loadMoreTasks(currentPage, profile_user)">Carregar mais tarefas...</a>
+            </div>`;
             Posts = response.user_jobs
             Posts.forEach(function (post) {
                 postsContainer.innerHTML += `
@@ -361,6 +369,7 @@ function tasksTab(page, user) {
 }
 
 function repliesTab(page, user_id) {
+    hasMoreData = true;
     document.querySelector("#likesTab").classList.remove("active");
     document.querySelector("#tasksTab").classList.remove("active");
     document.querySelector("#repliesTab").classList.add("active");
@@ -383,7 +392,13 @@ function repliesTab(page, user_id) {
     }).done(function (response) {
         if (response.length === 0) {
             hasMoreData = false;
+            postsContainer.innerHTML = `<p class='text-center'>${User.user} não respondeu ninguém ainda!</p>`;
+            loadMoreButton.innerHTML = '';
         } else {
+            loadMoreButton.innerHTML = `
+            <div class="text-center">
+                <a href="javascript:void(0)" class="nav-link fw-bold link-primary" onclick="loadMoreTasks(currentPage, profile_user)">Carregar mais tarefas...</a>
+            </div>`;
             Posts = response.replies
             Posts.forEach(function (post) {
                 postsContainer.innerHTML += `
@@ -437,6 +452,7 @@ function repliesTab(page, user_id) {
 }
 
 function likesTab(page, user_id) {
+    hasMoreData = true;
     document.querySelector("#tasksTab").classList.remove("active");
     document.querySelector("#repliesTab").classList.remove("active");
     document.querySelector("#likesTab").classList.add("active");
@@ -459,7 +475,13 @@ function likesTab(page, user_id) {
     }).done(function (response) {
         if (response.length === 0) {
             hasMoreData = false;
+            postsContainer.innerHTML = `<p class='text-center'>${User.user} ainda não curtiu nada!</p>`;
+            loadMoreButton.innerHTML = '';
         } else {
+            loadMoreButton.innerHTML = `
+            <div class="text-center">
+                <a href="javascript:void(0)" class="nav-link fw-bold link-primary" onclick="loadMoreLikes(currentPage, profile_user)">Carregar mais curtidas...</a>
+            </div>`;
             Posts = response
             Posts.forEach(function (post) {
                 if (post.type == 'POST') {
@@ -467,7 +489,7 @@ function likesTab(page, user_id) {
                             <div class="post-container post">
                                 <div class="user-img">
                                     <a href="${BASEURL}/user/${post.content_liked_user}">
-                                        <img height="48" width="48" src="${!post.content_liked_user_img ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.content_liked_user_img}" alt="Profile pic">
+                                        <img height="48" width="48" src="${!post.content_liked_user_img ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.content_liked_user + '/' + post.content_liked_user_img}" alt="Profile pic">
                                     </a>
                                 </div>
                                 <div class="user-info">

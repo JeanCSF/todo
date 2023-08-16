@@ -39,6 +39,7 @@ $routes->setAutoRoute(true);
  */
 $routes->get('all_jobs', 'Api_jobs::index');
 $routes->get('job/(:any)', 'Api_jobs::show/$1');
+$routes->delete('job_delete/(:any)', 'Api_jobs::delete/$1');
 $routes->get('comment/(:any)', 'Api_jobs::showComment/$1');
 $routes->match(['get', 'post'], 'like_job', 'Api_jobs::likeJob');
 $routes->match(['get', 'post'], 'like_comment', 'Api_jobs::likeComment');

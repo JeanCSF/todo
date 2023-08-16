@@ -51,7 +51,7 @@ function loadPosts(page) {
             Posts = response;
             Posts.forEach(function (post) {
                 mainContainer.innerHTML += `
-                        <div class="post-container post">
+                        <div class="post-container post" id="post${post.job_id}">
                             <div class="user-img">
                                 <a href="${BASEURL + '/user/' + post.user}">
                                     <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic}" alt="Profile pic">
