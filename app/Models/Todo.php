@@ -53,8 +53,8 @@ class Todo extends Model
 
         if (!empty($post)) {
             $data = [
-                'JOB_TITLE'         => isset($post['job_name']) ? $post['job_name'] : $post['header_job_name'] ,
-                'JOB'               => isset($post['job_desc']) ? nl2br($post['job_desc']) : nl2br($post['header_job_desc']) ,
+                'JOB_TITLE'         => isset($post['job_name']) ? $post['job_name'] : $post['header_job_name'],
+                'JOB'               => isset($post['job_desc']) ? nl2br($post['job_desc']) : nl2br($post['header_job_desc']),
                 'DATETIME_CREATED'  => date('Y-m-d H:i:s'),
                 'USER_ID'           => $_SESSION['USER_ID'],
                 'PRIVACY'           => (isset($post['privacy_select'])) ? $post['privacy_select'] : 1,
@@ -184,10 +184,11 @@ class Todo extends Model
                 ->select('COALESCE(replies.NUM_REPLIES, 0) AS NUM_REPLIES', false)
                 ->join('(SELECT CONTENT_ID, COUNT(LIKE_ID) AS NUM_LIKES FROM likes GROUP BY CONTENT_ID) AS likes', 'likes.CONTENT_ID = jobs.ID_JOB', 'left')
                 ->join('(SELECT ID_JOB, COUNT(REPLY_ID) AS NUM_REPLIES FROM replies GROUP BY ID_JOB) AS replies', 'replies.ID_JOB = jobs.ID_JOB', 'left')
-                ->where('jobs.PRIVACY', true)->where('jobs.USER_ID', $user_id)->countAllResults() / 10;
-            
+                ->where('jobs.PRIVACY', true)->where('jobs.USER_ID', $user_id)->countAllResults() / 25;
+
             return ceil($result);
         }
+
         $result = $this->select('jobs.ID_JOB
                                 ,jobs.USER_ID
                                 ,jobs.JOB_TITLE
@@ -201,6 +202,52 @@ class Todo extends Model
             ->join('(SELECT CONTENT_ID, COUNT(LIKE_ID) AS NUM_LIKES FROM likes GROUP BY CONTENT_ID) AS likes', 'likes.CONTENT_ID = jobs.ID_JOB', 'left')
             ->join('(SELECT ID_JOB, COUNT(REPLY_ID) AS NUM_REPLIES FROM replies GROUP BY ID_JOB) AS replies', 'replies.ID_JOB = jobs.ID_JOB', 'left')
             ->where('jobs.PRIVACY', true)->where('jobs.USER_ID', $user_id)->orderBy('NUM_LIKES DESC, NUM_REPLIES DESC, jobs.DATETIME_CREATED DESC')->paginate(10, 'default', $currentPage);
+
+        return $result;
+    }
+
+    public function getIndexDataAndPages($currentPage = null)
+    {
+        if ($currentPage == null) {
+            $result = $this->select('login.PROFILE_PIC
+                                        ,login.USER
+                                        ,login.NAME
+                                        ,login.USER_ID
+                                        ,jobs.ID_JOB
+                                        ,jobs.USER_ID
+                                        ,jobs.JOB_TITLE
+                                        ,jobs.JOB
+                                        ,jobs.DATETIME_CREATED
+                                        ,jobs.DATETIME_UPDATED
+                                        ,jobs.DATETIME_FINISHED
+                                        ,jobs.PRIVACY')
+                ->select('COALESCE(likes.NUM_LIKES, 0) AS NUM_LIKES', false)
+                ->select('COALESCE(replies.NUM_REPLIES, 0) AS NUM_REPLIES', false)
+                ->join('login', 'login.USER_ID = jobs.USER_ID')
+                ->join('(SELECT CONTENT_ID, COUNT(LIKE_ID) AS NUM_LIKES FROM likes GROUP BY CONTENT_ID) AS likes', 'likes.CONTENT_ID = jobs.ID_JOB', 'left')
+                ->join('(SELECT ID_JOB, COUNT(REPLY_ID) AS NUM_REPLIES FROM replies GROUP BY ID_JOB) AS replies', 'replies.ID_JOB = jobs.ID_JOB', 'left')
+                ->where('jobs.PRIVACY', true)->orderBy('NUM_LIKES DESC, NUM_REPLIES DESC, jobs.DATETIME_CREATED DESC')->countAllResults() / 25;
+
+            return ceil($result);
+        }
+        $result = $this->select('login.PROFILE_PIC
+                                        ,login.USER
+                                        ,login.NAME
+                                        ,login.USER_ID
+                                        ,jobs.USER_ID
+                                        ,jobs.ID_JOB
+                                        ,jobs.JOB_TITLE
+                                        ,jobs.JOB
+                                        ,jobs.DATETIME_CREATED
+                                        ,jobs.DATETIME_UPDATED
+                                        ,jobs.DATETIME_FINISHED
+                                        ,jobs.PRIVACY')
+            ->select('COALESCE(likes.NUM_LIKES, 0) AS NUM_LIKES', false)
+            ->select('COALESCE(replies.NUM_REPLIES, 0) AS NUM_REPLIES', false)
+            ->join('login', 'login.USER_ID = jobs.USER_ID')
+            ->join('(SELECT CONTENT_ID, COUNT(LIKE_ID) AS NUM_LIKES FROM likes GROUP BY CONTENT_ID) AS likes', 'likes.CONTENT_ID = jobs.ID_JOB', 'left')
+            ->join('(SELECT ID_JOB, COUNT(REPLY_ID) AS NUM_REPLIES FROM replies GROUP BY ID_JOB) AS replies', 'replies.ID_JOB = jobs.ID_JOB', 'left')
+            ->where('jobs.PRIVACY', true)->orderBy('NUM_LIKES DESC, NUM_REPLIES DESC, jobs.DATETIME_CREATED DESC')->paginate(25, '', $currentPage);
 
         return $result;
     }

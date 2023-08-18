@@ -186,10 +186,7 @@ class Api_users extends ResourceController
                             'user_liked'                    =>  $like->TYPE == 'POST' ? $this->likesModel->checkUserLikedJob($like->CONTENT_ID, $this->session->USER_ID) : $this->likesModel->checkUserLikedReply($like->CONTENT_ID, $this->session->USER_ID)
                         ];
                     }
-
-                    // $response = [
-                    //     'user_likes'       =>  $user_likes
-                    // ];
+                    
                 } else {
                     $response = [];
                 }
