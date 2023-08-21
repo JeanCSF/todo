@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Libraries\HTMLPurifierService;
+use App\Libraries\TimeElapsedStringService;
 use CodeIgniter\Debug\Exceptions;
 use CodeIgniter\RESTful\ResourceController;
 use Exception;
@@ -10,6 +11,8 @@ use Exception;
 class Api_jobs extends ResourceController
 {
     private $HTMLPurifier;
+    private $TimeElapsedString;
+
     private $mainController;
     private $jobsModel;
     private $likesModel;
@@ -22,8 +25,11 @@ class Api_jobs extends ResourceController
         $this->jobsModel = new \App\Models\Todo();
         $this->likesModel = new \App\Models\Likes();
         $this->repliesModel = new \App\Models\Replies();
+
+
         $this->session = \Config\Services::session();
         $this->HTMLPurifier = new HTMLPurifierService();
+        $this->TimeElapsedString = new TimeElapsedStringService();
     }
 
     private function _tokenValidate()
@@ -247,7 +253,7 @@ class Api_jobs extends ResourceController
                                 'comment_id'            => $comment['comment_id'],
                                 'comment'               => $this->HTMLPurifier->html_purify($comment['comment']),
                                 'comment_created'       => isset($comment['comment_created']) ? date("d/m/Y H:i:s", strtotime($comment['comment_created'])) : "",
-                                'comment_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'POST'),
+                                'comment_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
                                 'comment_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
                                 'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], $this->session->USER_ID),
                             ];
@@ -472,7 +478,6 @@ class Api_jobs extends ResourceController
     {
         if ($this->_tokenValidate()) {
             $job = $this->jobsModel->find($id);
-
             if (!$job) {
                 return $this->failNotFound('Item not found.');
             }
@@ -485,5 +490,49 @@ class Api_jobs extends ResourceController
         } else {
             return $this->respondDeleted(['error' => 'Token inválido!']);
         }
+    }
+
+    public function deleteReply($id = null)
+    {
+        if ($this->_tokenValidate()) {
+            $reply = $this->repliesModel->find($id);
+            if (!$reply) {
+                return $this->failNotFound('Item not found.');
+            }
+            if ($this->session->USER_ID == $reply->USER_ID) {
+                $this->repliesModel->delete($id);
+                return $this->respondDeleted(['message' => 'Resposta deletada com sucesso!']);
+            } else {
+                return $this->respondDeleted(['error' => 'Esta resposta não pertence a você!']);
+            }
+        } else {
+            return $this->respondDeleted(['error' => 'Token inválido!']);
+        }
+    }
+
+    public function showLikes()
+    {
+        $response = [];
+        if ($this->_tokenValidate()) {
+            $content_id = $this->request->getVar('content_id');
+            $type = $this->request->getVar('type');
+    
+            $likes = $this->likesModel->select('login.USER, login.NAME, login.PROFILE_PIC, likes.LIKE_ID, likes.DATETIME_LIKED')->join('login', 'login.USER_ID = likes.USER_ID')->where('CONTENT_ID', $content_id)->where('TYPE', $type)->get()->getResultObject();
+            foreach ($likes as $like) {
+                $response[] = [
+                    'like_id'               => $like->LIKE_ID,
+                    'profile_pic'           => $like->PROFILE_PIC,
+                    'name'                  => $like->NAME,
+                    'user'                  => $like->USER,
+                    'datetime_liked'        => $this->TimeElapsedString->time_elapsed_string($like->DATETIME_LIKED),
+                ];
+            }
+        } else {
+            $response = [
+                'response'  =>  'error',
+                'msg'       =>  'Token inválido',
+            ];
+        }
+        return $this->respond($response);
     }
 }

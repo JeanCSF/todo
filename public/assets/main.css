@@ -404,6 +404,13 @@ html {
     font-size: .7rem;
 }
 
+.users-liked a {
+    text-decoration: none;
+}
+
+.users-liked img {
+    border-radius: 50%;
+}
 
 
 @media screen and (max-width: 1400px) {

@@ -1,3 +1,34 @@
+document.addEventListener("DOMContentLoaded", function () {
+    $('#btnDeletar').on('click', function () {
+        var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
+        $.ajax({
+            url: BASEURL + '/reply_delete/' + id,
+            type: 'delete',
+            headers: {
+                'token': 'ihgfedcba987654321'
+            },
+            success: function (data) {
+                msg = document.querySelector('#msgInfo');
+                alerta = document.querySelector('#alerta');
+                if (!data.error) {
+                    mainContainer.innerHTML = '';
+                    alerta.classList.add('alert-success');
+                    msg.textContent = data.message;
+                    document.querySelector('#closeDeleteModal').click();
+                        setTimeout(() => {
+                            window.history.go(-1);
+                        }, 300)
+                } else {
+                    alerta.classList.add('alert-danger');
+                    msg.textContent = data.error;
+                }
+                new bootstrap.Toast(document.querySelector('#basicToast')).show();
+
+            }
+        });
+    });
+});
+
 frmComment.addEventListener('submit', function(e) {
     commentReply(session_user_id, reply_id, comment.value);
     e.preventDefault();
@@ -38,7 +69,7 @@ $.ajax({
                                         </button>
                                         <ul class="dropdown-menu post-it-dropdown">
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#replyModal" title="Editar Resposta" role="edit" onclick="fillModalEditReply('${response.reply.reply_id}', '${response.reply.reply}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
-                                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDelete(${response.reply.reply_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
+                                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDeleteReply(${response.reply.reply_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                         </ul>
                                     </div>` 
                                     :
@@ -55,7 +86,7 @@ $.ajax({
                         <div class="post-actions" id="postActions_${response.reply.reply_id}">
                             <a id="likeReplyButton${response.reply.reply_id}" href="javascript:void(0)" role="button" >
                                 <i class="${response.reply.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }" onClick="likeComment(${session_user_id},${response.reply.reply_id})"></i>
-                                <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${response.reply.reply_likes}</span>
+                                <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${response.reply.reply_id}, 'REPLY')">${response.reply.reply_likes}</span>
                             </a>
                             <a href="javascript:void(0)" style="pointer-events: none;" role="button">
                                 <i class="fa-regular fa-comment"></i>
@@ -83,7 +114,7 @@ $.ajax({
                                         </button>
                                         <ul class="dropdown-menu post-it-dropdown">
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#replyModal" title="Editar Resposta" role="edit" onclick="fillModalEditReply('${post.comment_id}', '${post.comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
-                                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDelete(${post.comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
+                                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDeleteReply(${post.comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                         </ul>
                                     </div>` 
                                     :
@@ -100,7 +131,7 @@ $.ajax({
                         <div class="post-actions" id="postActions_${post.comment_id}">
                             <a id="likeReplyButton${post.comment_id}" href="javascript:void(0)" role="button">
                                 <i class="${post.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }" onClick="likeComment(${session_user_id},${post.comment_id})"></i>
-                                <span id="likes${post.comment_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${post.comment_likes}</span>
+                                <span id="likes${post.comment_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.comment_id}, 'REPLY')">${post.comment_likes}</span>
                             </a>
                             <a href="javascript:void(0)" role="button" onclick="commentPage(${post.comment_id})">
                                 <i class="fa-regular fa-comment"></i>
@@ -146,7 +177,7 @@ function likeComment(user_id, comment_id) {
 
             likeButton.innerHTML += `
                     <i id="likeReplyButton${response.reply.reply_id}" class="${response.reply.user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }" onClick="likeComment(${session_user_id},${response.reply.reply_id})"></i>
-                    <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${response.reply.reply_likes}</span>
+                    <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${response.reply.reply_id}, 'REPLY')">${response.reply.reply_likes}</span>
             `;
         });
     });
@@ -197,7 +228,7 @@ function commentReply(user_id, reply_id, reply_comment) {
                                         </button>
                                         <ul class="dropdown-menu post-it-dropdown">
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Comentário" role="edit" onclick="fillModalEditReply('${response.reply_comments[0].comment_id}', '${response.reply_comments[0].comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
-                                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDelete(${response.reply_comments[0].comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
+                                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDeleteReply(${response.reply_comments[0].comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                         </ul>
                                     </div>` 
                                     :
@@ -214,7 +245,7 @@ function commentReply(user_id, reply_id, reply_comment) {
                         <div class="post-actions" id="postActions_${response.reply_comments[0].comment_id}">
                             <a id="likeReplyButton${response.reply_comments[0].comment_id}" href="javascript:void(0)" role="button">
                                 <i class="${response.reply_comments[0].user_liked? 'fa fa-heart' : 'fa-regular fa-heart' }" onClick="likeComment(${session_user_id},${response.reply_comments[0].comment_id})"></i>
-                                <span id="likes${response.reply_comments[0].comment_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${response.reply_comments[0].comment_likes}</span>
+                                <span id="likes${response.reply_comments[0].comment_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${response.reply_comments[0].comment_id}, 'REPLY')">${response.reply_comments[0].comment_likes}</span>
                             </a>
                             <a href="javascript:void(0)" style="pointer-events: none;" role="button">
                                 <i class="fa-regular fa-comment" onclick="commentPage(${response.reply_comments[0].comment_id})"></i>

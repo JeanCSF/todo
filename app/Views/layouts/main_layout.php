@@ -200,6 +200,23 @@
     </div>
     <!-- Plus Task Modal -->
 
+    <!-- Likes Modal -->
+    <div class="modal fade" id="likesModal" tabindex="-1" aria-labelledby="likesModallLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Curtidas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-2">
+                    <div id="likesModalContainer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Likes Modal -->
+
 
     <!-- Toast Notification -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="top: 10px; right: 10px; z-index: 9999;">
@@ -299,34 +316,7 @@
     <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script>
-        
-        $('#btnDeletar').on('click', function() {
-            var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
-            $.ajax({
-                url: '<?= base_url()?>' + '/job_delete/' + id,
-                type: 'delete',
-                headers: {
-                    'token': 'ihgfedcba987654321'
-                },
-                success: function(data) {
-                    msg = document.querySelector('#msgInfo');
-                    alerta = document.querySelector('#alerta');
-                    if (!data.error) {
-                        alerta.classList.add('alert-success');
-                        msg.textContent = data.msg;
-                        document.querySelector('#post' + id).remove();
-                        document.querySelector('#closeDeleteModal').click();
-                    } else {
-                        alerta.classList.add('alert-danger');
-                        msg.textContent = data.error;
-                    }
-                    new bootstrap.Toast(document.querySelector('#basicToast')).show();
 
-
-
-                }
-            });
-        });
     </script>
     <script>
         <?php
@@ -341,6 +331,40 @@
 
         const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
         const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
+        function fillModalLikes(content_id, type) {
+            var likesContainer = document.querySelector("#likesModalContainer");
+            let Likes = [];
+            likesContainer.innerHTML = '';
+            $.ajax({
+                url: BASEURL + '/show_likes',
+                type: "GET",
+                data: {
+                    content_id: content_id,
+                    type: type
+                },
+                headers: {
+                    'token': 'ihgfedcba987654321'
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erro na requisição:", error);
+                }
+            }).done(function(response) {
+                Likes = response;
+                Likes.forEach(function(like) {
+                    likesContainer.innerHTML += `
+                        <div class="d-flex justify-content-between align-center" id="like${like.like_id}">
+                            <a href="${BASEURL + '/user/' + like.user}" class="nav-link">
+                                <img class="rounded-circle me-3" height="48" width="48" src="${!like.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + like.user + '/' + like.profile_pic}" alt="Profile pic">
+                                <span class="fw-bold">${like.name}</span>
+                            </a>
+                            <span class="text-muted fst-italic p-3" style="font-size: 10px;">${like.datetime_liked}</span>
+                        </div>
+                    `;
+
+                })
+            })
+        }
 
         function fillModalEdit(id, job, desc) {
             document.getElementById("form").setAttribute('action', '<?= site_url('todocontroller/editjobsubmit') ?>');
@@ -362,10 +386,20 @@
 
         }
 
-        function fillModalDelete(id) {
+        function fillModalDelete(id, type) {
             document.getElementById("modalTitle").textContent = "Deletar Tarefa";
             document.getElementById("bodyMsg").textContent = "Deseja realmente deletar esta tarefa?";
             document.getElementById("btnDeletar").setAttribute('data-delete', id);
+            document.getElementById("btnDeletar").setAttribute('data-type', type);
+
+
+        }
+
+        function fillModalDeleteReply(id, type = null) {
+            document.getElementById("modalTitle").textContent = "Deletar Resposta";
+            document.getElementById("bodyMsg").textContent = "Deseja realmente deletar esta resposta?";
+            document.getElementById("btnDeletar").setAttribute('data-delete', id);
+            document.getElementById("btnDeletar").setAttribute('data-type', type);
 
         }
 

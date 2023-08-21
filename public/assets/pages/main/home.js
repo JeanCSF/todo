@@ -1,5 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () {
     loadPosts(currentPage);
+    $('#btnDeletar').on('click', function () {
+        var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
+        $.ajax({
+            url: BASEURL + '/job_delete/' + id,
+            type: 'delete',
+            headers: {
+                'token': 'ihgfedcba987654321'
+            },
+            success: function (data) {
+                msg = document.querySelector('#msgInfo');
+                alerta = document.querySelector('#alerta');
+                if (!data.error) {
+                    alerta.classList.add('alert-success');
+                    msg.textContent = data.message;
+                    document.querySelector('#post' + id).remove();
+                    document.querySelector('#closeDeleteModal').click();
+                } else {
+                    alerta.classList.add('alert-danger');
+                    msg.textContent = data.error;
+                }
+                new bootstrap.Toast(document.querySelector('#basicToast')).show();
+
+            }
+        });
+    });
 });
 
 function profilePage(user) {
@@ -90,7 +115,7 @@ function loadPosts(page) {
                             <div class="post-actions" id="postActions_${post.job_id}">
                                 <a id="likeButton${post.job_id}" href="javascript:void(0)" role="button">
                                     <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${post.job_id})"></i>
-                                    <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${post.job_likes}</span>
+                                    <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.job_id}, 'POST')">${post.job_likes}</span>
                                 </a>
                                 <a href="javascript:void(0)" onclick="postPage(${post.job_id})" role="button">
                                     <i class="fa-regular fa-comment"></i>
@@ -170,7 +195,7 @@ function loadMorePosts(page) {
                             <div class="post-actions" id="postActions_${post.job_id}">
                                 <a id="likeButton${post.job_id}" href="javascript:void(0)" role="button">
                                     <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${post.job_id})"></i>
-                                    <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${post.job_likes}</span>
+                                    <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.job_id}, 'POST')">${post.job_likes}</span>
                                 </a>
                                 <a href="javascript:void(0)" onclick="postPage(${post.job_id})" role="button">
                                     <i class="fa-regular fa-comment"></i>
@@ -235,7 +260,7 @@ function likeJob(user_id, job_id) {
 
             likeButton.innerHTML += `
                         <i id="likeButton${response.job.job_id}" class="${response.job.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${response.job.job_id})"></i>
-                        <span id="likes${response.job.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${response.job.job_likes}</span>
+                        <span id="likes${response.job.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${response.job.job_id}, 'POST')">${response.job.job_likes}</span>
                 `;
         });
     });
