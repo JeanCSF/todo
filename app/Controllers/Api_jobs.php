@@ -59,9 +59,9 @@ class Api_jobs extends ResourceController
                         'job_id'                => $job->ID_JOB,
                         'job_title'             => $this->HTMLPurifier->html_purify($job->JOB_TITLE),
                         'job'                   => $this->HTMLPurifier->html_purify($job->JOB),
-                        'job_created'           => isset($job->DATETIME_CREATED) ? date("d/m/Y", strtotime($job->DATETIME_CREATED)) : "",
-                        'job_updated'           => isset($job->DATETIME_UPDATED) ? date("d/m/Y", strtotime($job->DATETIME_UPDATED)) : "",
-                        'job_finished'          => isset($job->DATETIME_FINISHED) ? date("d/m/Y", strtotime($job->DATETIME_FINISHED)) : "",
+                        'job_created'           => isset($job->DATETIME_CREATED) ? $this->TimeElapsedString->time_elapsed_string($job->DATETIME_CREATED) : "",
+                        'job_updated'           => isset($job->DATETIME_UPDATED) ? 'Atualizado: '.$this->TimeElapsedString->time_elapsed_string($job->DATETIME_UPDATED) : "",
+                        'job_finished'          => isset($job->DATETIME_FINISHED) ? 'Finalizado: '.$this->TimeElapsedString->time_elapsed_string($job->DATETIME_FINISHED) : "",
                         'job_privacy'           => $job->PRIVACY,
                         'job_likes'             => $job->NUM_LIKES,
                         'job_num_comments'      => $job->NUM_REPLIES,
@@ -209,7 +209,7 @@ class Api_jobs extends ResourceController
                     ->select('COALESCE(likes.NUM_LIKES, 0) AS NUM_LIKES', false)
                     ->select('COALESCE(replies.NUM_REPLIES, 0) AS NUM_REPLIES', false)
                     ->join('login', 'login.USER_ID = jobs.USER_ID')
-                    ->join('(SELECT CONTENT_ID, COUNT(LIKE_ID) AS NUM_LIKES FROM likes GROUP BY CONTENT_ID) AS likes', 'likes.CONTENT_ID = jobs.ID_JOB', 'left')
+                    ->join('(SELECT CONTENT_ID, TYPE, COUNT(LIKE_ID) AS NUM_LIKES FROM likes GROUP BY CONTENT_ID) AS likes', "likes.CONTENT_ID = jobs.ID_JOB AND likes.TYPE = 'POST'", 'left')
                     ->join('(SELECT ID_JOB, COUNT(REPLY_ID) AS NUM_REPLIES FROM replies GROUP BY ID_JOB) AS replies', 'replies.ID_JOB = jobs.ID_JOB', 'left')
                     ->where('jobs.PRIVACY', true)->where('jobs.ID_JOB', $id)->get()->getResultArray();
 
@@ -235,9 +235,9 @@ class Api_jobs extends ResourceController
                                 'job_id'                => $job['ID_JOB'],
                                 'job_title'             => $this->HTMLPurifier->html_purify($job['JOB_TITLE']),
                                 'job'                   => $this->HTMLPurifier->html_purify($job['JOB']),
-                                'job_created'           => isset($job['DATETIME_CREATED']) ? date("d/m/Y", strtotime($job['DATETIME_CREATED'])) : "",
-                                'job_updated'           => isset($job['DATETIME_UPDATED']) ? date("d/m/Y", strtotime($job['DATETIME_UPDATED'])) : "",
-                                'job_finished'          => isset($job['DATETIME_FINISHED']) ? date("d/m/Y", strtotime($job['DATETIME_FINISHED'])) : "",
+                                'job_created'           => isset($job['DATETIME_CREATED']) ? $this->TimeElapsedString->time_elapsed_string($job['DATETIME_CREATED']) : "",
+                                'job_updated'           => isset($job['DATETIME_UPDATED']) ? 'Atualizado: '.$this->TimeElapsedString->time_elapsed_string($job['DATETIME_UPDATED']) : "",
+                                'job_finished'          => isset($job['DATETIME_FINISHED']) ? 'Finalizado: '.$this->TimeElapsedString->time_elapsed_string($job['DATETIME_FINISHED']) : "",
                                 'job_privacy'           => $job['PRIVACY'],
                                 'job_likes'             => $job['NUM_LIKES'],
                                 'job_num_comments'      => $job['NUM_REPLIES'],
@@ -252,7 +252,7 @@ class Api_jobs extends ResourceController
                                 'user_id'               => $comment['user_id'],
                                 'comment_id'            => $comment['comment_id'],
                                 'comment'               => $this->HTMLPurifier->html_purify($comment['comment']),
-                                'comment_created'       => isset($comment['comment_created']) ? date("d/m/Y H:i:s", strtotime($comment['comment_created'])) : "",
+                                'comment_created'       => isset($comment['comment_created']) ? $this->TimeElapsedString->time_elapsed_string($comment['comment_created']) : "",
                                 'comment_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
                                 'comment_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
                                 'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], $this->session->USER_ID),

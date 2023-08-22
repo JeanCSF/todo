@@ -1,4 +1,26 @@
+
+
+function readMore(btn) {
+    let post = btn.parentElement;
+    post.querySelector(".dots").classList.toggle("hide");
+    post.querySelector(".more").classList.toggle("hide");
+    btn.textContent == "Ler mais" ? btn.textContent = "Ler menos" : btn.textContent = "Ler mais";
+}
+
 document.addEventListener("DOMContentLoaded", function () {
+    let contents = document.querySelectorAll(".job");
+    console.log(contents);
+    let numChar = 150;
+
+    contents.forEach(content => {
+        if (content.textContent.length < numChar) {
+            content.nextElementSibling.style.display = "none";
+        } else {
+            let displayText = content.textContent.slice(0, numChar);
+            let moreText = content.textContent.slice(numChar);
+            content.innerHTML = `${displayText}<span class="dots">...</span><span class="hide more">${moreText}</span>`;
+        }
+    });
     loadPosts(currentPage);
     $('#btnDeletar').on('click', function () {
         var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
@@ -27,6 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
+
 function profilePage(user) {
     window.location.href = BASEURL + '/user/' + user;
 }
@@ -46,7 +70,7 @@ function debounce(func, delay) {
 }
 
 $(window).scroll(debounce(function () {
-    if (hasMoreData && !isLoading && $(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+    if (hasMoreData && !isLoading && $(window).scrollTop() + $(window).height() >= $(document).height() - 1000) {
         loadMorePosts(currentPage);
     }
 }, 500));
@@ -79,7 +103,7 @@ function loadPosts(page) {
                         <div class="post-container post" id="post${post.job_id}">
                             <div class="user-img">
                                 <a href="${BASEURL + '/user/' + post.user}">
-                                    <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic}" alt="Profile pic">
+                                    <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic}" alt="Profile pic">
                                 </a>
                             </div>
                             <div class="user-info">
@@ -104,9 +128,10 @@ function loadPosts(page) {
                     }
                                 </span>
                             </div>
-                            <div class="user-post-text" onclick="postPage(${post.job_id})">
-                                <span class="fst-italic text-center d-block fs-5" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
-                                <span id="jobTextContent">${post.job}</span>
+                            <div class="user-post-text">
+                                <span onclick="postPage(${post.job_id})" class="fst-italic text-center d-block fs-5 job-title" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
+                                <span onclick="postPage(${post.job_id})" class="job">${post.job}</span>
+                                <button class="btn border-0 text-primary" onclick="readMore(this)">Ler mais</button>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">
                                 <p>${post.job_created}</p>
@@ -159,7 +184,7 @@ function loadMorePosts(page) {
                         <div class="post-container post">
                             <div class="user-img">
                                 <a href="${BASEURL + '/user/' + post.user}">
-                                    <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic}" alt="Profile pic">
+                                    <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic}" alt="Profile pic">
                                 </a>
                             </div>
                             <div class="user-info">
@@ -185,7 +210,7 @@ function loadMorePosts(page) {
                                 </span>
                             </div>
                             <div class="user-post-text" onclick="postPage(${post.job_id})">
-                                <span class="fst-italic text-center d-block fs-5" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
+                                <span class="fst-italic text-center d-block fs-5 job-title" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
                                 <span id="jobTextContent">${post.job}</span>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">

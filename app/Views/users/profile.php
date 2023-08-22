@@ -3,14 +3,15 @@
 <?= $this->section('section') ?>
 <style>
     :root {
-    --maingrey: rgb(247, 247, 247);
-    --hovergrey: rgb(231, 231, 231);
-    --primary: #0D6EFD;
-    --white: #F2F2F2;
-    --black: #212121;
-    --transparent: rgba(0, 0, 0, 0);
-    --link-text: 1.5rem;
-}
+        --maingrey: rgb(247, 247, 247);
+        --hovergrey: rgb(231, 231, 231);
+        --primary: #0D6EFD;
+        --white: #F2F2F2;
+        --black: #212121;
+        --transparent: rgba(0, 0, 0, 0);
+        --link-text: 1.5rem;
+    }
+
     .profile-img {
         margin-block: .3rem;
         position: absolute;
@@ -54,9 +55,9 @@
 </div>
 <div class="tabs row">
     <div class="text-center d-flex justify-content-evenly m-0 p-0">
-            <a href="javascript:void(0)" class="nav-link fw-bold" id="tasksTab" onclick="tasksTab(1, profile_user)">Tarefas</a>
-            <a href="javascript:void(0)" class="nav-link fw-bold" id="repliesTab" onclick="repliesTab(1, profile_user_id)">Respostas</a>
-            <a href="javascript:void(0)" class="nav-link fw-bold" id="likesTab" onclick="likesTab(1, profile_user_id)">Curtidas</a>
+        <a href="javascript:void(0)" class="nav-link fw-bold" id="tasksTab" onclick="tasksTab(1, profile_user)">Tarefas</a>
+        <a href="javascript:void(0)" class="nav-link fw-bold" id="repliesTab" onclick="repliesTab(1, profile_user_id)">Respostas</a>
+        <a href="javascript:void(0)" class="nav-link fw-bold" id="likesTab" onclick="likesTab(1, profile_user_id)">Curtidas</a>
     </div>
 </div>
 
@@ -65,7 +66,7 @@
 </div>
 <div id="loadMore" class="row mt-2">
 </div>
-
+<div class="bottom-space"> </div>
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>

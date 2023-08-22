@@ -231,21 +231,21 @@
 
     <div class="row">
         <header class="d-flex flex-column justify-content-between mt-2 left-panel">
-            <div id="userActions">
-                <a href="<?= base_url('home') ?>" class="nav-link assn-text">ASSN</a>
-                <a href="<?= base_url('home') ?>" class="nav-link"><i class="fa fa-home icon"></i><span class="side-text">Home</span></a>
+            <div id="userActions" >
+                <a href="<?= base_url('home') ?>" class="dropdown-item assn-text">ASSN</a>
+                <a href="<?= base_url('home') ?>" class="dropdown-item"><i class="fa fa-home icon"></i><span class="side-text">Home</span></a>
                 <?php if (isset($_SESSION['USER_ID'])) : ?>
-                    <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="nav-link"><i class="fa fa-user icon"></i><span class="side-text">Perfil</span></a>
-                    <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="nav-link"><i class="fa fa-inbox icon"></i><span class="side-text">Mensagens</span></a>
-                    <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="nav-link"><i class="fa fa-bell icon"></i><span class="side-text">Notificações</span></a>
-                    <a href="<?= base_url('logout') ?>"><i class="fa fa-right-from-bracket icon"></i><span class="side-text">Logout</span></a>
+                    <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="dropdown-item"><i class="fa fa-user icon"></i><span class="side-text">Perfil</span></a>
+                    <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="dropdown-item"><i class="fa fa-inbox icon"></i><span class="side-text">Mensagens</span></a>
+                    <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="dropdown-item"><i class="fa fa-bell icon"></i><span class="side-text">Notificações</span></a>
+                    <a href="<?= base_url('logout') ?>" class="dropdown-item"><i class="fa fa-right-from-bracket icon"></i><span class="side-text">Logout</span></a>
                     <a id="sidebarTask" type="button" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"></a>
                     <?php if ($_SESSION['SU'] == 1) : ?>
-                        <a href="<?= base_url('users') ?>" class="nav-link"><i class="fa fa-users icon"></i><span class="side-text">Usuários</span></a>
+                        <a href="<?= base_url('users') ?>" class="dropdown-item"><i class="fa fa-users icon"></i><span class="side-text">Usuários</span></a>
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <a href="<?= base_url('about') ?>" class="nav-link"><i class="fa fa-circle-info icon"></i><span class="side-text">Sobre</span></a>
+                <a href="<?= base_url('about') ?>" class="dropdown-item"><i class="fa fa-circle-info icon"></i><span class="side-text">Sobre</span></a>
             </div>
         </header>
 
@@ -286,7 +286,7 @@
             <?php endif; ?>
             <div>
                 <div class="footer mt-3">
-                    <a href="contact" class="text-decoration-none link-secondary fw-bolder">FEEDBACK</a>
+                    <a href="<?= base_url('contact')?>" class="text-decoration-none link-secondary fw-bolder">FEEDBACK</a>
                     <div class="footer-socials">
                         <a class="link-secondary me-4" href="https://github.com/JeanCSF" target="_blank">GitHub</a>
                         <a class="link-secondary me-4" href="https://facebook.com/fookinselfish" target="_blank">Facebook</a>
@@ -303,10 +303,24 @@
         <div class="row">
             <nav class="task-bar">
                 <ul>
-                    <li><a href="<?= base_url('/') ?>" class="nav-link"><i class="fa fa-home icon"></i></a></li>
+                    <li><a href="<?= base_url('/home') ?>" class="nav-link"><i class="fa fa-home icon"></i></a></li>
                     <li><a href="explore" class="nav-link"><i class="fa fa-search icon"></i></a></li>
-                    <li><a href="about" class="nav-link"><i class="fa fa-circle-info icon"></i></a></li>
-                    <li><a href="#" class="nav-link"><i class="fa fa-gear icon"></i></a></li>
+                    <li><a href="<?= base_url('about') ?>" class="nav-link"><i class="fa fa-circle-info icon"></i></a></li>
+                    <li>
+                        <div class="dropdown">
+                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-gear"></i>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-dark mt-3">
+                                <li> <a href="<?= base_url('contact')?>" class="dropdown-item"><i class="fa fa-message icon"></i> Feedback</a></li>
+                                <?php if (isset($_SESSION['USER_ID'])) : ?>
+                                    <li><a class="dropdown-item" href="<?= base_url('user/' . $_SESSION['USER']) ?>"><i class="fa fa-user icon"></i><span class="side-text"> Perfil</span></a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('logout') ?>"><i class="fa fa-right-from-bracket icon"></i> Sair</a></li>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -353,9 +367,9 @@
                 Likes = response;
                 Likes.forEach(function(like) {
                     likesContainer.innerHTML += `
-                        <div class="d-flex justify-content-between align-center" id="like${like.like_id}">
+                        <div class="d-flex justify-content-between align-center my-2" id="like${like.like_id}">
                             <a href="${BASEURL + '/user/' + like.user}" class="nav-link">
-                                <img class="rounded-circle me-3" height="48" width="48" src="${!like.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + like.user + '/' + like.profile_pic}" alt="Profile pic">
+                                <img class="rounded-circle me-3" height="48" width="48" src="${!like.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + like.user + '/' + like.profile_pic}" alt="Profile pic">
                                 <span class="fw-bold">${like.name}</span>
                             </a>
                             <span class="text-muted fst-italic p-3" style="font-size: 10px;">${like.datetime_liked}</span>

@@ -76,6 +76,10 @@ html {
 
 }
 
+.bottom-space {
+    height: 100px;
+}
+
 .page-title {
     display: flex;
     border-bottom: 2px solid var(--maingrey);
@@ -95,6 +99,13 @@ html {
     color: var(--black);
     font-weight: 900;
 
+}
+
+.page-title p {
+    white-space: nowrap;
+    max-width: 50ch;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .page-title input {
@@ -336,6 +347,7 @@ html {
 
 .container-fluid {
     margin-top: 15%;
+    
 }
 
 .search button {
@@ -412,6 +424,9 @@ html {
     border-radius: 50%;
 }
 
+.hide {
+    display: none;
+}
 
 @media screen and (max-width: 1400px) {
     .header-post {
@@ -602,11 +617,19 @@ html {
     .content section {
         width: 100%;
         margin: 0;
-        height: 60vh !important;
+        height: 100vh !important;
     }
 
     .page-title {
         width: 100%;
+        font-size: 1rem;
+    }
+
+    .page-title p {
+        white-space: nowrap;
+        max-width: 33ch;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     .right-panel,
@@ -652,12 +675,15 @@ html {
         font-size: 2rem;
         position: absolute;
         bottom: 10%;
-        z-index: 999;
+        z-index: 999 !important;
         right: 3%;
 
     }
 
-
+    .job-title {
+        font-size: 1rem !important;
+        font-weight: 900;
+    }
 
 
 }

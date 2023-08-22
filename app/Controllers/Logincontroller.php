@@ -71,7 +71,7 @@ class Logincontroller extends BaseController
                 $msg['msg'] = 'Cadastro criado, acesse seu email para confirmar a conta!';
                 $msg['type'] = 'alert-success';
                 $this->session->setFlashdata('msg', $msg);
-                return redirect()->to(base_url('/'));
+                return redirect()->to(base_url('home'));
             }
         }
         $data['pageTitle'] = "Criar Conta";
@@ -159,6 +159,6 @@ class Logincontroller extends BaseController
     public function logout()
     {
         session()->destroy();
-        return redirect()->to(base_url('/home'));
+        return redirect()->to(base_url('home'));
     }
 }

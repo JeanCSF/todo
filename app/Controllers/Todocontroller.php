@@ -154,11 +154,11 @@ class Todocontroller extends BaseController
     public function reply($reply_id)
     {
         $replies = new Replies();
-        $replie = $replies->find($reply_id);
-        if ($replie) {
+        $reply = $replies->find($reply_id);
+        if ($reply) {
             if (isset($_SESSION['USER_ID'])) {
                 $data = [
-                    'pageTitle'     =>  $replie->REPLY,
+                    'pageTitle'     =>  $reply->REPLY,
                     'reply_id'      =>  $reply_id,
                 ];
                 return view('reply', $data);

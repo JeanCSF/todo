@@ -56,7 +56,7 @@ $.ajax({
                     <div class="post-container post">
                         <div class="user-img">
                             <a href="${BASEURL}/user/${response.reply.user}">
-                                <img height="48" width="48" src="${!response.reply.profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.reply.user + '/' + response.reply.profile_pic }" alt="Profile pic">
+                                <img height="48" width="48" src="${!response.reply.profile_pic? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + response.reply.user + '/' + response.reply.profile_pic }" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">
@@ -101,7 +101,7 @@ $.ajax({
                 <div class="post-container post p-2">
                         <div class="user-img">
                             <a href="${BASEURL}/user/${post.user}">
-                                <img height="48" width="48" src="${!post.profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic }" alt="Profile pic">
+                                <img height="48" width="48" src="${!post.profile_pic? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic }" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">
@@ -215,7 +215,7 @@ function commentReply(user_id, reply_id, reply_comment) {
             <div class="post-container post p-2">
                         <div class="user-img">
                             <a href="${BASEURL}/user/${response.reply_comments[0].user}">
-                                <img height="48" width="48" src="${!response.reply_comments[0].profile_pic? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.reply_comments[0].user + '/' + response.reply_comments[0].profile_pic }" alt="Profile pic">
+                                <img height="48" width="48" src="${!response.reply_comments[0].profile_pic? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + response.reply_comments[0].user + '/' + response.reply_comments[0].profile_pic }" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">

@@ -22,9 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         msg.textContent = data.error;
                     }
                     new bootstrap.Toast(document.querySelector('#basicToast')).show();
-
-
-
                 }
             });
         } else {
@@ -49,8 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         msg.textContent = data.error;
                     }
                     new bootstrap.Toast(document.querySelector('#basicToast')).show();
-
-
 
                 }
             });
@@ -85,7 +80,7 @@ $.ajax({
                     <div class="post-container post">
                         <div class="user-img">
                             <a href="${BASEURL}/user/${response.job.user}">
-                                <img height="48" width="48" src="${!response.job.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.job.user + '/' + response.job.profile_pic}" alt="Profile pic">
+                                <img height="48" width="48" src="${!response.job.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + response.job.user + '/' + response.job.profile_pic}" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">
@@ -111,7 +106,7 @@ $.ajax({
                             </span>
                         </div>
                         <div class="user-post-text">
-                            <span class="fst-italic text-center d-block fs-5" style="${!response.job.job_finished ? "" : "text-decoration: line-through;"}">${response.job.job_title}</span>
+                            <span id="jobTitle" class="fst-italic text-center d-block fs-5 job-title" style="${!response.job.job_finished ? "" : "text-decoration: line-through;"}">${response.job.job_title}</span>
                             <span id="jobTextContent">${response.job.job}</span>
                         </div>
                         <div class="user-post-footer fst-italic text-muted mt-3">
@@ -136,7 +131,7 @@ $.ajax({
                 <div class="post-container post p-2" id="reply${post.comment_id}">
                         <div class="user-img">
                             <a href="${BASEURL}/user/${post.user}">
-                                <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic}" alt="Profile pic">
+                                <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + post.user + '/' + post.profile_pic}" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">
@@ -288,7 +283,7 @@ function commentJob(user_id, job_id, job_comment) {
             <div class="post-container post p-2" id="reply${response.job_comments[0].comment_id}">
                         <div class="user-img">
                             <a href="${BASEURL}/user/${response.job_comments[0].user}">
-                                <img height="48" width="48" src="${!response.job_comments[0].profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + response.job_comments[0].user + '/' + response.job_comments[0].profile_pic}" alt="Profile pic">
+                                <img height="48" width="48" src="${!response.job_comments[0].profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + response.job_comments[0].user + '/' + response.job_comments[0].profile_pic}" alt="Profile pic">
                             </a>
                         </div>
                         <div class="user-info">

@@ -115,32 +115,35 @@ function loadAll(page, user) {
             console.error("Erro na requisição:", error);
         }
     }).done(function (response) {
-        if (response.length === 0) {
-            hasMoreData = false;
+        User = response.user_info;
+        headerContainer.innerHTML += `
+            <div class="banner">
+                <div class="profile-img">
+                    <img class="img fluid rounded-circle" height="200" width="200" src="${!User.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic"">
+                    <p class="fst-italic fw-bold text-muted">@${User.user}</p>
+                    <p class="fst-italic fw-light text-muted">Since 97</p>
+                </div>
+            </div>
+            `;
+        if (response.user_jobs === null && User) {
             postsContainer.innerHTML = `<p class='text-center'>${User.user} não postou nada ainda!</p>`;
+            loadMoreButton.innerHTML = '';
+        }
+        if (response.user_jobs === null) {
+            hasMoreData = false;
             loadMoreButton.innerHTML = '';
         } else {
             loadMoreButton.innerHTML = `
             <div class="text-center">
                 <a href="javascript:void(0)" class="nav-link fw-bold link-primary" onclick="loadMoreTasks(currentPage, profile_user)">Carregar mais tarefas...</a>
             </div>`;
-            User = response.user_info;
-            headerContainer.innerHTML += `
-            <div class="banner">
-                <div class="profile-img">
-                    <img class="img fluid rounded-circle" height="200" width="200" src="${!User.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic"">
-                    <p class="fst-italic fw-bold text-muted">@${User.user}</p>
-                    <p class="fst-italic fw-light text-muted">Since 97</p>
-                </div>
-            </div>
-            `;
             Posts = response.user_jobs
             Posts.forEach(function (post) {
                 postsContainer.innerHTML += `
                         <div class="post-container post">
                             <div class="user-img">
                                 <a href="${BASEURL}/user/${User.user}">
-                                    <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
+                                    <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
                                 </a>
                             </div>
                             <div class="user-info">
@@ -176,7 +179,7 @@ function loadAll(page, user) {
                             <div class="post-actions" id="postActions_${post.job_id}">
                                 <a id="likeButton${post.job_id}" href="javascript:void(0)" role="button">
                                     <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${post.job_id})"></i>
-                                    <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${post.job_likes}</span>
+                                    <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.job_id}, 'POST')">${post.job_likes}</span>
                                 </a>
                                 <a href="javascript:void(0)" onclick="postPage(${post.job_id})" role="button">
                                     <i class="fa-regular fa-comment"></i>
@@ -226,7 +229,7 @@ function loadMoreTasks(page, user) {
                         <div class="post-container post">
                             <div class="user-img">
                                 <a href="${BASEURL}/user/${User.user}">
-                                    <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
+                                    <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
                                 </a>
                             </div>
                             <div class="user-info">
@@ -301,7 +304,7 @@ function tasksTab(page, user) {
             console.error("Erro na requisição:", error);
         }
     }).done(function (response) {
-        if (response.length === 0) {
+        if (response.user_jobs === null) {
             hasMoreData = false;
             postsContainer.innerHTML = `<p class='text-center'>${User.user} não postou nada ainda!</p>`;
             loadMoreButton.innerHTML = '';
@@ -316,7 +319,7 @@ function tasksTab(page, user) {
                             <div class="post-container post">
                                 <div class="user-img">
                                     <a href="${BASEURL}/user/${User.user}">
-                                        <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
+                                        <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
                                     </a>
                                 </div>
                                 <div class="user-info">
@@ -352,7 +355,7 @@ function tasksTab(page, user) {
                                 <div class="post-actions" id="postActions_${post.job_id}">
                                     <a id="likeButton${post.job_id}" href="javascript:void(0)" role="button">
                                         <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${post.job_id})"></i>
-                                        <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${post.job_likes}</span>
+                                        <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.job_id}, 'POST')">${post.job_likes}</span>
                                     </a>
                                     <a href="javascript:void(0)" onclick="postPage(${post.job_id})" role="button">
                                         <i class="fa-regular fa-comment"></i>
@@ -405,7 +408,7 @@ function repliesTab(page, user_id) {
                             <div class="post-container post">
                                 <div class="user-img">
                                     <a href="${BASEURL}/user/${User.user}">
-                                        <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
+                                        <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
                                     </a>
                                 </div>
                                 <div class="user-info">
@@ -435,7 +438,7 @@ function repliesTab(page, user_id) {
                                 <div class="post-actions" id="replyActions_${post.reply_id}">
                                     <a id="likeCommentButton${post.reply_id}" href="javascript:void(0)" role="button">
                                         <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeComment(${session_user_id},${post.reply_id})"></i>
-                                        <span id="likes${post.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${post.reply_likes}</span>
+                                        <span id="likes${post.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.reply_id}, 'REPLY')">${post.reply_likes}</span>
                                     </a>
                                     <a href="javascript:void(0)" onclick="commentPage(${post.reply_id})" role="button">
                                         <i class="fa-regular fa-comment"></i>
@@ -489,7 +492,7 @@ function likesTab(page, user_id) {
                             <div class="post-container post">
                                 <div class="user-img">
                                     <a href="${BASEURL}/user/${post.content_liked_user}">
-                                        <img height="48" width="48" src="${!post.content_liked_user_img ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.content_liked_user + '/' + post.content_liked_user_img}" alt="Profile pic">
+                                        <img height="48" width="48" src="${!post.content_liked_user_img ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + post.content_liked_user + '/' + post.content_liked_user_img}" alt="Profile pic">
                                     </a>
                                 </div>
                                 <div class="user-info">
@@ -525,7 +528,7 @@ function likesTab(page, user_id) {
                                 <div class="post-actions" id="postActions_${post.content_id}">
                                     <a id="likeButton${post.content_id}" href="javascript:void(0)" role="button">
                                         <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${post.content_id})"></i>
-                                        <span id="likes${post.content_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${post.content_liked_num_likes}</span>
+                                        <span id="likes${post.content_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.content_id}, 'POST')">${post.content_liked_num_likes}</span>
                                     </a>
                                     <a href="javascript:void(0)" onclick="postPage(${post.content_id})" role="button">
                                         <i class="fa-regular fa-comment"></i>
@@ -540,7 +543,7 @@ function likesTab(page, user_id) {
                                 <div class="post-container post">
                                     <div class="user-img">
                                         <a href="${BASEURL}/user/${post.content_liked_user}">
-                                            <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/logo.png' : BASEURL + '/assets/img/profiles_pics/' + post.content_liked_user + '/' + post.content_liked_user_img}" alt="Profile pic">
+                                            <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + post.content_liked_user + '/' + post.content_liked_user_img}" alt="Profile pic">
                                         </a>
                                     </div>
                                     <div class="user-info">
@@ -570,7 +573,7 @@ function likesTab(page, user_id) {
                                     <div class="post-actions" id="replyActions_${post.content_id}">
                                         <a id="likeCommentButton${post.content_id}" href="javascript:void(0)" role="button">
                                             <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeComment(${session_user_id},${post.content_id})"></i>
-                                            <span id="likes${post.content_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${post.content_liked_num_likes}</span>
+                                            <span id="likes${post.content_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.content_id}, 'REPLY')">${post.content_liked_num_likes}</span>
                                         </a>
                                         <a href="javascript:void(0)" onclick="commentPage(${post.content_id})" role="button">
                                             <i class="fa-regular fa-comment"></i>
