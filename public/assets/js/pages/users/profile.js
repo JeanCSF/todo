@@ -1,8 +1,36 @@
+var currentPage = 1;
+var isLoading = false;
+var hasMoreData = true;
+var headerContainer = document.querySelector("#headerContainer");
+var postsContainer = document.querySelector("#postsContainer");
+var loadMoreButton = document.querySelector("#loadMore");
+var profileViewsContainer = document.querySelector("#profileViewsModalContainer");
+
 document.addEventListener("DOMContentLoaded", function () {
+    if(session_user_id != profile_user_id) {
+        saveVisitForProfile(profile_user_id, session_user_id)
+    }
     document.querySelector("#tasksTab").classList.add("active");
     postsContainer.innerHTML = '';
     loadAll(currentPage, profile_user);
 });
+
+function saveVisitForProfile(profile_user_id, session_user_id) {
+    $.ajax({
+        url: BASEURL + '/save_visit',
+        type: "POST",
+        data: {
+            user_id: profile_user_id,
+            visitor_id: session_user_id
+        },
+        headers: {
+            'token': 'ihgfedcba987654321'
+        },
+        error: function(xhr, status, error) {
+            console.error("Erro na requisição:", error);
+        }
+    });
+}
 
 function saveContent() {
     localStorage.setItem("html", document.body.innerHTML)
@@ -34,7 +62,6 @@ function likeJob(user_id, job_id) {
     }).done(function (resp) {
         var likeButton = document.querySelector(`#likeButton${job_id}`);
         likeButton.innerHTML = '';
-        let Posts = [];
         $.ajax({
             url: BASEURL + '/job/' + job_id,
             type: "GET",
@@ -48,7 +75,7 @@ function likeJob(user_id, job_id) {
 
             likeButton.innerHTML += `
                         <i id="likeButton${response.job.job_id}" class="${response.job.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${response.job.job_id})"></i>
-                        <span id="likes${response.job.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${response.job.job_likes}</span>
+                        <span id="likes${response.job.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${response.job.job_id}, 'POST')">${response.job.job_likes}</span>
                 `;
         });
     });
@@ -86,7 +113,7 @@ function likeComment(user_id, comment_id) {
 
             likeButton.innerHTML += `
                     <i id="likeCommentButton${response.reply.reply_id}" class="${response.reply.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeComment(${session_user_id},${response.reply.reply_id})"></i>
-                    <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${response.reply.reply_likes}</span>
+                    <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${response.reply.reply_id}, 'REPLY')">${response.reply.reply_likes}</span>
             `;
         });
     });
@@ -121,9 +148,13 @@ function loadAll(page, user) {
                 <div class="profile-img">
                     <img class="img fluid rounded-circle" height="200" width="200" src="${!User.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic"">
                     <p class="fst-italic fw-bold text-muted">@${User.user}</p>
-                    <p class="fst-italic fw-light text-muted">Since 97</p>
                 </div>
             </div>
+            ${session_user_id == User.user_id ?
+                `<div class="text-end">
+                    <button class="btn border-0"><i class="fa fa-eye"></i></button>
+                </div>`
+                : ''}
             `;
         if (response.user_jobs === null && User) {
             postsContainer.innerHTML = `<p class='text-center'>${User.user} não postou nada ainda!</p>`;

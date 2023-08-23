@@ -1,26 +1,10 @@
-
-
-function readMore(btn) {
-    let post = btn.parentElement;
-    post.querySelector(".dots").classList.toggle("hide");
-    post.querySelector(".more").classList.toggle("hide");
-    btn.textContent == "Ler mais" ? btn.textContent = "Ler menos" : btn.textContent = "Ler mais";
-}
+let Posts = [];
+var currentPage = 1;
+var isLoading = false;
+var hasMoreData = true;
+var mainContainer = document.querySelector("#postContainer");
 
 document.addEventListener("DOMContentLoaded", function () {
-    let contents = document.querySelectorAll(".job");
-    console.log(contents);
-    let numChar = 150;
-
-    contents.forEach(content => {
-        if (content.textContent.length < numChar) {
-            content.nextElementSibling.style.display = "none";
-        } else {
-            let displayText = content.textContent.slice(0, numChar);
-            let moreText = content.textContent.slice(numChar);
-            content.innerHTML = `${displayText}<span class="dots">...</span><span class="hide more">${moreText}</span>`;
-        }
-    });
     loadPosts(currentPage);
     $('#btnDeletar').on('click', function () {
         var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
@@ -49,8 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
-
 function profilePage(user) {
     window.location.href = BASEURL + '/user/' + user;
 }
@@ -74,8 +56,6 @@ $(window).scroll(debounce(function () {
         loadMorePosts(currentPage);
     }
 }, 500));
-
-
 
 function loadPosts(page) {
     if (isLoading || !hasMoreData) {

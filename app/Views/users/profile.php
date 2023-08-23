@@ -70,19 +70,9 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script defer src="<?= base_url('assets/pages/users/profile.js') ?>"></script>
+<script defer src="<?= base_url('assets/js/pages/users/profile.js') ?>"></script>
 <script>
-    const BASEURL = '<?= base_url() ?>';
-    var session_user_id = '<?= $_SESSION['USER_ID'] ?>';
-    var session_profile_pic = '<?= $_SESSION['IMG'] ?>';
-    var session_user = '<?= $_SESSION['USER'] ?>';
     var profile_user = '<?= $user ?>';
     var profile_user_id = '<?= $user_id ?>';
-    var currentPage = 1;
-    var isLoading = false;
-    var hasMoreData = true;
-    var headerContainer = document.querySelector("#headerContainer");
-    var postsContainer = document.querySelector("#postsContainer");
-    var loadMoreButton = document.querySelector("#loadMore");
 </script>
 <?= $this->endSection() ?>

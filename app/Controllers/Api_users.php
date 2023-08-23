@@ -19,15 +19,19 @@ class Api_users extends ResourceController
     private $likesModel;
     private $repliesModel;
     private $usersModel;
+    private $visitsModel;
+
     private $token = 'ihgfedcba987654321';
 
     public function __construct()
     {
         $this->mainController = new \App\Controllers\Main();
+
         $this->jobsModel = new \App\Models\Todo();
         $this->likesModel = new \App\Models\Likes();
         $this->repliesModel = new \App\Models\Replies();
         $this->usersModel = new \App\Models\Users();
+        $this->visitsModel = new \App\Models\Visits();
 
         $this->session = \Config\Services::session();
         $this->HTMLPurifier = new HTMLPurifierService();
@@ -78,8 +82,8 @@ class Api_users extends ResourceController
                             'job_title'             => $this->HTMLPurifier->html_purify($job->JOB_TITLE),
                             'job'                   => $this->HTMLPurifier->html_purify($job->JOB),
                             'job_created'           => isset($job->DATETIME_CREATED) ? $this->TimeElapsedString->time_elapsed_string($job->DATETIME_CREATED) : "",
-                            'job_updated'           => isset($job->DATETIME_UPDATED) ? 'Atualizado: '.$this->TimeElapsedString->time_elapsed_string($job->DATETIME_UPDATED) : "",
-                            'job_finished'          => isset($job->DATETIME_FINISHED) ? 'Finalizado: '.$this->TimeElapsedString->time_elapsed_string($job->DATETIME_FINISHED) : "",
+                            'job_updated'           => isset($job->DATETIME_UPDATED) ? 'Atualizado: ' . $this->TimeElapsedString->time_elapsed_string($job->DATETIME_UPDATED) : "",
+                            'job_finished'          => isset($job->DATETIME_FINISHED) ? 'Finalizado: ' . $this->TimeElapsedString->time_elapsed_string($job->DATETIME_FINISHED) : "",
                             'job_privacy'           => $job->PRIVACY,
                             'job_likes'             => $job->NUM_LIKES,
                             'job_num_comments'      => $job->NUM_REPLIES,
@@ -111,6 +115,57 @@ class Api_users extends ResourceController
                 'msg'       =>  'Token inválido',
             ];
         }
+    }
+
+    public function saveVisit()
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+        $response = [];
+        if ($this->_tokenValidate()) {
+            $checkVisit = $this->visitsModel->getInfoIfAlreadyVisitedProfile($this->request->getPost('user_id'), $this->request->getPost('visitor_id'));
+
+            try {
+                if ($this->request->getPost('user_id') == $this->request->getPost('visitor_id')) {
+                    $response = [];
+                } else if (!empty($checkVisit)) {
+                    $newVisit = [
+                        'DATETIME_VISITED'          =>  date("Y-m-d H:i:s"),
+                    ];
+
+                    $this->visitsModel->table('profile_views')->update($checkVisit, $newVisit);
+                    $response = [
+                        'response'  =>  'success',
+                        'msg'       =>  'Visit Updated'
+                    ];
+                } else {
+                    $newVisit = [
+                        'PROFILE_USER_ID'           =>  $this->request->getPost('user_id'),
+                        'VISITOR_ID'                =>  $this->request->getPost('visitor_id'),
+                        'DATETIME_VISITED'          =>  date("Y-m-d H:i:s"),
+                    ];
+
+                    $this->visitsModel->save($newVisit);
+                    $response = [
+                        'response'  =>  'success',
+                        'msg'       =>  'Visit Saved'
+                    ];
+                }
+            } catch (Exception $e) {
+                $response = [
+                    'response'  =>  'error',
+                    'msg'       =>  'Erro ao Visitar Perfil',
+                    'errors'    =>  [
+                        'exception' =>  $e->getMessage()
+                    ],
+                ];
+            }
+        } else {
+            $response = [
+                'response'  =>  'error',
+                'msg'       =>  'Token inválido',
+            ];
+        }
+        return $this->respond($response);
     }
 
     public function getReplies($user_id = null)
@@ -185,14 +240,13 @@ class Api_users extends ResourceController
                             'content_liked_title'           =>  $like->TYPE == 'POST' ? $this->HTMLPurifier->html_purify($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB_TITLE')) : '',
                             'content_liked_text'            =>  $like->TYPE == 'POST' ? $this->HTMLPurifier->html_purify($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB')) : $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('REPLY'),
                             'content_liked_created'         =>  $like->TYPE == 'POST' ? $this->TimeElapsedString->time_elapsed_string($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_CREATED')) : $this->TimeElapsedString->time_elapsed_string($this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('DATETIME_REPLIED')),
-                            'content_liked_finished'        =>  $like->TYPE == 'POST' ? !empty($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_FINISHED'))? 'Finalizado: '.$this->TimeElapsedString->time_elapsed_string($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_FINISHED')) :'' : '',
+                            'content_liked_finished'        =>  $like->TYPE == 'POST' ? !empty($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_FINISHED')) ? 'Finalizado: ' . $this->TimeElapsedString->time_elapsed_string($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_FINISHED')) : '' : '',
                             'content_liked_privacy'         =>  $like->TYPE == 'POST' ? $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('PRIVACY') : '',
                             'content_liked_num_likes'       =>  $like->TYPE == 'POST' ? $this->likesModel->getContentLikes($like->CONTENT_ID, 'POST') : $this->likesModel->getContentLikes($like->CONTENT_ID, 'REPLY'),
                             'content_liked_num_comments'    =>  $like->TYPE == 'POST' ? $this->repliesModel->countJobReplies($like->CONTENT_ID) : $this->repliesModel->countRepliesOfThisReply($like->CONTENT_ID),
                             'user_liked'                    =>  $like->TYPE == 'POST' ? $this->likesModel->checkUserLikedJob($like->CONTENT_ID, $this->session->USER_ID) : $this->likesModel->checkUserLikedReply($like->CONTENT_ID, $this->session->USER_ID)
                         ];
                     }
-                    
                 } else {
                     $response = [];
                 }

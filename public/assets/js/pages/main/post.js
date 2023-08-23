@@ -1,3 +1,12 @@
+var mainContainer = document.querySelector("#postContainer");
+var commentsContainer = document.querySelector("#commentsContainer");
+var newComment = document.querySelector("#newComment");
+var comment = document.querySelector('#post_comment');
+var frmComment = document.querySelector('#frmComment');
+mainContainer.innerHTML = '';
+commentsContainer.innerHTML = '';
+newComment.innerHTML = '';
+
 document.addEventListener("DOMContentLoaded", function () {
     $('#btnDeletar').on('click', function () {
         var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);

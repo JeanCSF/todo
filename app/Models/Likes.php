@@ -14,8 +14,6 @@ class Likes extends Model
     protected $protectFields    = true;
     protected $allowedFields    = ['LIKE_ID', 'USER_ID', 'CONTENT_ID', 'DATETIME_LIKED', 'TYPE'];
 
-
-
     // Validation
     protected $validationRules      = [];
     protected $validationMessages   = [];

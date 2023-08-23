@@ -29,20 +29,8 @@
     </article>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script defer src="<?= base_url('assets/pages/main/post.js') ?>"></script>
+<script defer src="<?= base_url('assets/js/pages/main/post.js') ?>"></script>
 <script>
-    const BASEURL = '<?= base_url() ?>';
-    var session_user_id = '<?= $_SESSION['USER_ID'] ?>';
-    var session_profile_pic = '<?= $_SESSION['IMG'] ?>';
-    var session_user = '<?= $_SESSION['USER'] ?>'
     var job_id = '<?= $job_id ?>';
-    var mainContainer = document.querySelector("#postContainer");
-    var commentsContainer = document.querySelector("#commentsContainer");
-    var newComment = document.querySelector("#newComment");
-    var comment = document.querySelector('#post_comment');
-    var frmComment = document.querySelector('#frmComment');
-    mainContainer.innerHTML = '';
-    commentsContainer.innerHTML = '';
-    newComment.innerHTML = '';
 </script>
 <?= $this->endSection() ?>

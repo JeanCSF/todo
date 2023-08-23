@@ -1,237 +1,24 @@
 <?php
 
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, minimum-scale=1">
     <title>Anti Social Social Network</title>
-    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/assets/main.css') ?>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" integrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+    <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/libs/font-awesome_6.4.0_css_all.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/main.css') ?>">
 </head>
 
 <body>
-    <!-- Reply Modal -->
-    <div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="replyModalLabel">Editar Resposta</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row">
-                            <div class="p-4 mb-3">
-                                <form action="" id="formReply" method="post">
-                                    <div class="row mb-3">
-                                        <textarea style="height: 150px;" name="reply_content" id="reply_content" value="" class="form-control" required></textarea>
-                                    </div>
-                                    <input type="hidden" name="reply_id" id="reply_id" value="">
-                            </div>
-                            <div class="modal-footer d-flex justify-content-between">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <input type="submit" value="Salvar" id="btnReply" onclick="" class="btn btn-success">
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Reply Modal -->
-
-    <!-- Profile Modal -->
-    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="profileModalLabel">Foto do Perfil</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row">
-                            <div class="p-4 mb-3">
-                                <form action="<?= url_to('upload') ?>" id="formProfilePic" method="post" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <?php if (session()->has('errors')) : ?>
-                                            <p class="text-danger"><?= session()->get('errors')['userfile'] ?></p>
-                                        <?php endif; ?>
-                                        <?php if (session()->has('uploaded')) : ?>
-                                            <p class="text-success"><?= session()->get('uploaded') ?></p>
-                                        <?php endif; ?>
-                                        <input type="file" name="userfile" id="userfile" class="form-control-file">
-                                    </div>
-                                    <div class="modal-footer d-flex justify-content-between">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <input type="submit" value="Salvar Imagem" id="btnUpload" onclick="" class="btn btn-success">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Profile Modal -->
-
-    <!-- Task Modal -->
-    <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="taskModalLabel"></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row">
-                            <div class="p-4 mb-3">
-                                <form action="" id="form" method="post">
-                                    <div class="row mb-3">
-                                        <input type="text" placeholder="Nome da tarefa" name="job_name" id="job_name" value="" class="form-control" autofocus required>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <textarea style="height: 150px;" name="job_desc" id="job_desc" value="" class="form-control" placeholder="Descrição" required></textarea>
-                                    </div>
-                                    <input type="hidden" name="id_job" id="id_job" value="">
-                                    <input type="hidden" id="editar" value="">
-                                    <div class="modal-footer d-flex justify-content-between">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <input type="submit" value="" id="btnSubmit" onclick="" class="btn btn-success">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Task Modal -->
-
-    <!-- Delete Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalTitle"></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeDeleteModal"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <h3 id="bodyMsg"></h3>
-                    <h5 id="tarefa"></h5>
-                    <span class="text-danger fw-bold">Esta ação é irreversível</span>
-                </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="btnDeletar" data-delete="">Sim, Deletar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Delete Modal -->
-
-    <!-- Privacy Modal -->
-    <div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Privacidade</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4 mb-3">
-                    <form action="<?= base_url('todocontroller/changeprivacy') ?>" id="formPrivacy" method="post">
-                        <div class="row">
-                            <div class="row mb-3 d-flex">
-                                <div class="col-1">
-                                    <input type="radio" name="privacyRb" id="privacyRb" value="<?= true ?>">
-                                </div>
-                                <div class="col-11">
-                                    <label for="privacyRb">Visível para todos</label>
-                                </div>
-                            </div>
-                            <div class="row mb-3 d-flex">
-                                <div class="col-1">
-                                    <input type="radio" name="privacyRb" id="privacyRb" value="<?= false ?>">
-                                </div>
-                                <div class="col-11">
-                                    <label for="privacyRb">Somente eu</label>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="hidden" name="privacy_id" id="privacy_id" value="">
-                        <div class="modal-footer d-flex justify-content-between">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <input type="submit" class="btn btn-primary" id="btnPrivacy" value="Salvar Alterações">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Privacy Modal -->
-
-    <!-- Plus Task Modal -->
-    <div class="modal fade" id="plusTaskModal" tabindex="-1" aria-labelledby="plusTaskModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="plusTaskModalTitle"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body col-10 offset-1 p-2">
-                    <div class="row">
-                        <p id="plusTaskModalDesc" class="text-justify"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Plus Task Modal -->
-
-    <!-- Likes Modal -->
-    <div class="modal fade" id="likesModal" tabindex="-1" aria-labelledby="likesModallLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Curtidas</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-2">
-                    <div id="likesModalContainer">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Likes Modal -->
-
-
-    <!-- Toast Notification -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="top: 10px; right: 10px; z-index: 9999;">
-        <div id="basicToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
-            <div class="alert" style="margin-bottom: 0;" id="alerta">
-                <span id="msgInfo" style="text-transform: capitalize;"></span>
-                <button type="button" class="btn-close btn-close-black float-end" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
-    <!-- Toast Notification -->
-
+    <?= $this->include('layouts/modals') ?>
     <div class="row">
         <header class="d-flex flex-column justify-content-between mt-2 left-panel">
-            <div id="userActions" >
+            <div id="userActions">
                 <a href="<?= base_url('home') ?>" class="dropdown-item assn-text">ASSN</a>
                 <a href="<?= base_url('home') ?>" class="dropdown-item"><i class="fa fa-home icon"></i><span class="side-text">Home</span></a>
                 <?php if (isset($_SESSION['USER_ID'])) : ?>
@@ -286,7 +73,7 @@
             <?php endif; ?>
             <div>
                 <div class="footer mt-3">
-                    <a href="<?= base_url('contact')?>" class="text-decoration-none link-secondary fw-bolder">FEEDBACK</a>
+                    <a href="<?= base_url('contact') ?>" class="text-decoration-none link-secondary fw-bolder">FEEDBACK</a>
                     <div class="footer-socials">
                         <a class="link-secondary me-4" href="https://github.com/JeanCSF" target="_blank">GitHub</a>
                         <a class="link-secondary me-4" href="https://facebook.com/fookinselfish" target="_blank">Facebook</a>
@@ -313,7 +100,7 @@
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-dark mt-3">
-                                <li> <a href="<?= base_url('contact')?>" class="dropdown-item"><i class="fa fa-message icon"></i> Feedback</a></li>
+                                <li> <a href="<?= base_url('contact') ?>" class="dropdown-item"><i class="fa fa-message icon"></i> Feedback</a></li>
                                 <?php if (isset($_SESSION['USER_ID'])) : ?>
                                     <li><a class="dropdown-item" href="<?= base_url('user/' . $_SESSION['USER']) ?>"><i class="fa fa-user icon"></i><span class="side-text"> Perfil</span></a></li>
                                     <li><a class="dropdown-item" href="<?= base_url('logout') ?>"><i class="fa fa-right-from-bracket icon"></i> Sair</a></li>
@@ -325,126 +112,28 @@
             </nav>
         </div>
     </div>
-
-    <script src="<?= base_url('assets/popper.min.js') ?>"></script>
-    <script src="<?= base_url('assets/bootstrap.min.js') ?>"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="<?= base_url('assets/js/libs/jquery_3.7.0_jquery.min.js')?>"></script>
+    <script src="<?= base_url('assets/js/libs/popper.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/bootstrap.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/libs/font-awesome_6.4.0_js_all.min.js') ?>"></script>
+    <script defer src="<?= base_url('assets/js/pages/main/main_scripts.js') ?>"></script>
     <script>
+        const BASEURL = '<?= base_url() ?>';
+        var session_user_id = '<?= $_SESSION['USER_ID'] ?>';
+        var session_profile_pic = '<?= $_SESSION['IMG'] ?>';
+        var session_user = '<?= $_SESSION['USER'] ?>'
 
-    </script>
-    <script>
         <?php
         if (isset($_SESSION['msg'])) {
             echo "msg = document.querySelector('#msgInfo');
-             alerta = document.querySelector('#alerta');
-             alerta.classList.add('" . $_SESSION['msg']['type'] . "');
-             msg.textContent = '" . $_SESSION['msg']['msg'] . "';
-             new bootstrap.Toast(document.querySelector('#basicToast')).show();";
+            alerta = document.querySelector('#alerta');
+            alerta.classList.add('" . $_SESSION['msg']['type'] . "');
+            msg.textContent = '" . $_SESSION['msg']['msg'] . "';
+            new bootstrap.Toast(document.querySelector('#basicToast')).show();";
         }
         ?>
-
-        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-
-        function fillModalLikes(content_id, type) {
-            var likesContainer = document.querySelector("#likesModalContainer");
-            let Likes = [];
-            likesContainer.innerHTML = '';
-            $.ajax({
-                url: BASEURL + '/show_likes',
-                type: "GET",
-                data: {
-                    content_id: content_id,
-                    type: type
-                },
-                headers: {
-                    'token': 'ihgfedcba987654321'
-                },
-                error: function(xhr, status, error) {
-                    console.error("Erro na requisição:", error);
-                }
-            }).done(function(response) {
-                Likes = response;
-                Likes.forEach(function(like) {
-                    likesContainer.innerHTML += `
-                        <div class="d-flex justify-content-between align-center my-2" id="like${like.like_id}">
-                            <a href="${BASEURL + '/user/' + like.user}" class="nav-link">
-                                <img class="rounded-circle me-3" height="48" width="48" src="${!like.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + like.user + '/' + like.profile_pic}" alt="Profile pic">
-                                <span class="fw-bold">${like.name}</span>
-                            </a>
-                            <span class="text-muted fst-italic p-3" style="font-size: 10px;">${like.datetime_liked}</span>
-                        </div>
-                    `;
-
-                })
-            })
-        }
-
-        function fillModalEdit(id, job, desc) {
-            document.getElementById("form").setAttribute('action', '<?= site_url('todocontroller/editjobsubmit') ?>');
-            document.getElementById("taskModalLabel").textContent = "Atualizar Tarefa";
-            document.getElementById("btnSubmit").setAttribute('value', 'Atualizar');
-            document.getElementById("id_job").setAttribute('value', id);
-            document.getElementById("job_name").setAttribute('value', job);
-            document.getElementById("job_desc").setAttribute('value', desc);
-            document.getElementById("job_desc").textContent = '' + desc;
-
-        }
-
-        function fillModalEditReply(id, reply) {
-            document.getElementById("btnSubmit").setAttribute('value', 'Atualizar');
-            document.getElementById("reply_id").setAttribute('value', id);
-            document.getElementById("reply_content").setAttribute('value', reply);
-            document.getElementById("reply_content").textContent = reply;
-
-
-        }
-
-        function fillModalDelete(id, type) {
-            document.getElementById("modalTitle").textContent = "Deletar Tarefa";
-            document.getElementById("bodyMsg").textContent = "Deseja realmente deletar esta tarefa?";
-            document.getElementById("btnDeletar").setAttribute('data-delete', id);
-            document.getElementById("btnDeletar").setAttribute('data-type', type);
-
-
-        }
-
-        function fillModalDeleteReply(id, type = null) {
-            document.getElementById("modalTitle").textContent = "Deletar Resposta";
-            document.getElementById("bodyMsg").textContent = "Deseja realmente deletar esta resposta?";
-            document.getElementById("btnDeletar").setAttribute('data-delete', id);
-            document.getElementById("btnDeletar").setAttribute('data-type', type);
-
-        }
-
-        function fillModalDeleteUser(id) {
-            document.getElementById("formDelete").setAttribute('action', '<?= site_url('userscontroller/delete') ?>');
-            document.getElementById("modalTitle").textContent = "Deletar Usuário";
-            document.getElementById("bodyMsg").textContent = "Deseja realmente deletar este usuário?";
-            document.getElementById("id").setAttribute('value', id);
-
-        }
-
-        function fillModalNewJob() {
-            document.getElementById("form").setAttribute('action', '<?= site_url('todocontroller/newjobsubmit') ?>');
-            document.getElementById("taskModalLabel").textContent = "Adicionar Tarefa";
-            document.getElementById("btnSubmit").setAttribute('value', 'Gravar');
-            document.getElementById("id_job").setAttribute('value', '');
-            document.getElementById("job_name").setAttribute('value', '');
-            document.getElementById("job_desc").setAttribute('value', '');
-            document.getElementById("job_desc").textContent = '';
-        }
-
-        function fillModalPlus(job, title) {
-            document.getElementById("plusTaskModalDesc").textContent = job;
-            document.getElementById("plusTaskModalTitle").textContent = title;
-        }
-
-        function fillModalPrivacy(id) {
-            document.getElementById("privacy_id").setAttribute('value', id)
-        }
     </script>
-    <?= $this->renderSection("script"); ?>
+    <?= $this->renderSection('script') ?>
 
 </body>
 

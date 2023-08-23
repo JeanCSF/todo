@@ -22,14 +22,5 @@
 <div id="main"></div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script defer src="<?= base_url('assets/pages/main/home.js') ?>"></script>
-<script>
-    let Posts = [];
-    var currentPage = 1;
-    var isLoading = false;
-    var hasMoreData = true;
-    const BASEURL = '<?= base_url() ?>';
-    var session_user_id = '<?= $_SESSION['USER_ID'] ?>';
-    var mainContainer = document.querySelector("#postContainer");
-</script>
+    <script defer src="<?= base_url('assets/js/pages/main/home.js') ?>"></script>
 <?= $this->endSection() ?>
