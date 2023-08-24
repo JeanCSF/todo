@@ -22,5 +22,5 @@
 <div id="main"></div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-    <script defer src="<?= base_url('assets/js/pages/main/home.js') ?>"></script>
+<script defer src="<?= base_url('assets/js/pages/main/home.js') ?>"></script>
 <?= $this->endSection() ?>

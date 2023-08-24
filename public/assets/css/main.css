@@ -1,4 +1,5 @@
 @import url('https://fonts.cdnfonts.com/css/friz-quadrata-std');
+
 :root {
     --maingrey: #F7F7F7;
     --hovergrey: #E7E7E7;
@@ -8,6 +9,7 @@
     --transparent: #00000000;
     --link-text: 1.5rem;
 }
+
 * {
     margin: 0;
     padding: 0;
@@ -186,12 +188,6 @@ html {
     z-index: 999;
 }
 
-#pager a {
-    text-decoration: none;
-    color: black;
-    font-weight: bolder;
-}
-
 .post-it-dropdown {
     background: rgba(134, 140, 141, 0.712);
     overflow: hidden;
@@ -347,7 +343,7 @@ html {
 
 .container-fluid {
     margin-top: 15%;
-    
+
 }
 
 .search button {
@@ -422,10 +418,6 @@ html {
 
 .users-liked img {
     border-radius: 50%;
-}
-
-.hide {
-    display: none;
 }
 
 @media screen and (max-width: 1400px) {
@@ -594,6 +586,10 @@ html {
     .post-container {
         border-bottom: 2px solid var(--maingrey) !important;
 
+    }
+
+    section {
+        border-inline: none !important;
     }
 
     .header-post {

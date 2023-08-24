@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Libraries\HTMLPurifierService;
 use App\Libraries\TimeElapsedStringService;
-
+use App\Services\UsersServices;
 use CodeIgniter\Debug\Exceptions;
 use CodeIgniter\RESTful\ResourceController;
 use Exception;
@@ -13,6 +13,7 @@ class Api_users extends ResourceController
 {
     private $HTMLPurifier;
     private $TimeElapsedString;
+    private $usersServices;
 
     private $mainController;
     private $jobsModel;
@@ -36,6 +37,7 @@ class Api_users extends ResourceController
         $this->session = \Config\Services::session();
         $this->HTMLPurifier = new HTMLPurifierService();
         $this->TimeElapsedString = new TimeElapsedStringService();
+        $this->usersServices = new UsersServices();
     }
 
     private function _tokenValidate()
@@ -93,7 +95,7 @@ class Api_users extends ResourceController
 
                     $response = [
                         'user_info'     =>  $user_info,
-                        'user_jobs'     =>  $user_jobs,
+                        'user_jobs'     =>  isset($user_jobs)? $user_jobs : null,
                     ];
                 } else {
                     $response = [];
@@ -162,7 +164,22 @@ class Api_users extends ResourceController
         } else {
             $response = [
                 'response'  =>  'error',
-                'msg'       =>  'Token inválido',
+                'msg'       =>  'Invalid Token',
+            ];
+        }
+        return $this->respond($response);
+    }
+
+    public function showVisits()
+    {
+        $response = [];
+        if ($this->_tokenValidate()) {
+
+            $response = $this->usersServices->getFormattedVisits($this->request->getVar('profile_id'));
+        } else {
+            $response = [
+                'response'  =>  'error',
+                'msg'       =>  'Invalid Token',
             ];
         }
         return $this->respond($response);
@@ -170,50 +187,17 @@ class Api_users extends ResourceController
 
     public function getReplies($user_id = null)
     {
-        if ($user_id != null) {
-            $currentPage = $this->request->getVar('page');
-            $response = [];
-            $user_replies = [];
-            $userInfo = $this->usersModel->where('USER_ID', $user_id)->get()->getRow();
-            $replies = $this->repliesModel->getRepliesDataAndPages($user_id, $currentPage);
-            $pages = $this->repliesModel->getRepliesDataAndPages($user_id);
+        $response = [];
+        if ($user_id != null && $this->_tokenValidate()) {
+            $currentPage = $this->request->getVar('page') ?? 1;
 
-            try {
-                if ($currentPage <= $pages) {
-                    foreach ($replies as $reply) {
-                        $user_replies[] = [
-                            'reply_id'              => $reply->REPLY_ID,
-                            'parent_reply_id'       => $reply->PARENT_REPLY_ID,
-                            'reply_id_job'          => $reply->ID_JOB,
-                            'reply'                 => $this->HTMLPurifier->html_purify($reply->REPLY),
-                            'datetime_replied'      => isset($reply->DATETIME_REPLIED) ? $this->TimeElapsedString->time_elapsed_string($reply->DATETIME_REPLIED) : "",
-                            'reply_likes'           => $this->likesModel->getContentLikes($reply->REPLY_ID, 'REPLY'),
-                            'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($reply->REPLY_ID),
-                            'user_liked'            => $this->likesModel->checkUserLikedReply($reply->REPLY_ID, $this->session->USER_ID),
-                        ];
-                    }
-
-                    $response = [
-                        'replies'       =>  $user_replies
-                    ];
-                } else {
-                    $response = [];
-                }
-            } catch (Exception $e) {
-                $response = [
-                    'response'  =>  'error',
-                    'msg'       =>  'Erro ao consultar usuário',
-                    'errors'    =>  [
-                        'exception' =>  $e->getMessage()
-                    ],
-                ];
-            }
+            $response = $this->usersServices->getFormatedReplies($user_id, $currentPage);
 
             return $this->respond($response);
         } else {
             $response = [
                 'response'  =>  'error',
-                'msg'       =>  'Token inválido',
+                'msg'       =>  'Invalid User/Token',
             ];
         }
     }
@@ -222,43 +206,8 @@ class Api_users extends ResourceController
     {
         if ($user_id != null) {
             $currentPage = $this->request->getVar('page') ?? 1;
-            $response = [];
-            $userInfo = $this->usersModel->where('USER_ID', $user_id)->get()->getRow();
-            $likes = $this->likesModel->getLikesDataAndPages($user_id, $currentPage);
-            $pages = $this->likesModel->getLikesDataAndPages($user_id);
-            try {
-                if ($currentPage <= $pages) {
-                    foreach ($likes as $like) {
-                        $response[] = [
-                            'type'                          =>  $like->TYPE,
-                            'content_id'                    =>  $like->CONTENT_ID,
-                            'date_liked'                    =>  $this->TimeElapsedString->time_elapsed_string($like->DATETIME_LIKED),
-                            'content_liked_user_id'         =>  $like->TYPE == 'POST' ? $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID') : $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'),
-                            'content_liked_user'            =>  $like->TYPE == 'POST' ? $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('USER') : $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('USER'),
-                            'content_liked_user_name'       =>  $like->TYPE == 'POST' ? $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('NAME') : $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('NAME'),
-                            'content_liked_user_img'        =>  $like->TYPE == 'POST' ? $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('PROFILE_PIC') : $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('PROFILE_PIC'),
-                            'content_liked_title'           =>  $like->TYPE == 'POST' ? $this->HTMLPurifier->html_purify($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB_TITLE')) : '',
-                            'content_liked_text'            =>  $like->TYPE == 'POST' ? $this->HTMLPurifier->html_purify($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB')) : $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('REPLY'),
-                            'content_liked_created'         =>  $like->TYPE == 'POST' ? $this->TimeElapsedString->time_elapsed_string($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_CREATED')) : $this->TimeElapsedString->time_elapsed_string($this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('DATETIME_REPLIED')),
-                            'content_liked_finished'        =>  $like->TYPE == 'POST' ? !empty($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_FINISHED')) ? 'Finalizado: ' . $this->TimeElapsedString->time_elapsed_string($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_FINISHED')) : '' : '',
-                            'content_liked_privacy'         =>  $like->TYPE == 'POST' ? $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('PRIVACY') : '',
-                            'content_liked_num_likes'       =>  $like->TYPE == 'POST' ? $this->likesModel->getContentLikes($like->CONTENT_ID, 'POST') : $this->likesModel->getContentLikes($like->CONTENT_ID, 'REPLY'),
-                            'content_liked_num_comments'    =>  $like->TYPE == 'POST' ? $this->repliesModel->countJobReplies($like->CONTENT_ID) : $this->repliesModel->countRepliesOfThisReply($like->CONTENT_ID),
-                            'user_liked'                    =>  $like->TYPE == 'POST' ? $this->likesModel->checkUserLikedJob($like->CONTENT_ID, $this->session->USER_ID) : $this->likesModel->checkUserLikedReply($like->CONTENT_ID, $this->session->USER_ID)
-                        ];
-                    }
-                } else {
-                    $response = [];
-                }
-            } catch (Exception $e) {
-                $response = [
-                    'response'  =>  'error',
-                    'msg'       =>  'Erro ao consultar usuário',
-                    'errors'    =>  [
-                        'exception' =>  $e->getMessage()
-                    ],
-                ];
-            }
+            
+            $response = $this->usersServices->getFormatedLikes($user_id, $currentPage);
 
             return $this->respond($response);
         } else {

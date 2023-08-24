@@ -33,6 +33,20 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+function textSlice() {
+    let maxLength = 522;
+    let jobsList = document.querySelectorAll(".user-post-text");
+    jobsList.forEach(container => {
+        let jobText = container.querySelector(".job-text");
+        let originalText = jobText.textContent.trim();
+
+        if (originalText.length > maxLength) {
+            let truncatedText = originalText.slice(0, maxLength) + "...";
+            jobText.textContent = truncatedText;
+        } 
+    });
+}
+
 function profilePage(user) {
     window.location.href = BASEURL + '/user/' + user;
 }
@@ -110,8 +124,7 @@ function loadPosts(page) {
                             </div>
                             <div class="user-post-text">
                                 <span onclick="postPage(${post.job_id})" class="fst-italic text-center d-block fs-5 job-title" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
-                                <span onclick="postPage(${post.job_id})" class="job">${post.job}</span>
-                                <button class="btn border-0 text-primary" onclick="readMore(this)">Ler mais</button>
+                                <span onclick="postPage(${post.job_id})" class="job-text">${post.job}</span>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">
                                 <p>${post.job_created}</p>
@@ -130,6 +143,7 @@ function loadPosts(page) {
                             </div>
                         </div>
                     `;
+                textSlice();
             });
         };
     });
@@ -191,7 +205,7 @@ function loadMorePosts(page) {
                             </div>
                             <div class="user-post-text" onclick="postPage(${post.job_id})">
                                 <span class="fst-italic text-center d-block fs-5 job-title" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
-                                <span id="jobTextContent">${post.job}</span>
+                                <span onclick="postPage(${post.job_id})" class="job-text">${post.job}</span>
                             </div>
                             <div class="user-post-footer fst-italic text-muted mt-3">
                                 <p>${post.job_created}</p>
@@ -210,6 +224,7 @@ function loadMorePosts(page) {
                             </div>
                         </div>
                     `;
+                textSlice();
                 currentPage = page;
             });
         };

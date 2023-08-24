@@ -1,3 +1,13 @@
+document.querySelector("#themeToggle").addEventListener("click", function () {
+    let body = document.querySelector("#body");
+    let theme = body.getAttribute("data-bs-theme")
+    if (theme === 'light') {
+        body.setAttribute("data-bs-theme", 'dark')
+    }
+    else {
+        body.setAttribute("data-bs-theme", 'light')
+    }
+});
 function fillModalLikes(content_id, type) {
     var likesContainer = document.querySelector("#likesModalContainer");
     let Likes = [];
@@ -12,12 +22,12 @@ function fillModalLikes(content_id, type) {
         headers: {
             'token': 'ihgfedcba987654321'
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error("Erro na requisição:", error);
         }
-    }).done(function(response) {
+    }).done(function (response) {
         Likes = response;
-        Likes.forEach(function(like) {
+        Likes.forEach(function (like) {
             likesContainer.innerHTML += `
                     <div class="d-flex justify-content-between align-center my-2" id="like${like.like_id}">
                         <a href="${BASEURL + '/user/' + like.user}" class="nav-link">

@@ -7,12 +7,13 @@ var loadMoreButton = document.querySelector("#loadMore");
 var profileViewsContainer = document.querySelector("#profileViewsModalContainer");
 
 document.addEventListener("DOMContentLoaded", function () {
-    if(session_user_id != profile_user_id) {
+    if (session_user_id != profile_user_id) {
         saveVisitForProfile(profile_user_id, session_user_id)
     }
     document.querySelector("#tasksTab").classList.add("active");
     postsContainer.innerHTML = '';
-    loadAll(currentPage, profile_user);
+    tasksTab(currentPage, profile_user);
+    headerContent(currentPage, profile_user);
 });
 
 function saveVisitForProfile(profile_user_id, session_user_id) {
@@ -26,9 +27,42 @@ function saveVisitForProfile(profile_user_id, session_user_id) {
         headers: {
             'token': 'ihgfedcba987654321'
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error("Erro na requisição:", error);
         }
+    });
+}
+
+function fillModalVisits(profile_id) {
+    var visitsContainer = document.querySelector("#profileViewsModalContainer");
+    let Visits = [];
+    visitsContainer.innerHTML = '';
+    $.ajax({
+        url: BASEURL + '/show_visits',
+        type: "GET",
+        data: {
+            profile_id: profile_id,
+        },
+        headers: {
+            'token': 'ihgfedcba987654321'
+        },
+        error: function (xhr, status, error) {
+            console.error("Erro na requisição:", error);
+        }
+    }).done(function (response) {
+        Visits = response;
+        Visits.forEach(function (visit) {
+            visitsContainer.innerHTML += `
+                    <div class="d-flex justify-content-between align-center my-2" id="like${visit.view_id}">
+                        <a href="${BASEURL + '/user/' + visit.user}" class="nav-link">
+                            <img class="rounded-circle me-3" height="48" width="48" src="${!visit.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + visit.user + '/' + visit.profile_pic}" alt="Profile pic">
+                            <span class="fw-bold">${visit.name}</span>
+                        </a>
+                        <span class="text-muted fst-italic p-3" style="font-size: 10px;">${visit.datetime_visited}</span>
+                    </div>
+                `;
+
+        });
     });
 }
 
@@ -119,16 +153,7 @@ function likeComment(user_id, comment_id) {
     });
 }
 
-function loadAll(page, user) {
-    document.querySelector("#likesTab").classList.remove("active");
-    document.querySelector("#repliesTab").classList.remove("active");
-    headerContainer.innerHTML = '';
-    postsContainer.innerHTML = '';
-    document.querySelector("#tasksTab").classList.add("active");
-    if (isLoading || !hasMoreData) {
-        loadMoreButton.innerHTML = '';
-        return;
-    }
+function headerContent(page, user) {
     $.ajax({
         url: BASEURL + '/profile/' + user,
         type: "GET",
@@ -152,78 +177,12 @@ function loadAll(page, user) {
             </div>
             ${session_user_id == User.user_id ?
                 `<div class="text-end">
-                    <button class="btn border-0"><i class="fa fa-eye"></i></button>
+                    <button class="btn border-0" data-bs-toggle="modal" data-bs-target="#profileViewsModal" title="Visitas" role="button" onclick="fillModalVisits(${profile_user_id})"><i class="fa fa-eye"></i></button>
                 </div>`
                 : ''}
             `;
-        if (response.user_jobs === null && User) {
-            postsContainer.innerHTML = `<p class='text-center'>${User.user} não postou nada ainda!</p>`;
-            loadMoreButton.innerHTML = '';
-        }
-        if (response.user_jobs === null) {
-            hasMoreData = false;
-            loadMoreButton.innerHTML = '';
-        } else {
-            loadMoreButton.innerHTML = `
-            <div class="text-center">
-                <a href="javascript:void(0)" class="nav-link fw-bold link-primary" onclick="loadMoreTasks(currentPage, profile_user)">Carregar mais tarefas...</a>
-            </div>`;
-            Posts = response.user_jobs
-            Posts.forEach(function (post) {
-                postsContainer.innerHTML += `
-                        <div class="post-container post">
-                            <div class="user-img">
-                                <a href="${BASEURL}/user/${User.user}">
-                                    <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
-                                </a>
-                            </div>
-                            <div class="user-info">
-                                <a href="${BASEURL}/user/${User.user}" class="user-name">${User.name} &#8226; <span class="text-muted fst-italic">@${User.user}</span></a>
-                                <span>
-                                    ${session_user_id == User.user_id ?
-                        `<div class="dropdown">
-                                            <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa fa-ellipsis"></i>
-                                            </button>
-                                            <ul class="dropdown-menu post-it-dropdown">
-                                                <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(${post.job_id})">Privacidade ${post.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}</a></li>
-                                                    ${!post.job_finished ?
-                            `<li><a class="dropdown-item" href="${BASEURL + '/todocontroller/jobdone/' + post.job_id}" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
-                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('${post.job_id}', '${post.job_title}', '${post.job}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>`
-                            : ``}                                        
-                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.job_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
-                                            </ul>
-                                        </div>`
-                        :
-                        `<p> </p>`
-                    }
-                                </span>
-                            </div>
-                            <div class="user-post-text" onclick="postPage(${post.job_id})">
-                                <span class="fst-italic text-center d-block fs-5" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
-                                <span id="jobTextContent">${post.job}</span>
-                            </div>
-                            <div class="user-post-footer fst-italic text-muted mt-3">
-                                <p>${post.job_created}</p>
-                                <p>${!post.job_finished ? "" : post.job_finished + " <i class='fa fa-check-double'></i>"}</p>
-                            </div>
-                            <div class="post-actions" id="postActions_${post.job_id}">
-                                <a id="likeButton${post.job_id}" href="javascript:void(0)" role="button">
-                                    <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${post.job_id})"></i>
-                                    <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.job_id}, 'POST')">${post.job_likes}</span>
-                                </a>
-                                <a href="javascript:void(0)" onclick="postPage(${post.job_id})" role="button">
-                                    <i class="fa-regular fa-comment"></i>
-                                    <span class="ms-1 fst-italic text-muted fw-bold fs-6">${post.job_num_comments}</span>
-                                    </a>
-                                <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
-                            </div>
-                        </div>
-                    `;
-            });
-        };
+
     });
-    isLoading = false;
 }
 
 function loadMoreTasks(page, user) {
@@ -318,7 +277,6 @@ function tasksTab(page, user) {
     document.querySelector("#likesTab").classList.remove("active");
     document.querySelector("#repliesTab").classList.remove("active");
     document.querySelector("#tasksTab").classList.add("active");
-    postsContainer.innerHTML = '';
     if (isLoading || !hasMoreData) {
         return;
     }
@@ -335,6 +293,8 @@ function tasksTab(page, user) {
             console.error("Erro na requisição:", error);
         }
     }).done(function (response) {
+        User = response.user_info;
+        postsContainer.innerHTML = '';
         if (response.user_jobs === null) {
             hasMoreData = false;
             postsContainer.innerHTML = `<p class='text-center'>${User.user} não postou nada ainda!</p>`;

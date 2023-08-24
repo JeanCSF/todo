@@ -56,6 +56,8 @@ $routes->get('profile/(:any)', 'Api_users::show/$1');
 $routes->get('user_comments/(:any)', 'Api_users::getReplies/$1');
 $routes->get('user_likes/(:any)', 'Api_users::getLikes/$1');
 $routes->match(['get', 'post'], 'save_visit', 'Api_users::saveVisit');
+$routes->match(['get', 'post'], 'show_visits', 'Api_users::showVisits');
+
 
 /*
  * --------------------------------------------------------------------

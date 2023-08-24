@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/main.css') ?>">
 </head>
 
-<body>
+<body id="body" data-bs-theme="light">
     <?= $this->include('layouts/modals') ?>
     <div class="row">
         <header class="d-flex flex-column justify-content-between mt-2 left-panel">
@@ -101,6 +101,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-dark mt-3">
                                 <li> <a href="<?= base_url('contact') ?>" class="dropdown-item"><i class="fa fa-message icon"></i> Feedback</a></li>
+                                <li> <a href="javascript:void(0)" role="button" id="themeToggle" class="dropdown-item"><i class="fa fa-sun icon"></i> Tema</a></li>
                                 <?php if (isset($_SESSION['USER_ID'])) : ?>
                                     <li><a class="dropdown-item" href="<?= base_url('user/' . $_SESSION['USER']) ?>"><i class="fa fa-user icon"></i><span class="side-text"> Perfil</span></a></li>
                                     <li><a class="dropdown-item" href="<?= base_url('logout') ?>"><i class="fa fa-right-from-bracket icon"></i> Sair</a></li>
@@ -119,9 +120,9 @@
     <script defer src="<?= base_url('assets/js/pages/main/main_scripts.js') ?>"></script>
     <script>
         const BASEURL = '<?= base_url() ?>';
-        var session_user_id = '<?= $_SESSION['USER_ID'] ?>';
-        var session_profile_pic = '<?= $_SESSION['IMG'] ?>';
-        var session_user = '<?= $_SESSION['USER'] ?>'
+        var session_user_id = '<?= isset($_SESSION['USER_ID'])? $_SESSION['USER_ID'] : '' ?>';
+        var session_profile_pic = '<?= isset($_SESSION['IMG'])? $_SESSION['IMG'] : '' ?>';
+        var session_user = '<?= isset($_SESSION['USER'])? $_SESSION['USER'] : '' ?>'
 
         <?php
         if (isset($_SESSION['msg'])) {
