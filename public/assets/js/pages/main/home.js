@@ -6,46 +6,7 @@ var mainContainer = document.querySelector("#postContainer");
 
 document.addEventListener("DOMContentLoaded", function () {
     loadPosts(currentPage);
-    $('#btnDeletar').on('click', function () {
-        var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
-        $.ajax({
-            url: BASEURL + '/job_delete/' + id,
-            type: 'delete',
-            headers: {
-                'token': 'ihgfedcba987654321'
-            },
-            success: function (data) {
-                msg = document.querySelector('#msgInfo');
-                alerta = document.querySelector('#alerta');
-                if (!data.error) {
-                    alerta.classList.add('alert-success');
-                    msg.textContent = data.message;
-                    document.querySelector('#post' + id).remove();
-                    document.querySelector('#closeDeleteModal').click();
-                } else {
-                    alerta.classList.add('alert-danger');
-                    msg.textContent = data.error;
-                }
-                new bootstrap.Toast(document.querySelector('#basicToast')).show();
-
-            }
-        });
-    });
 });
-
-function textSlice() {
-    let maxLength = 522;
-    let jobsList = document.querySelectorAll(".user-post-text");
-    jobsList.forEach(container => {
-        let jobText = container.querySelector(".job-text");
-        let originalText = jobText.textContent.trim();
-
-        if (originalText.length > maxLength) {
-            let truncatedText = originalText.slice(0, maxLength) + "...";
-            jobText.textContent = truncatedText;
-        } 
-    });
-}
 
 function profilePage(user) {
     window.location.href = BASEURL + '/user/' + user;
@@ -108,13 +69,13 @@ function loadPosts(page) {
                                             <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa fa-ellipsis"></i>
                                             </button>
-                                            <ul class="dropdown-menu post-it-dropdown">
+                                            <ul class="dropdown-menu">
                                                 <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(${post.job_id})">Privacidade ${post.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}</a></li>
                                                     ${!post.job_finished ?
                             `<li><a class="dropdown-item" href="${BASEURL + '/todocontroller/jobdone/' + post.job_id}" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
                                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('${post.job_id}', '${post.job_title}', '${post.job}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>`
                             : ``}                                        
-                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.job_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
+                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.job_id}, 1)">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                             </ul>
                                         </div>`
                         :
@@ -139,7 +100,7 @@ function loadPosts(page) {
                                     <i class="fa-regular fa-comment"></i>
                                     <span class="ms-1 fst-italic text-muted fw-bold fs-6">${post.job_num_comments}</span>
                                 </a>
-                                <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
+                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#comingSoonModal" title="Compartilhar" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
                             </div>
                         </div>
                     `;
@@ -189,7 +150,7 @@ function loadMorePosts(page) {
                                             <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa fa-ellipsis"></i>
                                             </button>
-                                            <ul class="dropdown-menu post-it-dropdown">
+                                            <ul class="dropdown-menu">
                                                 <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(${post.job_id})">Privacidade ${post.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}</a></li>
                                                     ${!post.job_finished ?
                             `<li><a class="dropdown-item" href="${BASEURL + '/todocontroller/jobdone/' + post.job_id}" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
@@ -220,7 +181,7 @@ function loadMorePosts(page) {
                                     <i class="fa-regular fa-comment"></i>
                                     <span class="ms-1 fst-italic text-muted fw-bold fs-6">${post.job_num_comments}</span>
                                 </a>
-                                <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
+                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#comingSoonModal" title="Compartilhar" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
                             </div>
                         </div>
                     `;

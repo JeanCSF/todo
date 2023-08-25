@@ -7,13 +7,14 @@ var loadMoreButton = document.querySelector("#loadMore");
 var profileViewsContainer = document.querySelector("#profileViewsModalContainer");
 
 document.addEventListener("DOMContentLoaded", function () {
+    headerContent(currentPage, profile_user);
+    tasksTab(currentPage, profile_user);
+
     if (session_user_id != profile_user_id) {
         saveVisitForProfile(profile_user_id, session_user_id)
     }
-    document.querySelector("#tasksTab").classList.add("active");
+
     postsContainer.innerHTML = '';
-    tasksTab(currentPage, profile_user);
-    headerContent(currentPage, profile_user);
 });
 
 function saveVisitForProfile(profile_user_id, session_user_id) {
@@ -33,41 +34,36 @@ function saveVisitForProfile(profile_user_id, session_user_id) {
     });
 }
 
-function fillModalVisits(profile_id) {
+async function fillModalVisits(profile_id) {
     var visitsContainer = document.querySelector("#profileViewsModalContainer");
-    let Visits = [];
     visitsContainer.innerHTML = '';
-    $.ajax({
-        url: BASEURL + '/show_visits',
-        type: "GET",
-        data: {
-            profile_id: profile_id,
-        },
+
+    const paramsObj = {
+        profile_id
+    };
+
+    const response = await fetch(`${BASEURL}/show_visits`, {
+        method: 'POST',
         headers: {
+            'Content-Type': 'application/json',
             'token': 'ihgfedcba987654321'
         },
-        error: function (xhr, status, error) {
-            console.error("Erro na requisição:", error);
-        }
-    }).done(function (response) {
-        Visits = response;
-        Visits.forEach(function (visit) {
-            visitsContainer.innerHTML += `
-                    <div class="d-flex justify-content-between align-center my-2" id="like${visit.view_id}">
-                        <a href="${BASEURL + '/user/' + visit.user}" class="nav-link">
-                            <img class="rounded-circle me-3" height="48" width="48" src="${!visit.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + visit.user + '/' + visit.profile_pic}" alt="Profile pic">
-                            <span class="fw-bold">${visit.name}</span>
-                        </a>
-                        <span class="text-muted fst-italic p-3" style="font-size: 10px;">${visit.datetime_visited}</span>
-                    </div>
-                `;
-
-        });
+        body: JSON.stringify(paramsObj)
     });
-}
+    try {
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
 
-function saveContent() {
-    localStorage.setItem("html", document.body.innerHTML)
+        const Visits = await response.json();
+
+        Visits.forEach(visit => {
+            const visitElement = createVisitElement(visit);
+            visitsContainer.appendChild(visitElement);
+        })
+    } catch (error) {
+        console.error("Erro na requisição", error)
+    }
 }
 
 function postPage(job_id) {
@@ -230,7 +226,7 @@ function loadMoreTasks(page, user) {
                                             <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa fa-ellipsis"></i>
                                             </button>
-                                            <ul class="dropdown-menu post-it-dropdown">
+                                            <ul class="dropdown-menu">
                                                 <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(${post.job_id})">Privacidade ${post.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}</a></li>
                                                     ${!post.job_finished ?
                             `<li><a class="dropdown-item" href="${BASEURL + '/todocontroller/jobdone/' + post.job_id}" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
@@ -321,13 +317,13 @@ function tasksTab(page, user) {
                                                 <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="fa fa-ellipsis"></i>
                                                 </button>
-                                                <ul class="dropdown-menu post-it-dropdown">
+                                                <ul class="dropdown-menu">
                                                     <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(${post.job_id})">Privacidade ${post.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}</a></li>
                                                         ${!post.job_finished ?
                             `<li><a class="dropdown-item" href="${BASEURL + '/todocontroller/jobdone/' + post.job_id}" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
                                                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('${post.job_id}', '${post.job_title}', '${post.job}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>`
                             : ``}                                        
-                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.job_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
+                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.job_id},1)">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                                 </ul>
                                             </div>`
                         :
@@ -410,9 +406,9 @@ function repliesTab(page, user_id) {
                                                 <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="fa fa-ellipsis"></i>
                                                 </button>
-                                                <ul class="dropdown-menu post-it-dropdown">
+                                                <ul class="dropdown-menu">
                                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEditReply('${post.reply_id}', '${post.reply}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
-                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.reply_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
+                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDeleteReply(${post.reply_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                                 </ul>
                                             </div>`
                         :
@@ -494,13 +490,13 @@ function likesTab(page, user_id) {
                                                 <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="fa fa-ellipsis"></i>
                                                 </button>
-                                                <ul class="dropdown-menu post-it-dropdown">
+                                                <ul class="dropdown-menu">
                                                     <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(${post.content_id})">Privacidade ${post.content_liked_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}</a></li>
                                                         ${!post.content_liked_finished ?
                                 `<li><a class="dropdown-item" href="${BASEURL + '/todocontroller/jobdone/' + post.content_id}" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
                                                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('${post.content_id}', '${post.content_liked_title}', '${post.content_liked_text}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>`
                                 : ``}                                        
-                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.content_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
+                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.content_id}, 1)">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                                 </ul>
                                             </div>`
                             :
@@ -545,9 +541,9 @@ function likesTab(page, user_id) {
                                                     <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                         <i class="fa fa-ellipsis"></i>
                                                     </button>
-                                                    <ul class="dropdown-menu post-it-dropdown">
+                                                    <ul class="dropdown-menu">
                                                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEditReply('${post.content_id}', '${post.content_liked_text}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
-                                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.content_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
+                                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDeleteReply(${post.content_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                                     </ul>
                                                 </div>`
                             :

@@ -1,10 +1,15 @@
- <!-- Reply Modal -->
+<style>
+    .modal-title {
+        margin: 0 auto !important;
+    }
+
+</style>
+<!-- Reply Modal -->
  <div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
-     <div class="modal-dialog">
+     <div class="modal-dialog modal-dialog-centered">
          <div class="modal-content">
              <div class="modal-header">
-                 <h1 class="modal-title fs-5" id="replyModalLabel">Editar Resposta</h1>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                 <h1 class="modal-title fs-5 text-center" id="replyModalLabel">Editar Resposta</h1>
              </div>
              <div class="modal-body">
                  <div class="container">
@@ -31,11 +36,10 @@
 
  <!-- Profile Modal -->
  <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
-     <div class="modal-dialog">
+     <div class="modal-dialog modal-dialog-centered">
          <div class="modal-content">
              <div class="modal-header">
-                 <h1 class="modal-title fs-5" id="profileModalLabel">Foto do Perfil</h1>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                 <h1 class="modal-title fs-5 text-center" id="profileModalLabel">Foto do Perfil</h1>
              </div>
              <div class="modal-body">
                  <div class="container">
@@ -67,11 +71,10 @@
 
  <!-- Task Modal -->
  <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
-     <div class="modal-dialog">
+     <div class="modal-dialog modal-dialog-centered">
          <div class="modal-content">
              <div class="modal-header">
-                 <h1 class="modal-title fs-5" id="taskModalLabel"></h1>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                 <h1 class="modal-title fs-5 text-center" id="taskModalLabel"></h1>
              </div>
              <div class="modal-body">
                  <div class="container">
@@ -102,11 +105,10 @@
 
  <!-- Delete Modal -->
  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-     <div class="modal-dialog">
+     <div class="modal-dialog modal-dialog-centered">
          <div class="modal-content">
              <div class="modal-header">
                  <h1 class="modal-title fs-5" id="modalTitle"></h1>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeDeleteModal"></button>
              </div>
              <div class="modal-body text-center">
                  <h3 id="bodyMsg"></h3>
@@ -124,11 +126,10 @@
 
  <!-- Privacy Modal -->
  <div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
-     <div class="modal-dialog">
+     <div class="modal-dialog modal-dialog-centered">
          <div class="modal-content">
              <div class="modal-header">
                  <h5 class="modal-title">Privacidade</h5>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              </div>
              <div class="modal-body p-4 mb-3">
                  <form action="<?= base_url('todocontroller/changeprivacy') ?>" id="formPrivacy" method="post">
@@ -164,11 +165,10 @@
 
  <!-- Plus Task Modal -->
  <div class="modal fade" id="plusTaskModal" tabindex="-1" aria-labelledby="plusTaskModalLabel" aria-hidden="true">
-     <div class="modal-dialog modal-dialog-scrollable">
+     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
          <div class="modal-content">
              <div class="modal-header">
                  <h5 class="modal-title" id="plusTaskModalTitle"></h5>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              </div>
              <div class="modal-body col-10 offset-1 p-2">
                  <div class="row">
@@ -182,11 +182,10 @@
 
  <!-- Likes Modal -->
  <div class="modal fade" id="likesModal" tabindex="-1" aria-labelledby="likesModallLabel" aria-hidden="true">
-     <div class="modal-dialog modal-dialog-scrollable">
+     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
          <div class="modal-content">
              <div class="modal-header">
                  <h5 class="modal-title">Curtidas</h5>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              </div>
              <div class="modal-body p-2">
                  <div id="likesModalContainer">
@@ -199,11 +198,10 @@
 
  <!-- Profile Views Modal -->
  <div class="modal fade" id="profileViewsModal" tabindex="-1" aria-labelledby="profileViewsModalLabel" aria-hidden="true">
-     <div class="modal-dialog modal-dialog-scrollable">
+     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
          <div class="modal-content">
              <div class="modal-header">
                  <h5 class="modal-title">Visitantes</h5>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              </div>
              <div class="modal-body p-2">
                  <div id="profileViewsModalContainer">
@@ -224,3 +222,21 @@
      </div>
  </div>
  <!-- Toast Notification -->
+
+  <!-- Coming Soon Modal -->
+  <div class="modal fade" id="comingSoonModal" tabindex="-1" aria-labelledby="comingSoonModalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-dialog-centered">
+         <div class="modal-content">
+             <!-- <div class="modal-header">
+                 <h1 class="modal-title fs-5">Em Breve!</h1>
+             </div> -->
+             <div class="modal-body text-center">
+                 <span class="text-warning fw-bold">Este botão não faz nada ainda, estamos trabalhando nisso!</span><br>
+                 <span class="fs-1 fw-bold">😁</span>
+             </div>
+             <!-- <div class="modal-footer d-flex justify-content-between">
+             </div> -->
+         </div>
+     </div>
+ </div>
+ <!-- Coming Soon Modal -->

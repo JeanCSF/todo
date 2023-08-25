@@ -201,7 +201,7 @@ class Todo extends Model
             ->select('COALESCE(replies.NUM_REPLIES, 0) AS NUM_REPLIES', false)
             ->join('(SELECT CONTENT_ID, COUNT(LIKE_ID) AS NUM_LIKES FROM likes GROUP BY CONTENT_ID) AS likes', 'likes.CONTENT_ID = jobs.ID_JOB', 'left')
             ->join('(SELECT ID_JOB, COUNT(REPLY_ID) AS NUM_REPLIES FROM replies GROUP BY ID_JOB) AS replies', 'replies.ID_JOB = jobs.ID_JOB', 'left')
-            ->where('jobs.PRIVACY', true)->where('jobs.USER_ID', $user_id)->orderBy('NUM_LIKES DESC, NUM_REPLIES DESC, jobs.DATETIME_CREATED DESC')->paginate(10, 'default', $currentPage);
+            ->where('jobs.PRIVACY', true)->where('jobs.USER_ID', $user_id)->orderBy('jobs.DATETIME_CREATED DESC')->paginate(10, 'default', $currentPage);
 
         return $result;
     }

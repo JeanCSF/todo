@@ -188,25 +188,6 @@ html {
     z-index: 999;
 }
 
-.post-it-dropdown {
-    background: rgba(134, 140, 141, 0.712);
-    overflow: hidden;
-    padding: 0.2em;
-    border-radius: 0 0 0 30px/45px;
-    box-shadow:
-        inset 0 -40px 40px rgba(0, 0, 0, 0.2),
-        inset 0 25px 10px rgba(0, 0, 0, 0.2),
-        0 5px 6px 5px rgba(0, 0, 0, 0.2);
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    line-height: 1.7em;
-    cursor: pointer;
-}
-
-.post-it-dropdown a:hover {
-    background: rgba(0, 51, 255, 0.052);
-}
-
-
 .footer-socials {
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 0.7rem;

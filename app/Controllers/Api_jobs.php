@@ -514,10 +514,9 @@ class Api_jobs extends ResourceController
     {
         $response = [];
         if ($this->_tokenValidate()) {
-            $content_id = $this->request->getVar('content_id');
-            $type = $this->request->getVar('type');
+            $json = $this->request->getJSON();
     
-            $likes = $this->likesModel->select('login.USER, login.NAME, login.PROFILE_PIC, likes.LIKE_ID, likes.DATETIME_LIKED')->join('login', 'login.USER_ID = likes.USER_ID')->where('CONTENT_ID', $content_id)->where('TYPE', $type)->get()->getResultObject();
+            $likes = $this->likesModel->select('login.USER, login.NAME, login.PROFILE_PIC, likes.LIKE_ID, likes.DATETIME_LIKED')->join('login', 'login.USER_ID = likes.USER_ID')->where('CONTENT_ID', $json->content_id)->where('TYPE', $json->type)->get()->getResultObject();
             foreach ($likes as $like) {
                 $response[] = [
                     'like_id'               => $like->LIKE_ID,
@@ -525,6 +524,7 @@ class Api_jobs extends ResourceController
                     'name'                  => $like->NAME,
                     'user'                  => $like->USER,
                     'datetime_liked'        => $this->TimeElapsedString->time_elapsed_string($like->DATETIME_LIKED),
+                    'full_datetime_liked'   => date("d/m/Y H:i:s", strtotime($like->DATETIME_LIKED)),
                 ];
             }
         } else {

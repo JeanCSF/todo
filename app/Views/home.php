@@ -10,7 +10,7 @@
         <br>
         <div class="mt-1 ms-3">
             <input type="text" id="header_job_name" name="header_job_name" placeholder="Tarefa" required autocomplete="off"><br>
-            <textarea oninput="auto_grow(this)" class="ms-3" type="text" id="header_job_desc" name="header_job_desc" placeholder="Sobre a tarefa" required autocomplete="off"></textarea>
+            <textarea oninput="autoGrow(this)" class="ms-3" type="text" id="header_job_desc" name="header_job_desc" placeholder="Sobre a tarefa" required autocomplete="off"></textarea>
         </div>
         <div class="text-end mt-1">
             <button type="submit" class="btn btn-sm btn-primary">Publicar</button>

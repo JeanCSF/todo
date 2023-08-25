@@ -43,6 +43,7 @@ class UsersServices
                 'profile_pic'               => !empty($this->usersModel->where('USER_ID', $visit->VISITOR_ID)->get()->getRow('PROFILE_PIC')) ? $this->usersModel->where('USER_ID', $visit->VISITOR_ID)->get()->getRow('PROFILE_PIC') : '',
                 'name'                      => $this->usersModel->where('USER_ID', $visit->VISITOR_ID)->get()->getRow('NAME'),
                 'datetime_visited'          => $this->TimeElapsedString->time_elapsed_string($visit->DATETIME_VISITED),
+                'full_datetime_visited'     => date("d/m/Y H:i:s", strtotime($visit->DATETIME_VISITED)),
             ];
         }
 

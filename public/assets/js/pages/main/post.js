@@ -7,61 +7,6 @@ mainContainer.innerHTML = '';
 commentsContainer.innerHTML = '';
 newComment.innerHTML = '';
 
-document.addEventListener("DOMContentLoaded", function () {
-    $('#btnDeletar').on('click', function () {
-        var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
-        var type = document.getElementById("btnDeletar").getAttribute('data-type', type);
-        if (type == "null") {
-            $.ajax({
-                url: BASEURL + '/reply_delete/' + id,
-                type: 'delete',
-                headers: {
-                    'token': 'ihgfedcba987654321'
-                },
-                success: function (data) {
-                    msg = document.querySelector('#msgInfo');
-                    alerta = document.querySelector('#alerta');
-                    if (!data.error) {
-                        alerta.classList.add('alert-success');
-                        msg.textContent = data.message;
-                        document.querySelector('#reply' + id).remove();
-                        document.querySelector('#closeDeleteModal').click();
-                    } else {
-                        alerta.classList.add('alert-danger');
-                        msg.textContent = data.error;
-                    }
-                    new bootstrap.Toast(document.querySelector('#basicToast')).show();
-                }
-            });
-        } else {
-            $.ajax({
-                url: BASEURL + '/job_delete/' + id,
-                type: 'delete',
-                headers: {
-                    'token': 'ihgfedcba987654321'
-                },
-                success: function (data) {
-                    msg = document.querySelector('#msgInfo');
-                    alerta = document.querySelector('#alerta');
-                    if (!data.error) {
-                        alerta.classList.add('alert-success');
-                        msg.textContent = data.message;
-                        document.querySelector('#closeDeleteModal').click();
-                        setTimeout(() => {
-                            window.history.go(-1);
-                        }, 300)
-                    } else {
-                        alerta.classList.add('alert-danger');
-                        msg.textContent = data.error;
-                    }
-                    new bootstrap.Toast(document.querySelector('#basicToast')).show();
-
-                }
-            });
-        }
-    });
-});
-
 frmComment.addEventListener('submit', function (e) {
     commentJob(session_user_id, job_id, comment.value);
     e.preventDefault();
@@ -69,9 +14,6 @@ frmComment.addEventListener('submit', function (e) {
 
 });
 
-function commentPage(comment_id) {
-    window.location.href = BASEURL + '/reply/' + comment_id;
-}
 
 $.ajax({
     url: BASEURL + '/job/' + job_id,
@@ -100,7 +42,7 @@ $.ajax({
                                         <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa fa-ellipsis"></i>
                                         </button>
-                                        <ul class="dropdown-menu post-it-dropdown">
+                                        <ul class="dropdown-menu">
                                             <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(${response.job.job_id})">Privacidade ${response.job.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}</a></li>
                                                 ${!response.job.job_finished ?
                 `<li><a class="dropdown-item" href="${BASEURL + '/todocontroller/jobdone/' + response.job.job_id}" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
@@ -151,7 +93,7 @@ $.ajax({
                                         <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa fa-ellipsis"></i>
                                         </button>
-                                        <ul class="dropdown-menu post-it-dropdown">
+                                        <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#replyModal" title="Editar Comentário" role="edit" onclick="fillModalEditReply('${post.comment_id}', '${post.comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDeleteReply(${post.comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                         </ul>
@@ -303,7 +245,7 @@ function commentJob(user_id, job_id, job_comment) {
                                         <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa fa-ellipsis"></i>
                                         </button>
-                                        <ul class="dropdown-menu post-it-dropdown">
+                                        <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Comentário" role="edit" onclick="fillModalEdit('${response.job_comments[0].comment_id}', '${response.job_comments[0].comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDeleteReply(${response.job_comments[0].comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                         </ul>
@@ -334,11 +276,4 @@ function commentJob(user_id, job_id, job_comment) {
             `;
         });
     });
-}
-
-function auto_grow(element) {
-    element.style.height = "5px";
-    element.style.height = (element.scrollHeight) + "px";
-    element.style.width = "5px";
-    element.style.width = (element.scrollHeight) + "px";
 }

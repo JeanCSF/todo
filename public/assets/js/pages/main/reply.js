@@ -7,47 +7,12 @@ mainContainer.innerHTML = '';
 commentsContainer.innerHTML = '';
 newComment.innerHTML = '';
 
-document.addEventListener("DOMContentLoaded", function () {
-    $('#btnDeletar').on('click', function () {
-        var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
-        $.ajax({
-            url: BASEURL + '/reply_delete/' + id,
-            type: 'delete',
-            headers: {
-                'token': 'ihgfedcba987654321'
-            },
-            success: function (data) {
-                msg = document.querySelector('#msgInfo');
-                alerta = document.querySelector('#alerta');
-                if (!data.error) {
-                    mainContainer.innerHTML = '';
-                    alerta.classList.add('alert-success');
-                    msg.textContent = data.message;
-                    document.querySelector('#closeDeleteModal').click();
-                    setTimeout(() => {
-                        window.history.go(-1);
-                    }, 300)
-                } else {
-                    alerta.classList.add('alert-danger');
-                    msg.textContent = data.error;
-                }
-                new bootstrap.Toast(document.querySelector('#basicToast')).show();
-
-            }
-        });
-    });
-});
-
 frmComment.addEventListener('submit', function (e) {
     commentReply(session_user_id, reply_id, comment.value);
     e.preventDefault();
     comment.value = '';
 
 });
-
-function commentPage(comment_id) {
-    window.location.href = BASEURL + '/reply/' + comment_id;
-}
 
 $.ajax({
     url: BASEURL + '/comment/' + reply_id,
@@ -76,7 +41,7 @@ $.ajax({
                                         <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa fa-ellipsis"></i>
                                         </button>
-                                        <ul class="dropdown-menu post-it-dropdown">
+                                        <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#replyModal" title="Editar Resposta" role="edit" onclick="fillModalEditReply('${response.reply.reply_id}', '${response.reply.reply}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDeleteReply(${response.reply.reply_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                         </ul>
@@ -121,7 +86,7 @@ $.ajax({
                                         <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa fa-ellipsis"></i>
                                         </button>
-                                        <ul class="dropdown-menu post-it-dropdown">
+                                        <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#replyModal" title="Editar Resposta" role="edit" onclick="fillModalEditReply('${post.comment_id}', '${post.comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDeleteReply(${post.comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                         </ul>
@@ -235,7 +200,7 @@ function commentReply(user_id, reply_id, reply_comment) {
                                         <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa fa-ellipsis"></i>
                                         </button>
-                                        <ul class="dropdown-menu post-it-dropdown">
+                                        <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Comentário" role="edit" onclick="fillModalEditReply('${response.reply_comments[0].comment_id}', '${response.reply_comments[0].comment}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Comentário" role="delete" onclick="fillModalDeleteReply(${response.reply_comments[0].comment_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
                                         </ul>
@@ -266,9 +231,4 @@ function commentReply(user_id, reply_id, reply_comment) {
             `;
         });
     });
-}
-
-function auto_grow(element) {
-    element.style.height = "5px";
-    element.style.height = (element.scrollHeight) + "px";
 }
