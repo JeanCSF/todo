@@ -228,8 +228,133 @@ function fillModalPrivacy(id) {
     document.getElementById("privacy_id").setAttribute('value', id)
 }
 
+function postPage(job_id) {
+    window.location.href = BASEURL + '/post/' + job_id;
+}
+
 function commentPage(comment_id) {
     window.location.href = BASEURL + '/reply/' + comment_id;
+}
+
+function likeJob(user_id, job_id) {
+    var dataToSend = {
+        user_id: user_id,
+        job_id: job_id
+    };
+    $.ajax({
+        url: BASEURL + '/like_job',
+        type: "POST",
+        headers: {
+            'token': 'ihgfedcba987654321'
+        },
+        data: dataToSend,
+        error: function (xhr, status, error) {
+            console.error("Erro na requisição:", error);
+        }
+    }).done(function (resp) {
+        var likeButton = document.querySelector(`#likeButton${job_id}`);
+        likeButton.innerHTML = '';
+        $.ajax({
+            url: BASEURL + '/job/' + job_id,
+            type: "GET",
+            headers: {
+                'token': 'ihgfedcba987654321'
+            },
+            error: function (xhr, status, error) {
+                console.error("Erro na requisição:", error);
+            }
+        }).done(function (response) {
+
+            likeButton.innerHTML += `
+                        <i id="likeButton${response.job.job_id}" class="${response.job.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${response.job.job_id})"></i>
+                        <span id="likes${response.job.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${response.job.job_id}, 'POST')">${response.job.job_likes}</span>
+                `;
+        });
+    });
+}
+
+async function likeContent(user_id, content_id, type) {
+    const paramsObj = {
+        user_id,
+        content_id,
+        type
+    };
+
+    try {
+        const response = await fetch(`${BASEURL}/like_content`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': 'ihgfedcba987654321'
+            },
+            body: JSON.stringify(paramsObj)
+        });
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+
+        var likeButton = document.querySelector(`#likeButton${content_id}`);
+        likeButton.innerHTML = '';
+        if (type === 'POST') {
+            const jobResponse = await fetch(`${BASEURL}/job/${job_id}`, {
+                method: 'GET',
+                headers: {
+                    'token': 'ihgfedcba987654321'
+                }
+            });
+
+            if (!jobResponse.ok) {
+                throw new Error(`Erro na requisição: ${jobResponse.statusText}`);
+            }
+
+            const jobData = await jobResponse.json();
+            const likeIcon = document.createElement('i');
+            likeIcon.id = `likeButton${jobData.job.job_id}`;
+            likeIcon.className = jobData.job.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart';
+            likeIcon.addEventListener('click', () => likeContent(user_id, jobData.job.job_id, jobData.job.type));
+
+            const likesCount = document.createElement('span');
+            likesCount.id = `likes${jobData.job.job_id}`;
+            likesCount.className = 'ms-1 fst-italic text-muted fw-bold fs-6';
+            likesCount.setAttribute('data-bs-toggle', 'modal');
+            likesCount.setAttribute('data-bs-target', '#likesModal');
+            likesCount.title = 'Likes';
+            likesCount.role = 'button';
+            likesCount.addEventListener('click', () => fillModalLikes(jobData.job.job_id, 'POST'));
+            likesCount.textContent = jobData.job.job_likes;
+
+
+            likeButton.appendChild(likeIcon);
+            likeButton.appendChild(likesCount);
+        }
+
+
+
+
+
+
+        //     const likeIcon = document.createElement('i');
+        //     likeIcon.id = `likeButton${response2.reply.reply_id}`;
+        //     likeIcon.className = response2.reply.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart';
+        //     likeIcon.addEventListener('click', () => likeContent(user_id, response2.reply.reply_id, response2.reply.type));
+
+        //     const likesCount = document.createElement('span');
+        //     likesCount.id = `likes${response2.reply.reply_id}`;
+        //     likesCount.className = 'ms-1 fst-italic text-muted fw-bold fs-6';
+        //     likesCount.setAttribute('data-bs-toggle', 'modal')
+        //     likesCount.setAttribute('data-bs-target', '#likesModal')
+        //     likesCount.title = 'Likes';
+        //     likesCount.role = 'button';
+        //     likesCount.addEventListener('click', () => fillModalLikes(response2.reply.reply_id, 'REPLY'))
+
+
+        //     likeButton.appendChild(likeIcon);
+        //     likeButton.appendChild(likesCount);
+
+
+    } catch (error) {
+        console.error("Erro na requisição:", error);
+    }
 }
 
 function autoGrow(element) {

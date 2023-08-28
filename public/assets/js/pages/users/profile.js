@@ -66,51 +66,6 @@ async function fillModalVisits(profile_id) {
     }
 }
 
-function postPage(job_id) {
-    window.location.href = BASEURL + '/post/' + job_id;
-}
-
-function commentPage(reply_id) {
-    window.location.href = BASEURL + '/reply/' + reply_id;
-}
-
-function likeJob(user_id, job_id) {
-    var dataToSend = {
-        user_id: user_id,
-        job_id: job_id
-    };
-    $.ajax({
-        url: BASEURL + '/like_job',
-        type: "POST",
-        headers: {
-            'token': 'ihgfedcba987654321'
-        },
-        data: dataToSend,
-        error: function (xhr, status, error) {
-            console.error("Erro na requisição:", error);
-        }
-    }).done(function (resp) {
-        var likeButton = document.querySelector(`#likeButton${job_id}`);
-        likeButton.innerHTML = '';
-        $.ajax({
-            url: BASEURL + '/job/' + job_id,
-            type: "GET",
-            headers: {
-                'token': 'ihgfedcba987654321'
-            },
-            error: function (xhr, status, error) {
-                console.error("Erro na requisição:", error);
-            }
-        }).done(function (response) {
-
-            likeButton.innerHTML += `
-                        <i id="likeButton${response.job.job_id}" class="${response.job.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${response.job.job_id})"></i>
-                        <span id="likes${response.job.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${response.job.job_id}, 'POST')">${response.job.job_likes}</span>
-                `;
-        });
-    });
-}
-
 function likeComment(user_id, comment_id) {
     var dataToSend = {
         user_id: user_id,

@@ -38,9 +38,9 @@ class Likes extends Model
         return $result;
     }
 
-    public function getInfoIfAlreadyLikedJob($id_job, $user_id)
+    public function getInfoIfAlreadyLikedContent($id_job, $user_id, $type)
     {
-        $result = $this->select('LIKE_ID')->where('CONTENT_ID', $id_job)->where('USER_ID', $user_id)->where("TYPE = 'POST' ")->find();
+        $result = $this->select('LIKE_ID')->where('CONTENT_ID', $id_job)->where('USER_ID', $user_id)->where('TYPE', $type)->find();
 
         return $result;
     }

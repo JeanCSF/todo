@@ -93,7 +93,7 @@ function loadPosts(page) {
                             </div>
                             <div class="post-actions" id="postActions_${post.job_id}">
                                 <a id="likeButton${post.job_id}" href="javascript:void(0)" role="button">
-                                    <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${post.job_id})"></i>
+                                    <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeContent(${session_user_id},${post.job_id},'POST')"></i>
                                     <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.job_id}, 'POST')">${post.job_likes}</span>
                                 </a>
                                 <a href="javascript:void(0)" onclick="postPage(${post.job_id})" role="button">

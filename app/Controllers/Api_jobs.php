@@ -79,20 +79,21 @@ class Api_jobs extends ResourceController
         }
     }
 
-    public function likeJob()
+    public function likeContent()
     {
         date_default_timezone_set('America/Sao_Paulo');
+        $requestInfo = $this->request->getJSON();
         $response = [];
         if ($this->_tokenValidate()) {
             $newLike = [
-                'LIKE_ID'           =>  $this->session->USER . date("Y-m-d H:i:s"),
-                'USER_ID'           =>  $this->request->getPost('user_id'),
-                'CONTENT_ID'        =>  $this->request->getPost('job_id'),
-                'TYPE'              =>  'POST',
+                'LIKE_ID'           =>  $this->session->USER . '_'. date("Y_m_d_H_i_s"),
+                'USER_ID'           =>  $requestInfo['user_id'],
+                'CONTENT_ID'        =>  $requestInfo['content_id'],
+                'TYPE'              =>  $requestInfo['type'],
                 'DATETIME_LIKED'    =>  date("Y-m-d H:i:s"),
             ];
 
-            $checkLike = $this->likesModel->getInfoIfAlreadyLikedJob($newLike['CONTENT_ID'], $newLike['USER_ID']);
+            $checkLike = $this->likesModel->getInfoIfAlreadyLikedContent($newLike['CONTENT_ID'], $newLike['USER_ID'], $newLike['TYPE']);
 
             try {
                 if (!empty($checkLike)) {
@@ -242,6 +243,7 @@ class Api_jobs extends ResourceController
                                 'job_likes'             => $job['NUM_LIKES'],
                                 'job_num_comments'      => $job['NUM_REPLIES'],
                                 'user_liked'            => $this->likesModel->checkUserLikedJob($job['ID_JOB'], $this->session->USER_ID),
+                                'type'                  => 'POST'
                             ];
                         }
                         foreach ($comments as $key => $comment) {
@@ -291,57 +293,10 @@ class Api_jobs extends ResourceController
         }
     }
 
-    public function likeComment()
-    {
-        date_default_timezone_set('America/Sao_Paulo');
-        $response = [];
-        if ($this->_tokenValidate()) {
-            $newLike = [
-                'LIKE_ID'           =>  $this->session->USER . date("Y-m-d H:i:s"),
-                'USER_ID'           =>  $this->request->getPost('user_id'),
-                'CONTENT_ID'        =>  $this->request->getPost('comment_id'),
-                'TYPE'              =>  'REPLY',
-                'DATETIME_LIKED'    =>  date("Y-m-d H:i:s"),
-            ];
-
-            $checkLike = $this->likesModel->getInfoIfAlreadyLikedReply($newLike['CONTENT_ID'], $newLike['USER_ID']);
-
-            try {
-                if (!empty($checkLike)) {
-                    $this->likesModel->where('LIKE_ID', $checkLike[0]->LIKE_ID)->delete();
-                    $response = [
-                        'response'  =>  'success',
-                        'msg'       =>  'Unliked Post'
-                    ];
-                } else {
-                    $this->likesModel->save($newLike);
-                    $response = [
-                        'response'  =>  'success',
-                        'msg'       =>  'Liked Post'
-                    ];
-                }
-            } catch (Exception $e) {
-                $response = [
-                    'response'  =>  'error',
-                    'msg'       =>  'Erro ao dar like no Post',
-                    'errors'    =>  [
-                        'exception' =>  $e->getMessage()
-                    ],
-                ];
-            }
-        } else {
-            $response = [
-                'response'  =>  'error',
-                'msg'       =>  'Token inválido',
-            ];
-        }
-        return $this->respond($response);
-    }
-
     public function showComment($id = null)
     {
         if (isset($this->session->USER_ID)) {
-            if ($this->_tokenValidate() && $id != null) {
+            if (!$this->_tokenValidate() && $id != null) {
                 $response = [];
 
                 $replies = $this->repliesModel->select('login.PROFILE_PIC
@@ -379,6 +334,7 @@ class Api_jobs extends ResourceController
                                 'reply_likes'           => $this->likesModel->getContentLikes($reply['REPLY_ID'], 'REPLY'),
                                 'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($reply['REPLY_ID']),
                                 'user_liked'            => $this->likesModel->checkUserLikedReply($reply['REPLY_ID'], $this->session->USER_ID),
+                                'type'                  => 'REPLY'
                             ];
                         }
 
