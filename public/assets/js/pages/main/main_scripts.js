@@ -64,34 +64,59 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-function createLikeElement(like) {
-    const container = document.createElement('div');
-    container.className = 'd-flex justify-content-between my-2';
-    container.id = `like_${like.user}`;
+const createElements = (elementName, attributes) => {
+    const element = document.createElement(elementName);
+    const attributesAsArray = Object.entries(attributes);
 
-    const profileLink = document.createElement('a');
-    profileLink.href = `${BASEURL}/user/${like.user}`;
-    profileLink.className = 'nav-link';
+    attributesAsArray.forEach(([key, value]) => element.setAttribute(key, value));
 
-    const profilePic = document.createElement('img');
-    profilePic.className = 'rounded-circle me-3';
-    profilePic.height = 48;
-    profilePic.width = 48;
-    profilePic.alt = 'Profile pic';
-    profilePic.src = !like.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${like.user}/${like.profile_pic}`;
+    return element;
+}
 
-    const profileName = document.createElement('span');
-    profileName.className = 'fw-bold';
-    profileName.textContent = like.name;
+function createProfileLink(data) {
+    const profileLink = createElements('a', {
+        href: `${BASEURL}/user/${data.user}`,
+        class: 'nav-link'
+    });
 
-    const timestamp = document.createElement('span');
-    timestamp.className = 'text-muted fst-italic p-3';
-    timestamp.style.fontSize = '10px';
-    timestamp.textContent = like.datetime_liked;
-    timestamp.title = like.full_datetime_liked
+    const profilePic = createProfilePic(data);
+    const profileName = createElements('span', {
+        class: 'fw-bold'
+    });
+    profileName.textContent = data.name;
 
     profileLink.appendChild(profilePic);
     profileLink.appendChild(profileName);
+
+    return profileLink;
+}
+
+function createProfilePic(data) {
+    return createElements('img', {
+        class: 'rounded-circle me-3',
+        height: 48,
+        width: 48,
+        alt: 'Profile Pic',
+        src: !data.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${data.user}/${data.profile_pic}`
+    });
+}
+
+function createTimestampElement(data) {
+    return createElements('span', {
+        class: 'text-muted fst-italic p-3',
+        style: 'font-size: 10px;',
+        title: data.full_datetime_liked
+    }, data.datetime_liked);
+}
+
+function createLikeElement(like) {
+    const container = createElements('div', {
+        class: 'd-flex justify-content-between my-2',
+        id: `like_${like.user}`
+    });
+
+    const profileLink = createProfileLink(like);
+    const timestamp = createTimestampElement(like);
 
     container.appendChild(profileLink);
     container.appendChild(timestamp);
@@ -100,33 +125,14 @@ function createLikeElement(like) {
 }
 
 function createVisitElement(visit) {
-    const container = document.createElement('div');
-    container.className = 'd-flex justify-content-between my-2';
-    container.id = `profileView${visit.view_id}_${visit.user}`;
 
-    const profileLink = document.createElement('a');
-    profileLink.href = `${BASEURL}/user/${visit.user}`;
-    profileLink.className = 'nav-link';
+    const container = createElements('div', {
+        class: 'd-flex justify-content-between my-2',
+        id: `like_${visit.user}`
+    });
 
-    const profilePic = document.createElement('img');
-    profilePic.className = 'rounded-circle me-3';
-    profilePic.height = 48;
-    profilePic.width = 48;
-    profilePic.alt = 'Profile pic';
-    profilePic.src = !visit.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${visit.user}/${visit.profile_pic}`;
-
-    const profileName = document.createElement('span');
-    profileName.className = 'fw-bold';
-    profileName.textContent = visit.name;
-
-    const timestamp = document.createElement('span');
-    timestamp.className = 'text-muted fst-italic p-3';
-    timestamp.style.fontSize = '10px';
-    timestamp.textContent = visit.datetime_visited;
-    timestamp.title = visit.full_datetime_visited;
-
-    profileLink.appendChild(profilePic);
-    profileLink.appendChild(profileName);
+    const profileLink = createProfileLink(visit);
+    const timestamp = createTimestampElement(visit);
 
     container.appendChild(profileLink);
     container.appendChild(timestamp);
@@ -158,6 +164,7 @@ async function fillModalLikes(content_id, type) {
         const Likes = await response.json();
 
         Likes.forEach(like => {
+
             const likeElement = createLikeElement(like);
             likesContainer.appendChild(likeElement);
         });
@@ -234,6 +241,10 @@ function postPage(job_id) {
 
 function commentPage(comment_id) {
     window.location.href = BASEURL + '/reply/' + comment_id;
+}
+
+function profilePage(user) {
+    window.location.href = BASEURL + '/user/' + user;
 }
 
 function likeJob(user_id, job_id) {
@@ -376,4 +387,14 @@ function textSlice() {
             jobText.textContent = truncatedText;
         }
     });
+}
+
+function debounce(func, delay) {
+    let timer;
+    return function () {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(this, arguments);
+        }, delay);
+    };
 }

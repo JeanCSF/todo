@@ -8,33 +8,113 @@ document.addEventListener("DOMContentLoaded", function () {
     loadPosts(currentPage);
 });
 
-function profilePage(user) {
-    window.location.href = BASEURL + '/user/' + user;
-}
-
-function postPage(job_id) {
-    window.location.href = BASEURL + '/post/' + job_id;
-}
-
-function debounce(func, delay) {
-    let timer;
-    return function () {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            func.apply(this, arguments);
-        }, delay);
-    };
-}
-
 $(window).scroll(debounce(function () {
     if (hasMoreData && !isLoading && $(window).scrollTop() + $(window).height() >= $(document).height() - 1000) {
         loadMorePosts(currentPage);
     }
 }, 500));
 
-function loadPosts(page) {
+function createUserOptionsDropdown(response) {
+    if(session_user_id == response.job.user_id){
+        const dropdownDiv = createElements('div', {
+            class: 'dropdown'
+        });
+        const dropdownToggle = createElements('button', {
+            class: 'bg-transparent border-o',
+            type: 'button',
+            'data-bs-toggle': 'dropdown',
+            'aria-expanded': 'false'
+        });
+        const dropdownEllipsis = createElements('i', {
+            class: 'fa fa-ellipsis'
+        });
+        dropdownToggle.appendChild(dropdownEllipsis);
+
+        const dropdownMenu = createElements('ul', {
+            class: 'dropdown-menu'
+        });
+        con
+    } else {
+        const dropdownDiv = document.createElement('p');
+        dropdownDiv.textContent = ' ';
+    }
+
+
+
+    return dropdownDiv;
+}
+
+function createPostElement(response) {
+    const container = createElements('div', {
+        class: 'post-container post',
+        id: `post${response.job_id}`
+    });
+
+    const profilePicContainer = createElements('div', {
+        class: 'user-img'
+    });
+    const imgLink = createElements('a', {
+        href: `${BASEURL}/user/${response.job.user}`,
+    });
+    const profilePic = createElements('img', {
+        height: 48,
+        width: 48,
+        src: !response.job.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profile_pics/${response.job.user}/${response.job.profile_pic}`,
+        alt: 'Profile Pic'
+    });
+    imgLink.appendChild(profilePic);
+    profilePicContainer.appendChild(imgLink);
+
+    const userInfo = createElements('div', {
+        class: 'user-info'
+    });
+    const profileLink = createElements('a', {
+        href: `${BASEURL}/user/${response.job.user}`,
+        class: 'user-name',
+    });
+    profileLink.textContent = `${response.job.name} &#8226;`;
+    const userName = createElements('span', {
+        class: 'text-muted fst-italic'
+    });
+    userName.textContent = `@${response.job.user}`;
+    profileLink.appendChild(userName);
+    const dropdown = createUserOptionsDropdown(response);
+
+}
+
+async function loadPosts(page) {
     if (isLoading || !hasMoreData) {
         return;
+    }
+    const paramsObj = {
+        page
+    };
+    try {
+        const response = await fetch(`${BASEURL}/all_jobs`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': 'ihgfedcba987654321'
+            },
+            body: JSON.stringify(paramsObj)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro na requisição? ${response.statusText}`);
+        }
+
+        const Posts = await response.json();
+        if (Posts.length === 0) {
+            hasMoreData = false;
+        } else {
+            Posts.forEach(post => {
+                const postElement = createPostElement(post);
+                mainContainer.appendChild(postElement);
+                textSlice();
+            });
+        }
+    } catch (error) {
+        console.error("Erro na requisição: ", error);
     }
     $.ajax({
         url: BASEURL + '/all_jobs',
@@ -203,11 +283,6 @@ document.querySelector("#privacy_select").addEventListener("focusout", event => 
         document.querySelector("#privacy_select").setAttribute("hidden", true)
     }, 500)
 })
-
-function auto_grow(element) {
-    element.style.height = "5px";
-    element.style.height = (element.scrollHeight) + "px";
-}
 
 function likeJob(user_id, job_id) {
     var dataToSend = {
