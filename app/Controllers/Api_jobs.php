@@ -45,7 +45,7 @@ class Api_jobs extends ResourceController
     public function index()
     {
         if (isset($this->session->USER_ID) && $this->_tokenValidate()) {
-            $currentPage = $this->request->getJSON('page') ?? 1;
+            $currentPage = $this->request->getVar('page') ?? 1;
             $jobs = $this->jobsModel->getIndexDataAndPages($currentPage);
             $pages = $this->jobsModel->getIndexDataAndPages();
 
