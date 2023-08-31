@@ -35,6 +35,28 @@ document.addEventListener("DOMContentLoaded", function () {
                     new bootstrap.Toast(document.querySelector('#basicToast')).show();
                 }
             });
+        } else if(type == 'home'){
+            $.ajax({
+                url: BASEURL + '/job_delete/' + id,
+                type: 'delete',
+                headers: {
+                    'token': 'ihgfedcba987654321'
+                },
+                success: function (data) {
+                    msg = document.querySelector('#msgInfo');
+                    alerta = document.querySelector('#alerta');
+                    if (!data.error) {
+                        alerta.classList.add('alert-success');
+                        msg.textContent = data.message;
+                        document.querySelector('#post' + id).remove();
+                        document.querySelector('#closeDeleteModal').click();
+                    } else {
+                        alerta.classList.add('alert-danger');
+                        msg.textContent = data.error;
+                    }
+                    new bootstrap.Toast(document.querySelector('#basicToast')).show();
+                }
+            });
         } else {
             $.ajax({
                 url: BASEURL + '/job_delete/' + id,
