@@ -60,12 +60,13 @@ class Api_jobs extends ResourceController
                         'job_title'             => $this->HTMLPurifier->html_purify($job->JOB_TITLE),
                         'job'                   => $this->HTMLPurifier->html_purify($job->JOB),
                         'job_created'           => isset($job->DATETIME_CREATED) ? $this->TimeElapsedString->time_elapsed_string($job->DATETIME_CREATED) : "",
-                        'job_updated'           => isset($job->DATETIME_UPDATED) ? 'Atualizado: '.$this->TimeElapsedString->time_elapsed_string($job->DATETIME_UPDATED) : "",
-                        'job_finished'          => isset($job->DATETIME_FINISHED) ? 'Finalizado: '.$this->TimeElapsedString->time_elapsed_string($job->DATETIME_FINISHED) : "",
+                        'job_updated'           => isset($job->DATETIME_UPDATED) ? 'Atualizado: ' . $this->TimeElapsedString->time_elapsed_string($job->DATETIME_UPDATED) : "",
+                        'job_finished'          => isset($job->DATETIME_FINISHED) ? 'Finalizado: ' . $this->TimeElapsedString->time_elapsed_string($job->DATETIME_FINISHED) : "",
                         'job_privacy'           => $job->PRIVACY,
                         'job_likes'             => $job->NUM_LIKES,
                         'job_num_comments'      => $job->NUM_REPLIES,
                         'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, $this->session->USER_ID),
+                        'type'                  => 'POST'
 
                     ];
                 } else {
@@ -83,13 +84,14 @@ class Api_jobs extends ResourceController
     {
         date_default_timezone_set('America/Sao_Paulo');
         $requestInfo = $this->request->getJSON();
+
         $response = [];
         if ($this->_tokenValidate()) {
             $newLike = [
-                'LIKE_ID'           =>  $this->session->USER . '_'. date("Y_m_d_H_i_s"),
-                'USER_ID'           =>  $requestInfo['user_id'],
-                'CONTENT_ID'        =>  $requestInfo['content_id'],
-                'TYPE'              =>  $requestInfo['type'],
+                'LIKE_ID'           =>  $this->session->USER . '_' . date("Y_m_d_H_i_s"),
+                'USER_ID'           =>  $requestInfo->user_id,
+                'CONTENT_ID'        =>  $requestInfo->content_id,
+                'TYPE'              =>  $requestInfo->type_content,
                 'DATETIME_LIKED'    =>  date("Y-m-d H:i:s"),
             ];
 
@@ -114,8 +116,9 @@ class Api_jobs extends ResourceController
                     'response'  =>  'error',
                     'msg'       =>  'Erro ao dar like no Post',
                     'errors'    =>  [
-                        'exception' =>  $e->getMessage()
+                        'exception' =>  $e->getMessage(),
                     ],
+
                 ];
             }
         } else {
@@ -124,7 +127,7 @@ class Api_jobs extends ResourceController
                 'msg'       =>  'Token inválido',
             ];
         }
-        return $this->respond($response);
+        return $this->respond($requestInfo);
     }
 
     public function commentJob()
@@ -237,8 +240,8 @@ class Api_jobs extends ResourceController
                                 'job_title'             => $this->HTMLPurifier->html_purify($job['JOB_TITLE']),
                                 'job'                   => $this->HTMLPurifier->html_purify($job['JOB']),
                                 'job_created'           => isset($job['DATETIME_CREATED']) ? $this->TimeElapsedString->time_elapsed_string($job['DATETIME_CREATED']) : "",
-                                'job_updated'           => isset($job['DATETIME_UPDATED']) ? 'Atualizado: '.$this->TimeElapsedString->time_elapsed_string($job['DATETIME_UPDATED']) : "",
-                                'job_finished'          => isset($job['DATETIME_FINISHED']) ? 'Finalizado: '.$this->TimeElapsedString->time_elapsed_string($job['DATETIME_FINISHED']) : "",
+                                'job_updated'           => isset($job['DATETIME_UPDATED']) ? 'Atualizado: ' . $this->TimeElapsedString->time_elapsed_string($job['DATETIME_UPDATED']) : "",
+                                'job_finished'          => isset($job['DATETIME_FINISHED']) ? 'Finalizado: ' . $this->TimeElapsedString->time_elapsed_string($job['DATETIME_FINISHED']) : "",
                                 'job_privacy'           => $job['PRIVACY'],
                                 'job_likes'             => $job['NUM_LIKES'],
                                 'job_num_comments'      => $job['NUM_REPLIES'],
@@ -471,7 +474,7 @@ class Api_jobs extends ResourceController
         $response = [];
         if ($this->_tokenValidate()) {
             $json = $this->request->getJSON();
-    
+
             $likes = $this->likesModel->select('login.USER, login.NAME, login.PROFILE_PIC, likes.LIKE_ID, likes.DATETIME_LIKED')->join('login', 'login.USER_ID = likes.USER_ID')->where('CONTENT_ID', $json->content_id)->where('TYPE', $json->type)->get()->getResultObject();
             foreach ($likes as $like) {
                 $response[] = [

@@ -14,6 +14,37 @@ frmComment.addEventListener('submit', function (e) {
 
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    loadPost(job_id);
+});
+
+async function loadPost(job_id) {
+    mainContainer.innerHTML = '';
+    const response = await fetch(`${BASEURL}/job/${job_id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'token': 'ihgfedcba987654321'
+        },
+    });
+    try {
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+
+        const Data = await response.json();
+        const Post = Data.job;
+        const Comments = Data.job_comments;
+        const postElement = createPostElement(Post, 'POST');
+        mainContainer.appendChild(postElement);
+        const repliesElement = createPostElement(Comments, 'REPLY');
+        commentsContainer.appendChild(repliesElement);
+
+
+    } catch (error) {
+        console.error("Erro na requisição:", error);
+    }
+}
 
 $.ajax({
     url: BASEURL + '/job/' + job_id,
@@ -125,82 +156,6 @@ $.ajax({
             `;
     });
 });
-
-function likeJob(user_id, job_id) {
-    var dataToSend = {
-        user_id: user_id,
-        job_id: job_id
-    };
-    $.ajax({
-        url: BASEURL + '/like_job',
-        type: "POST",
-        headers: {
-            'token': 'ihgfedcba987654321'
-        },
-        data: dataToSend,
-        error: function (xhr, status, error) {
-            console.error("Erro na requisição:", error);
-        }
-    }).done(function (resp) {
-        var likeButton = document.querySelector(`#likeButton${job_id}`);
-        likeButton.innerHTML = '';
-        let Posts = [];
-        $.ajax({
-            url: BASEURL + '/job/' + job_id,
-            type: "GET",
-            headers: {
-                'token': 'ihgfedcba987654321'
-            },
-            error: function (xhr, status, error) {
-                console.error("Erro na requisição:", error);
-            }
-        }).done(function (response) {
-
-            likeButton.innerHTML += `
-                    <i id="likeButton${response.job.job_id}" class="${response.job.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${response.job.job_id})"></i>
-                    <span id="likes${response.job.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${response.job.job_id}, 'POST')">${response.job.job_likes}</span>
-            `;
-        });
-    });
-}
-
-function likeComment(user_id, comment_id) {
-    var dataToSend = {
-        user_id: user_id,
-        comment_id: comment_id
-    };
-    $.ajax({
-        url: BASEURL + '/like_comment',
-        type: "POST",
-        headers: {
-            'token': 'ihgfedcba987654321'
-        },
-        data: dataToSend,
-        error: function (xhr, status, error) {
-            console.error("Erro na requisição:", error);
-        }
-    }).done(function (resp) {
-        var likeButton = document.querySelector(`#likeCommentButton${comment_id}`);
-        likeButton.innerHTML = '';
-        let Posts = [];
-        $.ajax({
-            url: BASEURL + '/comment/' + comment_id,
-            type: "GET",
-            headers: {
-                'token': 'ihgfedcba987654321'
-            },
-            error: function (xhr, status, error) {
-                console.error("Erro na requisição:", error);
-            }
-        }).done(function (response) {
-
-            likeButton.innerHTML += `
-                    <i id="likeCommentButton${response.reply.reply_id}" class="${response.reply.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeComment(${session_user_id},${response.reply.reply_id})"></i>
-                    <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${response.reply.reply_id}, 'REPLY')">${response.reply.reply_likes}</span>
-            `;
-        });
-    });
-}
 
 function commentJob(user_id, job_id, job_comment) {
     var dataToSend = {
