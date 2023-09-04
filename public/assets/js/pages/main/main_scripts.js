@@ -96,86 +96,168 @@ const createElements = (elementName, attributes) => {
 }
 
 function createUserOptionsDropdown(response, type) {
-    const dropdownDiv = createElements('div', {
-        class: 'dropdown'
-    });
-
-    if (session_user_id === response.user_id) {
-        const dropdownToggle = createElements('button', {
-            class: 'bg-transparent border-0',
-            type: 'button',
-            'data-bs-toggle': 'dropdown',
-            'aria-expanded': 'false'
+    if (type === 'POST') {
+        const dropdownDiv = createElements('div', {
+            class: 'dropdown'
         });
-        dropdownToggle.innerHTML = '<i class="fa fa-ellipsis"></i>'
-
-        const dropdownMenu = createElements('ul', {
-            class: 'dropdown-menu'
-        });
-
-        const item1 = document.createElement('li');
-        const linkItem1 = createElements('a', {
-            'data-bs-toggle': 'modal',
-            'data-bs-target': '#privacyModal',
-            class: 'dropdown-item'
-        });
-        linkItem1.addEventListener('click', () => fillModalPrivacy(response.job_id));
-        linkItem1.innerHTML = `Privacidade ${response.job.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}`;
-        item1.appendChild(linkItem1);
-        dropdownMenu.appendChild(item1);
-
-        if (!response.job_finished) {
-            const item2 = document.createElement('li');
-            const linkItem2 = createElements('a', {
-                class: 'dropdown-item',
-                href: `${BASEURL}/todocontroller/jobdone/${response.job_id}`,
-                role: 'finish',
-                title: 'Finalizar Tarefa',
+    
+        if (session_user_id === response.user_id) {
+            const dropdownToggle = createElements('button', {
+                class: 'bg-transparent border-0',
+                type: 'button',
+                'data-bs-toggle': 'dropdown',
+                'aria-expanded': 'false'
             });
-            linkItem2.innerHTML = 'Finalizar <i class="fa fa-crosshairs text-success"></i>';
-            item2.appendChild(linkItem2);
-            dropdownMenu.appendChild(item2);
-
-            const item3 = document.createElement('li');
-            const linkItem3 = createElements('a', {
+            dropdownToggle.innerHTML = '<i class="fa fa-ellipsis"></i>'
+    
+            const dropdownMenu = createElements('ul', {
+                class: 'dropdown-menu'
+            });
+    
+            const item1 = document.createElement('li');
+            const linkItem1 = createElements('a', {
+                'data-bs-toggle': 'modal',
+                'data-bs-target': '#privacyModal',
+                class: 'dropdown-item'
+            });
+            linkItem1.addEventListener('click', () => fillModalPrivacy(response.job_id));
+            linkItem1.innerHTML = `Privacidade ${response.job.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}`;
+            item1.appendChild(linkItem1);
+            dropdownMenu.appendChild(item1);
+    
+            if (!response.job_finished) {
+                const item2 = document.createElement('li');
+                const linkItem2 = createElements('a', {
+                    class: 'dropdown-item',
+                    href: `${BASEURL}/todocontroller/jobdone/${response.job_id}`,
+                    role: 'finish',
+                    title: 'Finalizar Tarefa',
+                });
+                linkItem2.innerHTML = 'Finalizar <i class="fa fa-crosshairs text-success"></i>';
+                item2.appendChild(linkItem2);
+                dropdownMenu.appendChild(item2);
+    
+                const item3 = document.createElement('li');
+                const linkItem3 = createElements('a', {
+                    class: 'dropdown-item',
+                    'data-bs-toggle': 'modal',
+                    'data-bs-target': '#taskModal',
+                    title: 'Editar Tarefa',
+                    role: 'edit',
+                });
+                item3.addEventListener('click', () => fillModalEdit(response.job_id, response.job_title, response.job))
+                linkItem3.innerHTML = 'Editar <i class="fa fa-pencil text-primary"></i>';
+                item3.appendChild(linkItem3)
+                dropdownMenu.appendChild(item3);
+    
+            }
+    
+            const item4 = document.createElement('li');
+            const linkItem4 = createElements('a', {
                 class: 'dropdown-item',
                 'data-bs-toggle': 'modal',
-                'data-bs-target': '#taskModal',
-                title: 'Editar Tarefa',
-                role: 'edit',
+                'data-bs-target': '#deleteModal',
+                title: 'Excluír Tarefa',
+                role: 'delete',
             });
-            item3.addEventListener('click', () => fillModalEdit(response.job_id, response.job_title, response.job))
-            linkItem3.innerHTML = 'Editar <i class="fa fa-pencil text-primary"></i>';
-            item3.appendChild(linkItem3)
-            dropdownMenu.appendChild(item3);
-
+            linkItem4.addEventListener('click', () => fillModalDelete(response.job_id, 'home'));
+            linkItem4.innerHTML = 'Excluír <i class="fa fa-trash text-danger"></i>';
+            item4.appendChild(linkItem4);
+            dropdownMenu.appendChild(item4);
+    
+            dropdownDiv.appendChild(dropdownToggle);
+            dropdownDiv.appendChild(dropdownMenu);
+    
+    
+        } else {
+            const dropdownDiv = document.createElement('p');
+            dropdownDiv.innerHTML = '<p> </p>';
         }
 
-        const item4 = document.createElement('li');
-        const linkItem4 = createElements('a', {
-            class: 'dropdown-item',
-            'data-bs-toggle': 'modal',
-            'data-bs-target': '#deleteModal',
-            title: 'Excluír Tarefa',
-            role: 'delete',
-        });
-        linkItem4.addEventListener('click', () => fillModalDelete(response.job_id, 'home'));
-        linkItem4.innerHTML = 'Excluír <i class="fa fa-trash text-danger"></i>';
-        item4.appendChild(linkItem4);
-        dropdownMenu.appendChild(item4);
-
-        dropdownDiv.appendChild(dropdownToggle);
-        dropdownDiv.appendChild(dropdownMenu);
-
-
-    } else {
-        const dropdownDiv = document.createElement('p');
-        dropdownDiv.innerHTML = '<p> </p>';
+        return dropdownDiv;
     }
 
-
-
-    return dropdownDiv;
+    if(type === 'REPLY') {
+        const dropdownDiv = createElements('div', {
+            class: 'dropdown'
+        });
+    
+        if (session_user_id === response.user_id) {
+            const dropdownToggle = createElements('button', {
+                class: 'bg-transparent border-0',
+                type: 'button',
+                'data-bs-toggle': 'dropdown',
+                'aria-expanded': 'false'
+            });
+            dropdownToggle.innerHTML = '<i class="fa fa-ellipsis"></i>'
+    
+            const dropdownMenu = createElements('ul', {
+                class: 'dropdown-menu'
+            });
+    
+            // const item1 = document.createElement('li');
+            // const linkItem1 = createElements('a', {
+            //     'data-bs-toggle': 'modal',
+            //     'data-bs-target': '#privacyModal',
+            //     class: 'dropdown-item'
+            // });
+            // linkItem1.addEventListener('click', () => fillModalPrivacy(response.job_id));
+            // linkItem1.innerHTML = `Privacidade ${response.job.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}`;
+            // item1.appendChild(linkItem1);
+            // dropdownMenu.appendChild(item1);
+    
+                // const item2 = document.createElement('li');
+                // const linkItem2 = createElements('a', {
+                //     class: 'dropdown-item',
+                //     href: `${BASEURL}/todocontroller/jobdone/${response.job_id}`,
+                //     role: 'finish',
+                //     title: 'Finalizar Tarefa',
+                // });
+                // linkItem2.innerHTML = 'Finalizar <i class="fa fa-crosshairs text-success"></i>';
+                // item2.appendChild(linkItem2);
+                // dropdownMenu.appendChild(item2);
+    
+                const item3 = document.createElement('li');
+                const linkItem3 = createElements('a', {
+                    class: 'dropdown-item',
+                    'data-bs-toggle': 'modal',
+                    'data-bs-target': '#taskModal',
+                    title: 'Editar Tarefa',
+                    role: 'edit',
+                });
+                item3.addEventListener('click', () => fillModalEditReply(response.comment_id, response.comment))
+                linkItem3.innerHTML = 'Editar <i class="fa fa-pencil text-primary"></i>';
+                item3.appendChild(linkItem3)
+                dropdownMenu.appendChild(item3);
+    
+    
+            const item4 = document.createElement('li');
+            const linkItem4 = createElements('a', {
+                class: 'dropdown-item',
+                'data-bs-toggle': 'modal',
+                'data-bs-target': '#deleteModal',
+                title: 'Excluír Tarefa',
+                role: 'delete',
+            });
+            linkItem4.addEventListener('click', () => fillModalDeleteReply(response.comment_id, 'REPLY'));
+            linkItem4.innerHTML = 'Excluír <i class="fa fa-trash text-danger"></i>';
+            item4.appendChild(linkItem4);
+            dropdownMenu.appendChild(item4);
+    
+            dropdownDiv.appendChild(dropdownToggle);
+            dropdownDiv.appendChild(dropdownMenu);
+    
+    
+        } else {
+            const dropdownDiv = document.createElement('p');
+            dropdownDiv.innerHTML = '<p> </p>';
+        }
+    
+    
+    
+        return dropdownDiv;
+    }
+    
 }
 
 function createPostElement(response, type) {
@@ -321,6 +403,142 @@ function createPostElement(response, type) {
         container.appendChild(userPostText);
         container.appendChild(userPostFooter);
         container.appendChild(postActions);
+
+        return container;
+    }
+
+    if (type === 'REPLY') {
+        const container = createElements('div', {
+            class: 'post-container post',
+            id: `jobReplyContent${response.comment_id}`
+        });
+
+
+        const profilePicContainer = createElements('div', {
+            class: 'user-img'
+        });
+        const imgLink = createElements('a', {
+            href: `${BASEURL}/user/${response.user}`,
+        });
+        const profilePic = createElements('img', {
+            height: 48,
+            width: 48,
+            src: !response.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${response.user}/${response.profile_pic}`,
+            alt: 'Profile Pic'
+        });
+        imgLink.appendChild(profilePic);
+        profilePicContainer.appendChild(imgLink);
+
+        const userInfo = createElements('div', {
+            class: 'user-info'
+        });
+        const profileLink = createElements('a', {
+            href: `${BASEURL}/user/${response.user}`,
+            class: 'user-name',
+        });
+        profileLink.innerHTML = `${response.name} &#8226;`;
+        const userName = createElements('span', {
+            class: 'text-muted fst-italic'
+        });
+        userName.textContent = `@${response.user}`;
+        profileLink.appendChild(userName);
+        userInfo.appendChild(profileLink);
+
+
+        const dropdownSpan = document.createElement('span');
+        const dropdown = createUserOptionsDropdown(response, 'REPLY');
+        dropdownSpan.appendChild(dropdown);
+        userInfo.appendChild(dropdownSpan);
+
+
+        const userReplyText = createElements('div', {
+            class: 'user-post-text'
+        });
+
+        const jobReplyContent = createElements('span', {
+            id: 'jobReplyContent',
+            class: 'job-text'
+        });
+        jobReplyContent.addEventListener('click', () => commentPage(response.comment_id))
+        jobReplyContent.innerHTML = response.comment;
+        userReplyText.appendChild(jobReplyContent);
+
+
+        const userPostFooter = createElements('div', {
+            class: 'user-post-footer fst-italic text-muted mt-3'
+        });
+        const replyCreated = document.createElement('p');
+        replyCreated.textContent = response.comment_created
+        userPostFooter.appendChild(replyCreated);
+
+
+        const replyActions = createElements('div', {
+            class: 'post-actions',
+            id: `replyActions_${response.comment_id}`
+        });
+        const likeButton = createElements('a', {
+            id: `likeReplyButton${response.comment_id}`,
+            href: 'javascript:void(0)',
+            role: 'button',
+        });
+        const likeIcon = createElements('i', {
+            id: `likeReplyIcon${response.comment_id}`,
+            class: response.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart',
+            'onclick': `likeContent(${session_user_id}, ${response.comment_id}, '${response.type}')`
+        });
+        likeButton.appendChild(likeIcon);
+        const likesCount = createElements('span', {
+            id: `replyLikesCount${response.comment_id}`,
+            class: 'ms-1 fst-italic text-muted fw-bold fs-6',
+            'data-bs-toggle': 'modal',
+            'data-bs-target': '#likesModal',
+            title: 'Likes',
+            role: 'button'
+        });
+        likesCount.addEventListener('click', () => fillModalLikes(response.comment_id, response.type));
+        likesCount.textContent = response.comment_likes;
+        likeButton.appendChild(likesCount);
+        const commentButton = createElements('a', {
+            id: `commentReplyButton${response.comment_id}`,
+            href: 'javascript:void(0)',
+            role: 'button'
+        });
+        commentButton.addEventListener('click', () => commentPage(response.job_id))
+        const commentIcon = createElements('i', {
+            class: 'fa-regular fa-comment'
+        });
+        commentButton.appendChild(commentIcon);
+        const commentsCount = createElements('span', {
+            class: 'ms-1 fst-italic text-muted fw-bold fs-6'
+        });
+        commentsCount.textContent = response.comment_num_comments;
+        commentButton.appendChild(commentsCount)
+        const shareButton = createElements('a', {
+            href: 'javascript:void(0)',
+            role: 'button',
+            'data-bs-toggle': 'modal',
+            'data-bs-target': '#comingSoonModal',
+            title: 'Compartilhar',
+        });
+        const shareIcon = createElements('i', {
+            class: 'fa fa-arrow-up-from-bracket'
+        });
+        shareButton.appendChild(shareIcon);
+        const shareCounts = createElements('span', {
+            class: 'ms-1 fst-italic text-muted'
+        });
+        shareCounts.textContent = ' ';
+        shareButton.appendChild(shareCounts);
+        replyActions.appendChild(likeButton);
+        replyActions.appendChild(commentButton);
+        replyActions.appendChild(shareButton);
+
+
+        container.appendChild(profilePicContainer);
+        container.appendChild(userInfo);
+        container.appendChild(userReplyText);
+        container.appendChild(userPostFooter);
+        container.appendChild(replyActions);
 
         return container;
     }

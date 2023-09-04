@@ -37,9 +37,10 @@ async function loadPost(job_id) {
         const Comments = Data.job_comments;
         const postElement = createPostElement(Post, 'POST');
         mainContainer.appendChild(postElement);
-        const repliesElement = createPostElement(Comments, 'REPLY');
-        commentsContainer.appendChild(repliesElement);
-
+        Comments.forEach(reply => {
+            const repliesElement = createPostElement(reply, 'REPLY');
+            commentsContainer.appendChild(repliesElement);
+        });
 
     } catch (error) {
         console.error("Erro na requisição:", error);

@@ -261,6 +261,7 @@ class Api_jobs extends ResourceController
                                 'comment_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
                                 'comment_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
                                 'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], $this->session->USER_ID),
+                                'type'                  => 'REPLY',
                             ];
                         }
                         $response = [
