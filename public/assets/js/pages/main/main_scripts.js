@@ -194,34 +194,12 @@ function createUserOptionsDropdown(response, type) {
             const dropdownMenu = createElements('ul', {
                 class: 'dropdown-menu'
             });
-    
-            // const item1 = document.createElement('li');
-            // const linkItem1 = createElements('a', {
-            //     'data-bs-toggle': 'modal',
-            //     'data-bs-target': '#privacyModal',
-            //     class: 'dropdown-item'
-            // });
-            // linkItem1.addEventListener('click', () => fillModalPrivacy(response.job_id));
-            // linkItem1.innerHTML = `Privacidade ${response.job.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}`;
-            // item1.appendChild(linkItem1);
-            // dropdownMenu.appendChild(item1);
-    
-                // const item2 = document.createElement('li');
-                // const linkItem2 = createElements('a', {
-                //     class: 'dropdown-item',
-                //     href: `${BASEURL}/todocontroller/jobdone/${response.job_id}`,
-                //     role: 'finish',
-                //     title: 'Finalizar Tarefa',
-                // });
-                // linkItem2.innerHTML = 'Finalizar <i class="fa fa-crosshairs text-success"></i>';
-                // item2.appendChild(linkItem2);
-                // dropdownMenu.appendChild(item2);
-    
+        
                 const item3 = document.createElement('li');
                 const linkItem3 = createElements('a', {
                     class: 'dropdown-item',
                     'data-bs-toggle': 'modal',
-                    'data-bs-target': '#taskModal',
+                    'data-bs-target': '#replyModal',
                     title: 'Editar Tarefa',
                     role: 'edit',
                 });
@@ -252,8 +230,6 @@ function createUserOptionsDropdown(response, type) {
             const dropdownDiv = document.createElement('p');
             dropdownDiv.innerHTML = '<p> </p>';
         }
-    
-    
     
         return dropdownDiv;
     }
@@ -736,7 +712,7 @@ async function likeContent(user_id, content_id, type_content) {
         if (!response.ok) {
             throw new Error(`Erro na requisição: ${response.statusText}`);
         }
-        if (response.ok && type_content === 'POST') {
+        if (type_content === 'POST') {
             const jobResponse = await fetch(`${BASEURL}/job/${content_id}`, {
                 method: 'GET',
                 headers: {
@@ -764,22 +740,23 @@ async function likeContent(user_id, content_id, type_content) {
             likesCount.textContent = jobData.job.job_likes;
 
         }
-        if (response.ok && type_content === 'REPLY') {
-            const jobResponse = await fetch(`${BASEURL}/comment/${content_id}`, {
+        if (type_content === 'REPLY') {
+            const replyResponse = await fetch(`${BASEURL}/comment/${content_id}`, {
                 method: 'GET',
                 headers: {
                     'token': 'ihgfedcba987654321'
                 }
             });
 
-            if (!jobResponse.ok) {
-                throw new Error(`Erro na requisição: ${jobResponse.statusText}`);
+            if (!replyResponse.ok) {
+                throw new Error(`Erro na requisição: ${replyResponse.statusText}`);
             }
 
-            const jobData = await jobResponse.json();
+            const replyData = await replyResponse.json();
+            console.log(replyData);
 
-            const likeIcon = document.querySelector(`#likeIcon${jobData.job.job_id}`)
-            if (!jobData.job.user_liked) {
+            const likeIcon = document.querySelector(`#likeReplyIcon${replyData.reply.reply_id}`)
+            if (!replyData.reply.user_liked) {
                 likeIcon.classList.remove('fa');
                 likeIcon.classList.add('fa-regular');
             } else {
@@ -787,9 +764,9 @@ async function likeContent(user_id, content_id, type_content) {
                 likeIcon.classList.add('fa');
             }
 
-            const likesCount = document.querySelector(`#likesCount${jobData.job.job_id}`);
+            const likesCount = document.querySelector(`#replyLikesCount${replyData.reply.reply_id}`);
             likesCount.textContent = ''
-            likesCount.textContent = jobData.job.job_likes;
+            likesCount.textContent = replyData.reply.reply_likes;
 
         }
 
