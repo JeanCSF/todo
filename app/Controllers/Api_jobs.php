@@ -127,7 +127,7 @@ class Api_jobs extends ResourceController
                 'msg'       =>  'Token inválido',
             ];
         }
-        return $this->respond($requestInfo);
+        return $this->respond($response);
     }
 
     public function commentJob()
@@ -300,7 +300,7 @@ class Api_jobs extends ResourceController
     public function showComment($id = null)
     {
         if (isset($this->session->USER_ID)) {
-            if (!$this->_tokenValidate() && $id != null) {
+            if ($this->_tokenValidate() && $id != null) {
                 $response = [];
 
                 $replies = $this->repliesModel->select('login.PROFILE_PIC

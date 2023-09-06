@@ -739,8 +739,7 @@ async function likeContent(user_id, content_id, type_content) {
             likesCount.textContent = ''
             likesCount.textContent = jobData.job.job_likes;
 
-        }
-        if (type_content === 'REPLY') {
+        } else if (type_content === 'REPLY') {
             const replyResponse = await fetch(`${BASEURL}/comment/${content_id}`, {
                 method: 'GET',
                 headers: {
@@ -753,7 +752,6 @@ async function likeContent(user_id, content_id, type_content) {
             }
 
             const replyData = await replyResponse.json();
-            console.log(replyData);
 
             const likeIcon = document.querySelector(`#likeReplyIcon${replyData.reply.reply_id}`)
             if (!replyData.reply.user_liked) {
@@ -769,6 +767,7 @@ async function likeContent(user_id, content_id, type_content) {
             likesCount.textContent = replyData.reply.reply_likes;
 
         }
+       
 
     } catch (error) {
         console.error("Erro na requisição:", error);
