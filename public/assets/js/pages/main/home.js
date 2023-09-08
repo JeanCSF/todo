@@ -12,78 +12,74 @@ window.addEventListener('scroll', debounce(onScroll, 500));
 
 function onScroll() {
     if (hasMoreData && !isLoading && window.scrollY + window.innerHeight >= document.body.scrollHeight - 100) {
-        loadMorePosts(currentPage);
+        loadPosts(currentPage, true);
     }
 }
 
-async function loadPosts(page) {
+async function loadPosts(page, more = false) {
     if (isLoading || !hasMoreData) {
         return;
     }
-
-    try {
-        const response = await fetch(`${BASEURL}/all_jobs?page=${page}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'token': 'ihgfedcba987654321'
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Erro na requisição? ${response.statusText}`);
-        }
-
-        const Posts = await response.json();
-        if (Posts.length === 0) {
-            hasMoreData = false;
-        } else {
-            Posts.forEach(post => {
-                const postElement = createPostElement(post, 'POST');
-                mainContainer.appendChild(postElement);
-                textSlice();
+    if (more) {
+        isLoading = true;
+        page++;
+        try {
+            const response = await fetch(`${BASEURL}/all_jobs?page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': 'ihgfedcba987654321'
+                },
             });
-        }
-    } catch (error) {
-        console.error("Erro na requisição: ", error);
-    }
-    isLoading = false;
-}
 
-async function loadMorePosts(page) {
-    if (isLoading || !hasMoreData) {
-        return;
-    }
-    isLoading = true;
-    page++;
-    try {
-        const response = await fetch(`${BASEURL}/all_jobs?page=${page}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'token': 'ihgfedcba987654321'
-            },
-        });
+            if (!response.ok) {
+                throw new Error(`Erro na requisição? ${response.statusText}`);
+            }
 
-        if (!response.ok) {
-            throw new Error(`Erro na requisição? ${response.statusText}`);
-        }
-
-        const Posts = await response.json();
-        if (Posts.length === 0) {
-            hasMoreData = false;
-        } else {
-            Posts.forEach(post => {
-                const postElement = createPostElement(post, 'POST');
-                mainContainer.appendChild(postElement);
-                textSlice();
+            const Posts = await response.json();
+            if (!Posts) {
+                hasMoreData = false;
+            } else {
+                Posts.forEach(post => {
+                    const postElement = createPostElement(post, 'POST');
+                    mainContainer.appendChild(postElement);
+                    textSlice();
+                });
                 currentPage = page;
-            });
+            }
+        } catch (error) {
+            console.error("Erro na requisição: ", error);
         }
-    } catch (error) {
-        console.error("Erro na requisição: ", error);
+        isLoading = false;
+    } else {
+        try {
+            const response = await fetch(`${BASEURL}/all_jobs?page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': 'ihgfedcba987654321'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro na requisição? ${response.statusText}`);
+            }
+
+            const Posts = await response.json();
+            if (!Posts) {
+                hasMoreData = false;
+            } else {
+                Posts.forEach(post => {
+                    const postElement = createPostElement(post, 'POST');
+                    mainContainer.appendChild(postElement);
+                    textSlice();
+                });
+            }
+        } catch (error) {
+            console.error("Erro na requisição: ", error);
+        }
+        isLoading = false;
     }
-    isLoading = false;
 }
 
 [document.querySelector("#header_job_name"), document.querySelector("#header_job_desc"), document.querySelector("#privacy_select")].forEach(item => {

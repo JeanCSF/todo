@@ -55,9 +55,9 @@
 </div>
 <div class="tabs row">
     <div class="text-center d-flex justify-content-evenly m-0 p-0">
-        <a href="javascript:void(0)" class="nav-link fw-bold" id="tasksTab" onclick="tasksTab(1, profile_user)">Tarefas</a>
-        <a href="javascript:void(0)" class="nav-link fw-bold" id="repliesTab" onclick="repliesTab(1, profile_user_id)">Respostas</a>
-        <a href="javascript:void(0)" class="nav-link fw-bold" id="likesTab" onclick="likesTab(1, profile_user_id)">Curtidas</a>
+        <a href="#tasks" class="nav-link fw-bold" id="tasksTab">Tarefas</a>
+        <a href="#replies" class="nav-link fw-bold" id="repliesTab">Respostas</a>
+        <a href="#likes" class="nav-link fw-bold" id="likesTab">Curtidas</a>
     </div>
 </div>
 

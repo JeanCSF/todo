@@ -8,13 +8,11 @@ var profileViewsContainer = document.querySelector("#profileViewsModalContainer"
 
 document.addEventListener("DOMContentLoaded", function () {
     headerContent(currentPage, profile_user);
-    tasksTab(currentPage, profile_user);
 
     if (session_user_id != profile_user_id) {
         saveVisitForProfile(profile_user_id, session_user_id)
     }
 
-    postsContainer.innerHTML = '';
 });
 
 function saveVisitForProfile(profile_user_id, session_user_id) {
@@ -66,469 +64,350 @@ async function fillModalVisits(profile_id) {
     }
 }
 
-function likeComment(user_id, comment_id) {
-    var dataToSend = {
-        user_id: user_id,
-        comment_id: comment_id
-    };
-    $.ajax({
-        url: BASEURL + '/like_comment',
-        type: "POST",
+async function headerContent(page, user) {
+    headerContainer.innerHTML = '';
+
+    const response = await fetch(`${BASEURL}/profile/${user}?page=${page}`, {
+        method: 'GET',
         headers: {
+            'Content-Type': 'application/json',
             'token': 'ihgfedcba987654321'
         },
-        data: dataToSend,
-        error: function (xhr, status, error) {
-            console.error("Erro na requisição:", error);
+    });
+    try {
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.statusText}`);
         }
-    }).done(function (resp) {
-        var likeButton = document.querySelector(`#likeCommentButton${comment_id}`);
-        likeButton.innerHTML = '';
-        let Posts = [];
-        $.ajax({
-            url: BASEURL + '/comment/' + comment_id,
-            type: "GET",
-            headers: {
-                'token': 'ihgfedcba987654321'
-            },
-            error: function (xhr, status, error) {
-                console.error("Erro na requisição:", error);
-            }
-        }).done(function (response) {
 
-            likeButton.innerHTML += `
-                    <i id="likeCommentButton${response.reply.reply_id}" class="${response.reply.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeComment(${session_user_id},${response.reply.reply_id})"></i>
-                    <span id="likes${response.reply.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${response.reply.reply_id}, 'REPLY')">${response.reply.reply_likes}</span>
-            `;
+        const Data = await response.json();
+        const User = Data.user_info;
+
+        const container = createElement('div', {
+            class: 'banner'
         });
-    });
-}
 
-function headerContent(page, user) {
-    $.ajax({
-        url: BASEURL + '/profile/' + user,
-        type: "GET",
-        data: {
-            page: page
-        },
-        headers: {
-            'token': 'ihgfedcba987654321'
-        },
-        error: function (xhr, status, error) {
-            console.error("Erro na requisição:", error);
-        }
-    }).done(function (response) {
-        User = response.user_info;
-        headerContainer.innerHTML += `
-            <div class="banner">
-                <div class="profile-img">
-                    <img class="img fluid rounded-circle" height="200" width="200" src="${!User.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic"">
-                    <p class="fst-italic fw-bold text-muted">@${User.user}</p>
-                </div>
-            </div>
-            ${session_user_id == User.user_id ?
-                `<div class="text-end">
-                    <button class="btn border-0" data-bs-toggle="modal" data-bs-target="#profileViewsModal" title="Visitas" role="button" onclick="fillModalVisits(${profile_user_id})"><i class="fa fa-eye"></i></button>
-                </div>`
-                : ''}
-            `;
+        const profilePicContainer = createElement('div', {
+            class: 'profile-img'
+        });
+        const profilePic = createElement('img', {
+            class: 'img fluid rounded-circle',
+            width: 180,
+            src: !User.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${User.user}/${User.profile_pic}`,
+            alt: 'Profile pic'
+        });
+        const profileUser = createElement('p', {
+            class: 'fst-italic fw-bold text-muted'
+        });
+        profileUser.textContent = `@${User.user}`;
+        profilePicContainer.appendChild(profilePic);
+        profilePicContainer.appendChild(profileUser);
 
-    });
-}
-
-function loadMoreTasks(page, user) {
-    loadMoreButton.innerHTML = '';
-    if (isLoading || !hasMoreData) {
-        loadMoreButton.innerHTML = '';
-        return;
-    } else {
-        loadMoreButton.innerHTML += `
-            <div class="text-center">
-                <a href="javascript:void(0)" class="nav-link fw-bold link-primary" onclick="loadMoreTasks(currentPage, profile_user)">Carregar mais tarefas...</a>
-            </div>`;
-    }
-    page++;
-    $.ajax({
-        url: BASEURL + '/profile/' + user,
-        type: "GET",
-        data: {
-            page: page
-        },
-        headers: {
-            'token': 'ihgfedcba987654321'
-        },
-        error: function (xhr, status, error) {
-            console.error("Erro na requisição:", error);
-        }
-    }).done(function (response) {
-        if (response.length === 0) {
-            hasMoreData = false;
-        } else {
-            Posts = response.user_jobs
-            Posts.forEach(function (post) {
-                postsContainer.innerHTML += `
-                        <div class="post-container post">
-                            <div class="user-img">
-                                <a href="${BASEURL}/user/${User.user}">
-                                    <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
-                                </a>
-                            </div>
-                            <div class="user-info">
-                                <a href="${BASEURL}/user/${User.user}" class="user-name">${User.name} &#8226; <span class="text-muted fst-italic">@${User.user}</span></a>
-                                <span>
-                                    ${session_user_id == User.user_id ?
-                        `<div class="dropdown">
-                                            <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa fa-ellipsis"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(${post.job_id})">Privacidade ${post.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}</a></li>
-                                                    ${!post.job_finished ?
-                            `<li><a class="dropdown-item" href="${BASEURL + '/todocontroller/jobdone/' + post.job_id}" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
-                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('${post.job_id}', '${post.job_title}', '${post.job}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>`
-                            : ``}                                        
-                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.job_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
-                                            </ul>
-                                        </div>`
-                        :
-                        `<p> </p>`
-                    }
-                                </span>
-                            </div>
-                            <div class="user-post-text" onclick="postPage(${post.job_id})">
-                                <span class="fst-italic text-center d-block fs-5" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
-                                <span id="jobTextContent">${post.job = post.job.replace(/(?:\r\n|\r|\n)/g, '<br>')}</span>
-                            </div>
-                            <div class="user-post-footer fst-italic text-muted mt-3">
-                                <p>${post.job_created}</p>
-                                <p>${!post.job_finished ? "" : post.job_finished + " <i class='fa fa-check-double'></i>"}</p>
-                            </div>
-                            <div class="post-actions" id="postActions_${post.job_id}">
-                                <a id="likeButton${post.job_id}" href="javascript:void(0)" role="button">
-                                    <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${post.job_id})"></i>
-                                    <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6">${post.job_likes}</span>
-                                </a>
-                                <a href="javascript:void(0)" onclick="postPage(${post.job_id})" role="button">
-                                    <i class="fa-regular fa-comment"></i>
-                                    <span class="ms-1 fst-italic text-muted fw-bold fs-6">${post.job_num_comments}</span>
-                                    </a>
-                                <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
-                            </div>
-                        </div>
-                    `;
-                currentPage = page;
+        if (session_user_id === User.user_id) {
+            const visitsButtonDiv = createElement('div', {
+                class: 'text-end z-3'
+            })
+            const visitsButton = createElement('button', {
+                class: 'btn border-0',
+                'data-bs-toggle': 'modal',
+                'data-bs-target': '#profileViewsModal',
+                title: 'Visitas',
+                role: 'button',
+                'onclick': fillModalVisits(User.user_id)
             });
-        };
-    });
-    isLoading = false;
+            const visitsIcon = createElement('i', {
+                class: 'fa fa-eye'
+            });
+            visitsButton.appendChild(visitsIcon);
+            visitsButtonDiv.appendChild(visitsButton);
+
+            headerContainer.appendChild(visitsButtonDiv);
+        }
+
+        container.appendChild(profilePicContainer);
+        headerContainer.appendChild(container);
+
+    } catch (error) {
+        console.error("Erro na requisição: ", error);
+    }
 }
 
-function tasksTab(page, user) {
-    hasMoreData = true;
+async function tasksTab(page, user, more = false) {
+    postsContainer.innerHTML = '';
+    if (isLoading || !hasMoreData) {
+        return;
+    }
     document.querySelector("#likesTab").classList.remove("active");
     document.querySelector("#repliesTab").classList.remove("active");
     document.querySelector("#tasksTab").classList.add("active");
+
+    window.addEventListener('scroll', debounce(onScroll, 500));
+
+    function onScroll() {
+        if (hasMoreData && !isLoading && window.scrollY + window.innerHeight >= document.body.scrollHeight - 100) {
+            tasksTab(currentPage, user, true);
+        }
+    }
+
+    if (more) {
+        isLoading = true;
+        page++;
+        try {
+            const response = await fetch(`${BASEURL}/profile/${user}?page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': 'ihgfedcba987654321'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro na requisição? ${response.statusText}`);
+            }
+
+            const Data = await response.json();
+            const Posts = Data.user_jobs;
+            if (!Posts) {
+                hasMoreData = false;
+            } else {
+                Posts.forEach(post => {
+                    const postElement = createPostElement(post, 'POST');
+                    postsContainer.appendChild(postElement);
+                    textSlice();
+                });
+                currentPage = page;
+            }
+        } catch (error) {
+            console.error("Erro na requisição: ", error);
+        }
+        isLoading = false;
+    } else {
+        try {
+            const response = await fetch(`${BASEURL}/profile/${user}?page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': 'ihgfedcba987654321'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro na requisição? ${response.statusText}`);
+            }
+
+            const Data = await response.json();
+            const Posts = Data.user_jobs;
+            if (!Posts) {
+                hasMoreData = false;
+                postsContainer.innerHTML = `<p class='text-center'>${Data.user_info.user} não publicou nada ainda!</p>`;
+            } else {
+                Posts.forEach(post => {
+                    const postElement = createPostElement(post, 'POST');
+                    postsContainer.appendChild(postElement);
+                    textSlice();
+                });
+            }
+        } catch (error) {
+            console.error("Erro na requisição: ", error);
+        }
+        isLoading = false;
+    }
+}
+
+async function repliesTab(page, user_id, more = false) {
+    postsContainer.innerHTML = '';
     if (isLoading || !hasMoreData) {
         return;
     }
-    $.ajax({
-        url: BASEURL + '/profile/' + user,
-        type: "GET",
-        data: {
-            page: page
-        },
-        headers: {
-            'token': 'ihgfedcba987654321'
-        },
-        error: function (xhr, status, error) {
-            console.error("Erro na requisição:", error);
-        }
-    }).done(function (response) {
-        User = response.user_info;
-        postsContainer.innerHTML = '';
-        if (response.user_jobs === null) {
-            hasMoreData = false;
-            postsContainer.innerHTML = `<p class='text-center'>${User.user} não postou nada ainda!</p>`;
-            loadMoreButton.innerHTML = '';
-        } else {
-            loadMoreButton.innerHTML = `
-            <div class="text-center">
-                <a href="javascript:void(0)" class="nav-link fw-bold link-primary" onclick="loadMoreTasks(currentPage, profile_user)">Carregar mais tarefas...</a>
-            </div>`;
-            Posts = response.user_jobs
-            Posts.forEach(function (post) {
-                postsContainer.innerHTML += `
-                            <div class="post-container post">
-                                <div class="user-img">
-                                    <a href="${BASEURL}/user/${User.user}">
-                                        <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
-                                    </a>
-                                </div>
-                                <div class="user-info">
-                                    <a href="${BASEURL}/user/${User.user}" class="user-name">${User.name} &#8226; <span class="text-muted fst-italic">@${User.user}</span></a>
-                                    <span>
-                                        ${session_user_id == User.user_id ?
-                        `<div class="dropdown">
-                                                <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa fa-ellipsis"></i>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(${post.job_id})">Privacidade ${post.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}</a></li>
-                                                        ${!post.job_finished ?
-                            `<li><a class="dropdown-item" href="${BASEURL + '/todocontroller/jobdone/' + post.job_id}" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
-                                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('${post.job_id}', '${post.job_title}', '${post.job}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>`
-                            : ``}                                        
-                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.job_id},1)">Excluír <i class="fa fa-trash text-danger"></i></a></li>
-                                                </ul>
-                                            </div>`
-                        :
-                        `<p> </p>`
-                    }
-                                    </span>
-                                </div>
-                                <div class="user-post-text" onclick="postPage(${post.job_id})">
-                                    <span class="fst-italic text-center d-block fs-5" style="${!post.job_finished ? "" : "text-decoration: line-through;"}">${post.job_title}</span>
-                                    <span id="jobTextContent">${post.job}</span>
-                                </div>
-                                <div class="user-post-footer fst-italic text-muted mt-3">
-                                    <p>${post.job_created}</p>
-                                    <p>${!post.job_finished ? "" : post.job_finished + " <i class='fa fa-check-double'></i>"}</p>
-                                </div>
-                                <div class="post-actions" id="postActions_${post.job_id}">
-                                    <a id="likeButton${post.job_id}" href="javascript:void(0)" role="button">
-                                        <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${post.job_id})"></i>
-                                        <span id="likes${post.job_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.job_id}, 'POST')">${post.job_likes}</span>
-                                    </a>
-                                    <a href="javascript:void(0)" onclick="postPage(${post.job_id})" role="button">
-                                        <i class="fa-regular fa-comment"></i>
-                                        <span class="ms-1 fst-italic text-muted fw-bold fs-6">${post.job_num_comments}</span>
-                                        </a>
-                                    <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
-                                </div>
-                            </div>
-                        `;
-            });
-        };
-    });
-    isLoading = false;
-}
-
-function repliesTab(page, user_id) {
-    hasMoreData = true;
     document.querySelector("#likesTab").classList.remove("active");
     document.querySelector("#tasksTab").classList.remove("active");
     document.querySelector("#repliesTab").classList.add("active");
-    postsContainer.innerHTML = '';
-    if (isLoading || !hasMoreData) {
-        return;
-    }
-    $.ajax({
-        url: BASEURL + '/user_comments/' + user_id,
-        type: "GET",
-        data: {
-            page: page
-        },
-        headers: {
-            'token': 'ihgfedcba987654321'
-        },
-        error: function (xhr, status, error) {
-            console.error("Erro na requisição:", error);
+
+    window.addEventListener('scroll', debounce(onScroll, 500));
+
+    function onScroll() {
+        if (hasMoreData && !isLoading && window.scrollY + window.innerHeight >= document.body.scrollHeight - 100) {
+            repliesTab(currentPage, user_id, true);
         }
-    }).done(function (response) {
-        if (response.length === 0) {
-            hasMoreData = false;
-            postsContainer.innerHTML = `<p class='text-center'>${User.user} não respondeu ninguém ainda!</p>`;
-            loadMoreButton.innerHTML = '';
-        } else {
-            loadMoreButton.innerHTML = `
-            <div class="text-center">
-                <a href="javascript:void(0)" class="nav-link fw-bold link-primary" onclick="loadMoreTasks(currentPage, profile_user)">Carregar mais tarefas...</a>
-            </div>`;
-            Posts = response.replies
-            Posts.forEach(function (post) {
-                postsContainer.innerHTML += `
-                            <div class="post-container post">
-                                <div class="user-img">
-                                    <a href="${BASEURL}/user/${User.user}">
-                                        <img height="48" width="48" src="${!User.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + User.user + '/' + User.profile_pic}" alt="Profile pic">
-                                    </a>
-                                </div>
-                                <div class="user-info">
-                                    <a href="${BASEURL}/user/${User.user}" class="user-name">${User.name} &#8226; <span class="text-muted fst-italic">@${User.user}</span></a>
-                                    <span>
-                                        ${session_user_id == User.user_id ?
-                        `<div class="dropdown">
-                                                <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa fa-ellipsis"></i>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEditReply('${post.reply_id}', '${post.reply}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
-                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDeleteReply(${post.reply_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
-                                                </ul>
-                                            </div>`
-                        :
-                        `<p> </p>`
-                    }
-                                    </span>
-                                </div>
-                                <div class="user-post-text" onclick="commentPage(${post.reply_id})">
-                                    <span id="jobTextContent">${post.reply}</span>
-                                </div>
-                                <div class="user-post-footer fst-italic text-muted mt-3">
-                                    <p>${post.datetime_replied}</p>
-                                </div>
-                                <div class="post-actions" id="replyActions_${post.reply_id}">
-                                    <a id="likeCommentButton${post.reply_id}" href="javascript:void(0)" role="button">
-                                        <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeComment(${session_user_id},${post.reply_id})"></i>
-                                        <span id="likes${post.reply_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.reply_id}, 'REPLY')">${post.reply_likes}</span>
-                                    </a>
-                                    <a href="javascript:void(0)" onclick="commentPage(${post.reply_id})" role="button">
-                                        <i class="fa-regular fa-comment"></i>
-                                        <span class="ms-1 fst-italic text-muted fw-bold fs-6">${post.reply_num_comments}</span>
-                                        </a>
-                                    <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
-                                </div>
-                            </div>
-                        `;
+    }
+
+    if (more) {
+        isLoading = true;
+        page++;
+        try {
+            const response = await fetch(`${BASEURL}/user_comments/${user_id}?page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': 'ihgfedcba987654321'
+                },
             });
-        };
-    });
-    isLoading = false;
+
+            if (!response.ok) {
+                throw new Error(`Erro na requisição? ${response.statusText}`);
+            }
+
+            const Data = await response.json();
+            const Replies = Data.replies;
+            if (!Replies) {
+                hasMoreData = false;
+            } else {
+                Replies.forEach(reply => {
+                    const postElement = createPostElement(reply, 'REPLY');
+                    postsContainer.appendChild(postElement);
+                    textSlice();
+                });
+                currentPage = page;
+            }
+        } catch (error) {
+            console.error("Erro na requisição: ", error);
+        }
+        isLoading = false;
+    } else {
+        try {
+            const response = await fetch(`${BASEURL}/user_comments/${user_id}?page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': 'ihgfedcba987654321'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro na requisição? ${response.statusText}`);
+            }
+
+            const Data = await response.json();
+            const Replies = Data.replies;
+            if (!Replies) {
+                hasMoreData = false;
+                postsContainer.innerHTML = `<p class='text-center'>${Replies.user} não respondeu ninguém ainda!</p>`;
+            } else {
+                Replies.forEach(reply => {
+                    const postElement = createPostElement(reply, 'REPLY');
+                    postsContainer.appendChild(postElement);
+                    textSlice();
+                });
+            }
+        } catch (error) {
+            console.error("Erro na requisição: ", error);
+        }
+        isLoading = false;
+    }
 }
 
-function likesTab(page, user_id) {
-    hasMoreData = true;
+async function likesTab(page, user_id, more = false) {
+    postsContainer.innerHTML = '';
     document.querySelector("#tasksTab").classList.remove("active");
     document.querySelector("#repliesTab").classList.remove("active");
     document.querySelector("#likesTab").classList.add("active");
-    postsContainer.innerHTML = '';
     if (isLoading || !hasMoreData) {
         return;
     }
-    $.ajax({
-        url: BASEURL + '/user_likes/' + user_id,
-        type: "GET",
-        data: {
-            page: page
-        },
-        headers: {
-            'token': 'ihgfedcba987654321'
-        },
-        error: function (xhr, status, error) {
-            console.error("Erro na requisição:", error);
-        }
-    }).done(function (response) {
-        if (response.length === 0) {
-            hasMoreData = false;
-            postsContainer.innerHTML = `<p class='text-center'>${User.user} ainda não curtiu nada!</p>`;
-            loadMoreButton.innerHTML = '';
-        } else {
-            loadMoreButton.innerHTML = `
-            <div class="text-center">
-                <a href="javascript:void(0)" class="nav-link fw-bold link-primary" onclick="loadMoreLikes(currentPage, profile_user)">Carregar mais curtidas...</a>
-            </div>`;
-            Posts = response
-            Posts.forEach(function (post) {
-                if (post.type == 'POST') {
-                    postsContainer.innerHTML += `
-                            <div class="post-container post">
-                                <div class="user-img">
-                                    <a href="${BASEURL}/user/${post.content_liked_user}">
-                                        <img height="48" width="48" src="${!post.content_liked_user_img ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + post.content_liked_user + '/' + post.content_liked_user_img}" alt="Profile pic">
-                                    </a>
-                                </div>
-                                <div class="user-info">
-                                    <a href="${BASEURL}/user/${post.content_liked_user}" class="user-name">${post.content_liked_user_name} &#8226; <span class="text-muted fst-italic">@${post.content_liked_user}</span></a>
-                                    <span>
-                                        ${session_user_id == post.content_liked_user_id ?
-                            `<div class="dropdown">
-                                                <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa fa-ellipsis"></i>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a data-bs-toggle="modal" data-bs-target="#privacyModal" class="dropdown-item" onclick="fillModalPrivacy(${post.content_id})">Privacidade ${post.content_liked_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}</a></li>
-                                                        ${!post.content_liked_finished ?
-                                `<li><a class="dropdown-item" href="${BASEURL + '/todocontroller/jobdone/' + post.content_id}" role="finish" title="Finalizar Tarefa">Finalizar <i class="fa fa-crosshairs text-success"></i></a></li>
-                                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEdit('${post.content_id}', '${post.content_liked_title}', '${post.content_liked_text}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>`
-                                : ``}                                        
-                                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDelete(${post.content_id}, 1)">Excluír <i class="fa fa-trash text-danger"></i></a></li>
-                                                </ul>
-                                            </div>`
-                            :
-                            `<p> </p>`
-                        }
-                                    </span>
-                                </div>
-                                <div class="user-post-text" onclick="postPage(${post.content_id})">
-                                    <span class="fst-italic text-center d-block fs-5" style="${!post.content_liked_finished ? "" : "text-decoration: line-through;"}">${post.content_liked_title}</span>
-                                    <span id="jobTextContent">${post.content_liked_text}</span>
-                                </div>
-                                <div class="user-post-footer fst-italic text-muted mt-3">
-                                    <p>${post.content_liked_created}</p>
-                                    <p>${!post.content_liked_finished ? "" : post.content_liked_finished + " <i class='fa fa-check-double'></i>"}</p>
-                                </div>
-                                <div class="post-actions" id="postActions_${post.content_id}">
-                                    <a id="likeButton${post.content_id}" href="javascript:void(0)" role="button">
-                                        <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeJob(${session_user_id},${post.content_id})"></i>
-                                        <span id="likes${post.content_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.content_id}, 'POST')">${post.content_liked_num_likes}</span>
-                                    </a>
-                                    <a href="javascript:void(0)" onclick="postPage(${post.content_id})" role="button">
-                                        <i class="fa-regular fa-comment"></i>
-                                        <span class="ms-1 fst-italic text-muted fw-bold fs-6">${post.content_liked_num_comments}</span>
-                                        </a>
-                                    <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
-                                </div>
-                            </div>
-                        `;
-                } else {
-                    postsContainer.innerHTML += `
-                                <div class="post-container post">
-                                    <div class="user-img">
-                                        <a href="${BASEURL}/user/${post.content_liked_user}">
-                                            <img height="48" width="48" src="${!post.profile_pic ? BASEURL + '/assets/avatar.webp' : BASEURL + '/assets/img/profiles_pics/' + post.content_liked_user + '/' + post.content_liked_user_img}" alt="Profile pic">
-                                        </a>
-                                    </div>
-                                    <div class="user-info">
-                                        <a href="${BASEURL}/user/${post.content_liked_user}" class="user-name">${post.content_liked_user_name} &#8226; <span class="text-muted fst-italic">@${post.content_liked_user}</span></a>
-                                        <span>
-                                            ${session_user_id == post.content_liked_user_id ?
-                            `<div class="dropdown">
-                                                    <button class="bg-transparent border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="fa fa-ellipsis"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskModal" title="Editar Tarefa" role="edit" onclick="fillModalEditReply('${post.content_id}', '${post.content_liked_text}')">Editar <i class="fa fa-pencil text-primary"></i></a></li>
-                                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Excluír Tarefa" role="delete" onclick="fillModalDeleteReply(${post.content_id})">Excluír <i class="fa fa-trash text-danger"></i></a></li>
-                                                    </ul>
-                                                </div>`
-                            :
-                            `<p> </p>`
-                        }
-                                        </span>
-                                    </div>
-                                    <div class="user-post-text" onclick="commentPage(${post.content_id})">
-                                        <span id="jobTextContent">${post.content_liked_text}</span>
-                                    </div>
-                                    <div class="user-post-footer fst-italic text-muted mt-3">
-                                        <p>${post.content_liked_created}</p>
-                                    </div>
-                                    <div class="post-actions" id="replyActions_${post.content_id}">
-                                        <a id="likeCommentButton${post.content_id}" href="javascript:void(0)" role="button">
-                                            <i class="${post.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart'}" onClick="likeComment(${session_user_id},${post.content_id})"></i>
-                                            <span id="likes${post.content_id}" class="ms-1 fst-italic text-muted fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#likesModal" title="Likes" role="button" onclick="fillModalLikes(${post.content_id}, 'REPLY')">${post.content_liked_num_likes}</span>
-                                        </a>
-                                        <a href="javascript:void(0)" onclick="commentPage(${post.content_id})" role="button">
-                                            <i class="fa-regular fa-comment"></i>
-                                            <span class="ms-1 fst-italic text-muted fw-bold fs-6">${post.content_liked_num_comments}</span>
-                                            </a>
-                                        <a href="#" role="button"><i class="fa fa-arrow-up-from-bracket"></i><span class="ms-1 fst-italic text-muted"> </span></a>
-                                    </div>
-                                </div>
-                            `;
 
-                }
+    window.addEventListener('scroll', debounce(onScroll, 500));
+
+    function onScroll() {
+        if (hasMoreData && !isLoading && window.scrollY + window.innerHeight >= document.body.scrollHeight - 100) {
+            likesTab(currentPage, user_id, true);
+        }
+    }
+
+    if (more) {
+        isLoading = true;
+        page++;
+        try {
+            const response = await fetch(`${BASEURL}/user_likes/${user_id}?page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': 'ihgfedcba987654321'
+                },
             });
-        };
-    });
-    isLoading = false;
+
+            if (!response.ok) {
+                throw new Error(`Erro na requisição? ${response.statusText}`);
+            }
+
+            const Data = await response.json();
+            const Likes = Data.likes;
+            if (!Likes) {
+                hasMoreData = false;
+            } else {
+                Likes.forEach(like => {
+                    if (like.type === 'REPLY') {
+                        const postElement = createPostElement(like, 'REPLY');
+                        postsContainer.appendChild(postElement);
+                        textSlice();
+                    } else {
+                        const postElement = createPostElement(like, 'POST');
+                        postsContainer.appendChild(postElement);
+                        textSlice();
+                    }
+                });
+                currentPage = page;
+            }
+        } catch (error) {
+            console.error("Erro na requisição: ", error);
+        }
+        isLoading = false;
+    } else {
+        try {
+            const response = await fetch(`${BASEURL}/user_likes/${user_id}?page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': 'ihgfedcba987654321'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro na requisição? ${response.statusText}`);
+            }
+
+            const Data = await response.json();
+            const Likes = Data.likes;
+            if (!Likes) {
+                hasMoreData = false;
+                postsContainer.innerHTML = `<p class='text-center'>${Replies.user} não curtiu nada ainda!</p>`;
+            } else {
+                Likes.forEach(like => {
+                    if (like.type === 'REPLY') {
+                        const postElement = createPostElement(like, 'REPLY');
+                        postsContainer.appendChild(postElement);
+                        textSlice();
+                    } else {
+                        const postElement = createPostElement(like, 'POST');
+                        postsContainer.appendChild(postElement);
+                        textSlice();
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("Erro na requisição: ", error);
+        }
+        isLoading = false;
+    }
 }
+
+function loadContent() {
+    const path = window.location.hash.substring(1);
+    postsContainer = document.querySelector("#postsContainer");
+
+    switch (path) {
+        case 'tasks':
+            tasksTab(currentPage, profile_user);
+            break;
+        case 'replies':
+            repliesTab(currentPage, profile_user_id);
+            break;
+        case 'likes':
+            likesTab(currentPage, profile_user_id);
+            break;
+        default:
+            tasksTab(currentPage, profile_user);
+    }
+}
+
+window.addEventListener('load', loadContent);
+
+window.addEventListener('hashchange', loadContent);

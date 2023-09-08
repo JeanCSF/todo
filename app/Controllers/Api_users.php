@@ -80,6 +80,10 @@ class Api_users extends ResourceController
 
                     foreach ($userJobs as $job) {
                         $user_jobs[] = [
+                            'profile_pic'           => $userInfo->PROFILE_PIC,
+                            'user'                  => $userInfo->USER,
+                            'name'                  => $userInfo->NAME,
+                            'user_id'               => $userInfo->USER_ID,
                             'job_id'                => $job->ID_JOB,
                             'job_title'             => $this->HTMLPurifier->html_purify($job->JOB_TITLE),
                             'job'                   => $this->HTMLPurifier->html_purify($job->JOB),
@@ -90,12 +94,13 @@ class Api_users extends ResourceController
                             'job_likes'             => $job->NUM_LIKES,
                             'job_num_comments'      => $job->NUM_REPLIES,
                             'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, $this->session->USER_ID),
+                            'type'                  => 'POST'
                         ];
                     }
 
                     $response = [
                         'user_info'     =>  $user_info,
-                        'user_jobs'     =>  isset($user_jobs)? $user_jobs : null,
+                        'user_jobs'     =>  isset($user_jobs) ? $user_jobs : null,
                     ];
                 } else {
                     $response = [];
@@ -204,10 +209,10 @@ class Api_users extends ResourceController
 
     public function getLikes($user_id = null)
     {
-        if ($user_id != null) {
+        if ($user_id != null && $this->_tokenValidate()) {
             $currentPage = $this->request->getVar('page') ?? 1;
-            
-            $response = $this->usersServices->getFormatedLikes($user_id, $currentPage);
+
+            $response = ['likes' => $this->usersServices->getFormatedLikes($user_id, $currentPage)]; 
 
             return $this->respond($response);
         } else {

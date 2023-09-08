@@ -8,6 +8,8 @@ use CodeIgniter\Debug\Exceptions;
 use CodeIgniter\RESTful\ResourceController;
 use Exception;
 
+use function PHPSTORM_META\type;
+
 class Api_jobs extends ResourceController
 {
     private $HTMLPurifier;
@@ -255,11 +257,11 @@ class Api_jobs extends ResourceController
                                 'user'                  => $comment['user'],
                                 'name'                  => $comment['name'],
                                 'user_id'               => $comment['user_id'],
-                                'comment_id'            => $comment['comment_id'],
-                                'comment'               => $this->HTMLPurifier->html_purify($comment['comment']),
-                                'comment_created'       => isset($comment['comment_created']) ? $this->TimeElapsedString->time_elapsed_string($comment['comment_created']) : "",
-                                'comment_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
-                                'comment_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
+                                'reply_id'              => $comment['comment_id'],
+                                'reply'                 => $this->HTMLPurifier->html_purify($comment['comment']),
+                                'datetime_replied'      => isset($comment['comment_created']) ? $this->TimeElapsedString->time_elapsed_string($comment['comment_created']) : "",
+                                'reply_likes'           => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
+                                'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
                                 'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], $this->session->USER_ID),
                                 'type'                  => 'REPLY',
                             ];
@@ -348,12 +350,13 @@ class Api_jobs extends ResourceController
                                 'user'                  => $comment['user'],
                                 'name'                  => $comment['name'],
                                 'user_id'               => $comment['user_id'],
-                                'comment_id'            => $comment['comment_id'],
-                                'comment'               => $this->HTMLPurifier->html_purify($comment['comment']),
-                                'comment_created'       => isset($comment['comment_created']) ? date("d/m/Y H:i:s", strtotime($comment['comment_created'])) : "",
-                                'comment_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
-                                'comment_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
+                                'reply_id'              => $comment['comment_id'],
+                                'reply'                 => $this->HTMLPurifier->html_purify($comment['comment']),
+                                'datetime_replied'      => isset($comment['comment_created']) ? date("d/m/Y H:i:s", strtotime($comment['comment_created'])) : "",
+                                'reply_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
+                                'reply_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
                                 'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], $this->session->USER_ID),
+                                'type'                  => 'REPLY'
                             ];
                         }
                         $response = [

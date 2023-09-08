@@ -62,6 +62,10 @@ class UsersServices
             if ($currentPage <= $pages) {
                 foreach ($replies as $reply) {
                     $user_replies[] = [
+                        'profile_pic'           => $userInfo->PROFILE_PIC,
+                        'user'                  => $userInfo->USER,
+                        'name'                  => $userInfo->NAME,
+                        'user_id'               => $userInfo->USER_ID,
                         'reply_id'              => $reply->REPLY_ID,
                         'parent_reply_id'       => $reply->PARENT_REPLY_ID,
                         'reply_id_job'          => $reply->ID_JOB,
@@ -70,6 +74,7 @@ class UsersServices
                         'reply_likes'           => $this->likesModel->getContentLikes($reply->REPLY_ID, 'REPLY'),
                         'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($reply->REPLY_ID),
                         'user_liked'            => $this->likesModel->checkUserLikedReply($reply->REPLY_ID, $this->session->USER_ID),
+                        'type'                  => 'REPLY'
                     ];
                 }
 
@@ -100,23 +105,41 @@ class UsersServices
         try {
             if ($currentPage <= $pages) {
                 foreach ($likes as $like) {
-                    $response[] = [
-                        'type'                          =>  $like->TYPE,
-                        'content_id'                    =>  $like->CONTENT_ID,
-                        'date_liked'                    =>  $this->TimeElapsedString->time_elapsed_string($like->DATETIME_LIKED),
-                        'content_liked_user_id'         =>  $like->TYPE == 'POST' ? $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID') : $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'),
-                        'content_liked_user'            =>  $like->TYPE == 'POST' ? $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('USER') : $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('USER'),
-                        'content_liked_user_name'       =>  $like->TYPE == 'POST' ? $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('NAME') : $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('NAME'),
-                        'content_liked_user_img'        =>  $like->TYPE == 'POST' ? $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('PROFILE_PIC') : $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('PROFILE_PIC'),
-                        'content_liked_title'           =>  $like->TYPE == 'POST' ? $this->HTMLPurifier->html_purify($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB_TITLE')) : '',
-                        'content_liked_text'            =>  $like->TYPE == 'POST' ? $this->HTMLPurifier->html_purify($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB')) : $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('REPLY'),
-                        'content_liked_created'         =>  $like->TYPE == 'POST' ? $this->TimeElapsedString->time_elapsed_string($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_CREATED')) : $this->TimeElapsedString->time_elapsed_string($this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('DATETIME_REPLIED')),
-                        'content_liked_finished'        =>  $like->TYPE == 'POST' ? !empty($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_FINISHED')) ? 'Finalizado: ' . $this->TimeElapsedString->time_elapsed_string($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_FINISHED')) : '' : '',
-                        'content_liked_privacy'         =>  $like->TYPE == 'POST' ? $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('PRIVACY') : '',
-                        'content_liked_num_likes'       =>  $like->TYPE == 'POST' ? $this->likesModel->getContentLikes($like->CONTENT_ID, 'POST') : $this->likesModel->getContentLikes($like->CONTENT_ID, 'REPLY'),
-                        'content_liked_num_comments'    =>  $like->TYPE == 'POST' ? $this->repliesModel->countJobReplies($like->CONTENT_ID) : $this->repliesModel->countRepliesOfThisReply($like->CONTENT_ID),
-                        'user_liked'                    =>  $like->TYPE == 'POST' ? $this->likesModel->checkUserLikedJob($like->CONTENT_ID, $this->session->USER_ID) : $this->likesModel->checkUserLikedReply($like->CONTENT_ID, $this->session->USER_ID)
-                    ];
+                    if ($like->TYPE == 'REPLY') {
+                        $response[] = [
+                            'reply_id'              =>  $like->CONTENT_ID,
+                            'profile_pic'           => $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('PROFILE_PIC'),
+                            'user'                  => $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('USER'),
+                            'name'                  => $this->usersModel->where('USER_ID', $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('NAME'),
+                            'user_id'               => $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('USER_ID'),
+                            'date_liked'            => $this->TimeElapsedString->time_elapsed_string($like->DATETIME_LIKED),
+                            'reply'                 => $this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('REPLY'),
+                            'datetime_replied'      => $this->TimeElapsedString->time_elapsed_string($this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('DATETIME_REPLIED')),
+                            'reply_likes'           => $this->likesModel->getContentLikes($like->CONTENT_ID, 'REPLY'),
+                            'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($like->CONTENT_ID),
+                            'user_liked'            => $this->likesModel->checkUserLikedReply($like->CONTENT_ID, $this->session->USER_ID),
+                            'type'                  => 'REPLY'
+                        ];
+                    } else {
+                        $response[] = [
+                            'job_id'                =>  $like->CONTENT_ID,
+                            'profile_pic'           => $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('PROFILE_PIC'),
+                            'user'                  => $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('USER'),
+                            'name'                  => $this->usersModel->where('USER_ID', $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'))->get()->getRow('NAME'),
+                            'user_id'               => $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('USER_ID'),
+                            'date_liked'            => $this->TimeElapsedString->time_elapsed_string($like->DATETIME_LIKED),
+                            'job_title'             => $this->HTMLPurifier->html_purify($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB_TITLE')),
+                            'job'                   => $this->HTMLPurifier->html_purify($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('JOB')),
+                            'job_created'           => $this->TimeElapsedString->time_elapsed_string($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_CREATED')),
+                            'job_updated'           => $this->TimeElapsedString->time_elapsed_string($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_UPDATED')),
+                            'job_finished'          => $this->TimeElapsedString->time_elapsed_string($this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('DATETIME_FINISHED')),
+                            'job_privacy'           => $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('PRIVACY'),
+                            'job_likes'             => $this->likesModel->getContentLikes($like->CONTENT_ID, 'POST'),
+                            'job_num_comments'      => $this->repliesModel->countJobReplies($like->CONTENT_ID),
+                            'user_liked'            => $this->likesModel->checkUserLikedJob($like->CONTENT_ID, $this->session->USER_ID),
+                            'type'                  => 'POST'
+                        ];
+                    }
                 }
             } else {
                 $response = [];

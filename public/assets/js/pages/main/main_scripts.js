@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-const createElements = (elementName, attributes) => {
+const createElement = (elementName, attributes) => {
     const element = document.createElement(elementName);
     const attributesAsArray = Object.entries(attributes);
 
@@ -97,12 +97,12 @@ const createElements = (elementName, attributes) => {
 
 function createUserOptionsDropdown(response, type) {
     if (type === 'POST') {
-        const dropdownDiv = createElements('div', {
+        const dropdownDiv = createElement('div', {
             class: 'dropdown'
         });
     
         if (session_user_id === response.user_id) {
-            const dropdownToggle = createElements('button', {
+            const dropdownToggle = createElement('button', {
                 class: 'bg-transparent border-0',
                 type: 'button',
                 'data-bs-toggle': 'dropdown',
@@ -110,12 +110,12 @@ function createUserOptionsDropdown(response, type) {
             });
             dropdownToggle.innerHTML = '<i class="fa fa-ellipsis"></i>'
     
-            const dropdownMenu = createElements('ul', {
+            const dropdownMenu = createElement('ul', {
                 class: 'dropdown-menu'
             });
     
             const item1 = document.createElement('li');
-            const linkItem1 = createElements('a', {
+            const linkItem1 = createElement('a', {
                 'data-bs-toggle': 'modal',
                 'data-bs-target': '#privacyModal',
                 class: 'dropdown-item'
@@ -127,7 +127,7 @@ function createUserOptionsDropdown(response, type) {
     
             if (!response.job_finished) {
                 const item2 = document.createElement('li');
-                const linkItem2 = createElements('a', {
+                const linkItem2 = createElement('a', {
                     class: 'dropdown-item',
                     href: `${BASEURL}/todocontroller/jobdone/${response.job_id}`,
                     role: 'finish',
@@ -138,7 +138,7 @@ function createUserOptionsDropdown(response, type) {
                 dropdownMenu.appendChild(item2);
     
                 const item3 = document.createElement('li');
-                const linkItem3 = createElements('a', {
+                const linkItem3 = createElement('a', {
                     class: 'dropdown-item',
                     'data-bs-toggle': 'modal',
                     'data-bs-target': '#taskModal',
@@ -153,7 +153,7 @@ function createUserOptionsDropdown(response, type) {
             }
     
             const item4 = document.createElement('li');
-            const linkItem4 = createElements('a', {
+            const linkItem4 = createElement('a', {
                 class: 'dropdown-item',
                 'data-bs-toggle': 'modal',
                 'data-bs-target': '#deleteModal',
@@ -178,12 +178,12 @@ function createUserOptionsDropdown(response, type) {
     }
 
     if(type === 'REPLY') {
-        const dropdownDiv = createElements('div', {
+        const dropdownDiv = createElement('div', {
             class: 'dropdown'
         });
     
         if (session_user_id === response.user_id) {
-            const dropdownToggle = createElements('button', {
+            const dropdownToggle = createElement('button', {
                 class: 'bg-transparent border-0',
                 type: 'button',
                 'data-bs-toggle': 'dropdown',
@@ -191,12 +191,12 @@ function createUserOptionsDropdown(response, type) {
             });
             dropdownToggle.innerHTML = '<i class="fa fa-ellipsis"></i>'
     
-            const dropdownMenu = createElements('ul', {
+            const dropdownMenu = createElement('ul', {
                 class: 'dropdown-menu'
             });
         
                 const item3 = document.createElement('li');
-                const linkItem3 = createElements('a', {
+                const linkItem3 = createElement('a', {
                     class: 'dropdown-item',
                     'data-bs-toggle': 'modal',
                     'data-bs-target': '#replyModal',
@@ -210,7 +210,7 @@ function createUserOptionsDropdown(response, type) {
     
     
             const item4 = document.createElement('li');
-            const linkItem4 = createElements('a', {
+            const linkItem4 = createElement('a', {
                 class: 'dropdown-item',
                 'data-bs-toggle': 'modal',
                 'data-bs-target': '#deleteModal',
@@ -238,19 +238,19 @@ function createUserOptionsDropdown(response, type) {
 
 function createPostElement(response, type) {
     if (type === 'POST') {
-        const container = createElements('div', {
+        const container = createElement('div', {
             class: 'post-container post',
             id: `post${response.job_id}`
         });
 
 
-        const profilePicContainer = createElements('div', {
+        const profilePicContainer = createElement('div', {
             class: 'user-img'
         });
-        const imgLink = createElements('a', {
+        const imgLink = createElement('a', {
             href: `${BASEURL}/user/${response.user}`,
         });
-        const profilePic = createElements('img', {
+        const profilePic = createElement('img', {
             height: 48,
             width: 48,
             src: !response.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${response.user}/${response.profile_pic}`,
@@ -259,15 +259,15 @@ function createPostElement(response, type) {
         imgLink.appendChild(profilePic);
         profilePicContainer.appendChild(imgLink);
 
-        const userInfo = createElements('div', {
+        const userInfo = createElement('div', {
             class: 'user-info'
         });
-        const profileLink = createElements('a', {
+        const profileLink = createElement('a', {
             href: `${BASEURL}/user/${response.user}`,
             class: 'user-name',
         });
         profileLink.innerHTML = `${response.name} &#8226;`;
-        const userName = createElements('span', {
+        const userName = createElement('span', {
             class: 'text-muted fst-italic'
         });
         userName.textContent = `@${response.user}`;
@@ -281,17 +281,17 @@ function createPostElement(response, type) {
         userInfo.appendChild(dropdownSpan);
 
 
-        const userPostText = createElements('div', {
+        const userPostText = createElement('div', {
             class: 'user-post-text'
         });
-        const jobTitle = createElements('span', {
+        const jobTitle = createElement('span', {
             id: 'jobTitle',
             class: 'fst-italic text-center d-block fs-5 job-title',
             style: `${!response.job_finished ? "" : "text-decoration: line-through;"}`
         });
         jobTitle.addEventListener('click', () => postPage(response.job_id))
         jobTitle.textContent = response.job_title;
-        const jobTextContent = createElements('span', {
+        const jobTextContent = createElement('span', {
             id: 'jobTextContent',
             class: 'job-text'
         });
@@ -301,7 +301,7 @@ function createPostElement(response, type) {
         userPostText.appendChild(jobTextContent);
 
 
-        const userPostFooter = createElements('div', {
+        const userPostFooter = createElement('div', {
             class: 'user-post-footer fst-italic text-muted mt-3'
         });
         const jobCreated = document.createElement('p');
@@ -312,22 +312,22 @@ function createPostElement(response, type) {
         userPostFooter.appendChild(jobFinished);
 
 
-        const postActions = createElements('div', {
+        const postActions = createElement('div', {
             class: 'post-actions',
             id: `postActions_${response.job_id}`
         });
-        const likeButton = createElements('a', {
+        const likeButton = createElement('a', {
             id: `likeButton${response.job_id}`,
             href: 'javascript:void(0)',
             role: 'button',
         });
-        const likeIcon = createElements('i', {
+        const likeIcon = createElement('i', {
             id: `likeIcon${response.job_id}`,
             class: response.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart',
             'onclick': `likeContent(${session_user_id}, ${response.job_id}, '${response.type}')`
         });
         likeButton.appendChild(likeIcon);
-        const likesCount = createElements('span', {
+        const likesCount = createElement('span', {
             id: `likesCount${response.job_id}`,
             class: 'ms-1 fst-italic text-muted fw-bold fs-6',
             'data-bs-toggle': 'modal',
@@ -338,33 +338,33 @@ function createPostElement(response, type) {
         likesCount.addEventListener('click', () => fillModalLikes(response.job_id, response.type));
         likesCount.textContent = response.job_likes;
         likeButton.appendChild(likesCount);
-        const commentButton = createElements('a', {
+        const commentButton = createElement('a', {
             id: `commentButton${response.job_id}`,
             href: 'javascript:void(0)',
             role: 'button'
         });
         commentButton.addEventListener('click', () => postPage(response.job_id))
-        const commentIcon = createElements('i', {
+        const commentIcon = createElement('i', {
             class: 'fa-regular fa-comment'
         });
         commentButton.appendChild(commentIcon);
-        const commentsCount = createElements('span', {
+        const commentsCount = createElement('span', {
             class: 'ms-1 fst-italic text-muted fw-bold fs-6'
         });
         commentsCount.textContent = response.job_num_comments;
         commentButton.appendChild(commentsCount)
-        const shareButton = createElements('a', {
+        const shareButton = createElement('a', {
             href: 'javascript:void(0)',
             role: 'button',
             'data-bs-toggle': 'modal',
             'data-bs-target': '#comingSoonModal',
             title: 'Compartilhar',
         });
-        const shareIcon = createElements('i', {
+        const shareIcon = createElement('i', {
             class: 'fa fa-arrow-up-from-bracket'
         });
         shareButton.appendChild(shareIcon);
-        const shareCounts = createElements('span', {
+        const shareCounts = createElement('span', {
             class: 'ms-1 fst-italic text-muted'
         });
         shareCounts.textContent = ' ';
@@ -384,19 +384,19 @@ function createPostElement(response, type) {
     }
 
     if (type === 'REPLY') {
-        const container = createElements('div', {
+        const container = createElement('div', {
             class: 'post-container post',
-            id: `jobReplyContent${response.comment_id}`
+            id: `jobReplyContent${response.reply_id}`
         });
 
 
-        const profilePicContainer = createElements('div', {
+        const profilePicContainer = createElement('div', {
             class: 'user-img'
         });
-        const imgLink = createElements('a', {
+        const imgLink = createElement('a', {
             href: `${BASEURL}/user/${response.user}`,
         });
-        const profilePic = createElements('img', {
+        const profilePic = createElement('img', {
             height: 48,
             width: 48,
             src: !response.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${response.user}/${response.profile_pic}`,
@@ -405,15 +405,15 @@ function createPostElement(response, type) {
         imgLink.appendChild(profilePic);
         profilePicContainer.appendChild(imgLink);
 
-        const userInfo = createElements('div', {
+        const userInfo = createElement('div', {
             class: 'user-info'
         });
-        const profileLink = createElements('a', {
+        const profileLink = createElement('a', {
             href: `${BASEURL}/user/${response.user}`,
             class: 'user-name',
         });
         profileLink.innerHTML = `${response.name} &#8226;`;
-        const userName = createElements('span', {
+        const userName = createElement('span', {
             class: 'text-muted fst-italic'
         });
         userName.textContent = `@${response.user}`;
@@ -427,80 +427,80 @@ function createPostElement(response, type) {
         userInfo.appendChild(dropdownSpan);
 
 
-        const userReplyText = createElements('div', {
+        const userReplyText = createElement('div', {
             class: 'user-post-text'
         });
 
-        const jobReplyContent = createElements('span', {
+        const jobReplyContent = createElement('span', {
             id: 'jobReplyContent',
             class: 'job-text'
         });
-        jobReplyContent.addEventListener('click', () => commentPage(response.comment_id))
-        jobReplyContent.innerHTML = response.comment;
+        jobReplyContent.addEventListener('click', () => commentPage(response.reply_id))
+        jobReplyContent.innerHTML = response.reply;
         userReplyText.appendChild(jobReplyContent);
 
 
-        const userPostFooter = createElements('div', {
+        const userPostFooter = createElement('div', {
             class: 'user-post-footer fst-italic text-muted mt-3'
         });
         const replyCreated = document.createElement('p');
-        replyCreated.textContent = response.comment_created
+        replyCreated.textContent = response.datetime_replied
         userPostFooter.appendChild(replyCreated);
 
 
-        const replyActions = createElements('div', {
+        const replyActions = createElement('div', {
             class: 'post-actions',
-            id: `replyActions_${response.comment_id}`
+            id: `replyActions_${response.reply_id}`
         });
-        const likeButton = createElements('a', {
-            id: `likeReplyButton${response.comment_id}`,
+        const likeButton = createElement('a', {
+            id: `likeReplyButton${response.reply_id}`,
             href: 'javascript:void(0)',
             role: 'button',
         });
-        const likeIcon = createElements('i', {
-            id: `likeReplyIcon${response.comment_id}`,
+        const likeIcon = createElement('i', {
+            id: `likeReplyIcon${response.reply_id}`,
             class: response.user_liked ? 'fa fa-heart' : 'fa-regular fa-heart',
-            'onclick': `likeContent(${session_user_id}, ${response.comment_id}, '${response.type}')`
+            'onclick': `likeContent(${session_user_id}, ${response.reply_id}, '${response.type}')`
         });
         likeButton.appendChild(likeIcon);
-        const likesCount = createElements('span', {
-            id: `replyLikesCount${response.comment_id}`,
+        const likesCount = createElement('span', {
+            id: `replyLikesCount${response.reply_id}`,
             class: 'ms-1 fst-italic text-muted fw-bold fs-6',
             'data-bs-toggle': 'modal',
             'data-bs-target': '#likesModal',
             title: 'Likes',
             role: 'button'
         });
-        likesCount.addEventListener('click', () => fillModalLikes(response.comment_id, response.type));
-        likesCount.textContent = response.comment_likes;
+        likesCount.addEventListener('click', () => fillModalLikes(response.reply_id, response.type));
+        likesCount.textContent = response.reply_likes;
         likeButton.appendChild(likesCount);
-        const commentButton = createElements('a', {
-            id: `commentReplyButton${response.comment_id}`,
+        const commentButton = createElement('a', {
+            id: `commentReplyButton${response.reply_id}`,
             href: 'javascript:void(0)',
             role: 'button'
         });
-        commentButton.addEventListener('click', () => commentPage(response.job_id))
-        const commentIcon = createElements('i', {
+        commentButton.addEventListener('click', () => commentPage(response.reply_id))
+        const commentIcon = createElement('i', {
             class: 'fa-regular fa-comment'
         });
         commentButton.appendChild(commentIcon);
-        const commentsCount = createElements('span', {
+        const commentsCount = createElement('span', {
             class: 'ms-1 fst-italic text-muted fw-bold fs-6'
         });
-        commentsCount.textContent = response.comment_num_comments;
+        commentsCount.textContent = response.reply_num_comments;
         commentButton.appendChild(commentsCount)
-        const shareButton = createElements('a', {
+        const shareButton = createElement('a', {
             href: 'javascript:void(0)',
             role: 'button',
             'data-bs-toggle': 'modal',
             'data-bs-target': '#comingSoonModal',
             title: 'Compartilhar',
         });
-        const shareIcon = createElements('i', {
+        const shareIcon = createElement('i', {
             class: 'fa fa-arrow-up-from-bracket'
         });
         shareButton.appendChild(shareIcon);
-        const shareCounts = createElements('span', {
+        const shareCounts = createElement('span', {
             class: 'ms-1 fst-italic text-muted'
         });
         shareCounts.textContent = ' ';
@@ -521,13 +521,13 @@ function createPostElement(response, type) {
 }
 
 function createProfileLink(data) {
-    const profileLink = createElements('a', {
+    const profileLink = createElement('a', {
         href: `${BASEURL}/user/${data.user}`,
         class: 'nav-link'
     });
 
     const profilePic = createProfilePic(data);
-    const profileName = createElements('span', {
+    const profileName = createElement('span', {
         class: 'fw-bold'
     });
     profileName.textContent = data.name;
@@ -539,7 +539,7 @@ function createProfileLink(data) {
 }
 
 function createProfilePic(data) {
-    return createElements('img', {
+    return createElement('img', {
         class: 'rounded-circle me-3',
         height: 48,
         width: 48,
@@ -549,7 +549,7 @@ function createProfilePic(data) {
 }
 
 function createTimestampElement(data) {
-    return createElements('span', {
+    return createElement('span', {
         class: 'text-muted fst-italic p-3',
         style: 'font-size: 10px;',
         title: data.full_datetime_liked
@@ -557,7 +557,7 @@ function createTimestampElement(data) {
 }
 
 function createLikeElement(like) {
-    const container = createElements('div', {
+    const container = createElement('div', {
         class: 'd-flex justify-content-between my-2',
         id: `like_${like.user}`
     });
@@ -573,7 +573,7 @@ function createLikeElement(like) {
 
 function createVisitElement(visit) {
 
-    const container = createElements('div', {
+    const container = createElement('div', {
         class: 'd-flex justify-content-between my-2',
         id: `like_${visit.user}`
     });
@@ -803,4 +803,8 @@ function debounce(func, delay) {
             func.apply(this, arguments);
         }, delay);
     };
+}
+
+function updateUrl(path) {
+    window.history.pushState({}, '', path);
 }
