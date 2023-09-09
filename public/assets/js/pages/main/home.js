@@ -82,6 +82,8 @@ async function loadPosts(page, more = false) {
     }
 }
 
+
+
 [document.querySelector("#header_job_name"), document.querySelector("#header_job_desc"), document.querySelector("#privacy_select")].forEach(item => {
     item.addEventListener("focus", event => {
         document.querySelector("#privacy_select").removeAttribute("hidden")

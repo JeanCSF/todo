@@ -100,7 +100,7 @@ function createUserOptionsDropdown(response, type) {
         const dropdownDiv = createElement('div', {
             class: 'dropdown'
         });
-    
+
         if (session_user_id === response.user_id) {
             const dropdownToggle = createElement('button', {
                 class: 'bg-transparent border-0',
@@ -109,11 +109,11 @@ function createUserOptionsDropdown(response, type) {
                 'aria-expanded': 'false'
             });
             dropdownToggle.innerHTML = '<i class="fa fa-ellipsis"></i>'
-    
+
             const dropdownMenu = createElement('ul', {
                 class: 'dropdown-menu'
             });
-    
+
             const item1 = document.createElement('li');
             const linkItem1 = createElement('a', {
                 'data-bs-toggle': 'modal',
@@ -124,7 +124,7 @@ function createUserOptionsDropdown(response, type) {
             linkItem1.innerHTML = `Privacidade ${response.job.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}`;
             item1.appendChild(linkItem1);
             dropdownMenu.appendChild(item1);
-    
+
             if (!response.job_finished) {
                 const item2 = document.createElement('li');
                 const linkItem2 = createElement('a', {
@@ -136,7 +136,7 @@ function createUserOptionsDropdown(response, type) {
                 linkItem2.innerHTML = 'Finalizar <i class="fa fa-crosshairs text-success"></i>';
                 item2.appendChild(linkItem2);
                 dropdownMenu.appendChild(item2);
-    
+
                 const item3 = document.createElement('li');
                 const linkItem3 = createElement('a', {
                     class: 'dropdown-item',
@@ -149,9 +149,9 @@ function createUserOptionsDropdown(response, type) {
                 linkItem3.innerHTML = 'Editar <i class="fa fa-pencil text-primary"></i>';
                 item3.appendChild(linkItem3)
                 dropdownMenu.appendChild(item3);
-    
+
             }
-    
+
             const item4 = document.createElement('li');
             const linkItem4 = createElement('a', {
                 class: 'dropdown-item',
@@ -164,11 +164,11 @@ function createUserOptionsDropdown(response, type) {
             linkItem4.innerHTML = 'Excluír <i class="fa fa-trash text-danger"></i>';
             item4.appendChild(linkItem4);
             dropdownMenu.appendChild(item4);
-    
+
             dropdownDiv.appendChild(dropdownToggle);
             dropdownDiv.appendChild(dropdownMenu);
-    
-    
+
+
         } else {
             const dropdownDiv = document.createElement('p');
             dropdownDiv.innerHTML = '<p> </p>';
@@ -177,11 +177,11 @@ function createUserOptionsDropdown(response, type) {
         return dropdownDiv;
     }
 
-    if(type === 'REPLY') {
+    if (type === 'REPLY') {
         const dropdownDiv = createElement('div', {
             class: 'dropdown'
         });
-    
+
         if (session_user_id === response.user_id) {
             const dropdownToggle = createElement('button', {
                 class: 'bg-transparent border-0',
@@ -190,25 +190,25 @@ function createUserOptionsDropdown(response, type) {
                 'aria-expanded': 'false'
             });
             dropdownToggle.innerHTML = '<i class="fa fa-ellipsis"></i>'
-    
+
             const dropdownMenu = createElement('ul', {
                 class: 'dropdown-menu'
             });
-        
-                const item3 = document.createElement('li');
-                const linkItem3 = createElement('a', {
-                    class: 'dropdown-item',
-                    'data-bs-toggle': 'modal',
-                    'data-bs-target': '#replyModal',
-                    title: 'Editar Tarefa',
-                    role: 'edit',
-                });
-                item3.addEventListener('click', () => fillModalEditReply(response.comment_id, response.comment))
-                linkItem3.innerHTML = 'Editar <i class="fa fa-pencil text-primary"></i>';
-                item3.appendChild(linkItem3)
-                dropdownMenu.appendChild(item3);
-    
-    
+
+            const item3 = document.createElement('li');
+            const linkItem3 = createElement('a', {
+                class: 'dropdown-item',
+                'data-bs-toggle': 'modal',
+                'data-bs-target': '#replyModal',
+                title: 'Editar Tarefa',
+                role: 'edit',
+            });
+            item3.addEventListener('click', () => fillModalEditReply(response.comment_id, response.comment))
+            linkItem3.innerHTML = 'Editar <i class="fa fa-pencil text-primary"></i>';
+            item3.appendChild(linkItem3)
+            dropdownMenu.appendChild(item3);
+
+
             const item4 = document.createElement('li');
             const linkItem4 = createElement('a', {
                 class: 'dropdown-item',
@@ -221,19 +221,19 @@ function createUserOptionsDropdown(response, type) {
             linkItem4.innerHTML = 'Excluír <i class="fa fa-trash text-danger"></i>';
             item4.appendChild(linkItem4);
             dropdownMenu.appendChild(item4);
-    
+
             dropdownDiv.appendChild(dropdownToggle);
             dropdownDiv.appendChild(dropdownMenu);
-    
-    
+
+
         } else {
             const dropdownDiv = document.createElement('p');
             dropdownDiv.innerHTML = '<p> </p>';
         }
-    
+
         return dropdownDiv;
     }
-    
+
 }
 
 function createPostElement(response, type) {
@@ -767,8 +767,69 @@ async function likeContent(user_id, content_id, type_content) {
             likesCount.textContent = replyData.reply.reply_likes;
 
         }
-       
 
+
+    } catch (error) {
+        console.error("Erro na requisição:", error);
+    }
+}
+
+async function commentContent(user_id, content_id, comment, type_content) {
+    const paramsObj = {
+        user_id: user_id,
+        content_id: content_id,
+        comment: comment,
+        type_content: type_content
+    }
+    try {
+        const response = await fetch(`${BASEURL}/comment_content`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': 'ihgfedcba987654321',
+            },
+            body: JSON.stringify(paramsObj),
+        });
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+
+        if (type_content === 'POST') {
+            const jobResponse = await fetch(`${BASEURL}/job/${content_id}`, {
+                method: 'GET',
+                headers: {
+                    'token': 'ihgfedcba987654321'
+                }
+            });
+
+            if (!jobResponse.ok) {
+                throw new Error(`Erro na requisição: ${jobResponse.statusText}`);
+            }
+
+            const jobData = await jobResponse.json();
+            const newComment = jobData.job_comments[0];
+            const newJobCommentContainer = document.querySelector("#newComment");
+            const newJobCommentElement = createPostElement(newComment, 'REPLY');
+            newJobCommentContainer.appendChild(newJobCommentElement);
+
+        } else if (type_content === 'REPLY') {
+            const replyResponse = await fetch(`${BASEURL}/comment/${content_id}`, {
+                method: 'GET',
+                headers: {
+                    'token': 'ihgfedcba987654321'
+                }
+            });
+
+            if (!replyResponse.ok) {
+                throw new Error(`Erro na requisição: ${replyResponse.statusText}`);
+            }
+
+            const replyData = await replyResponse.json();
+            const newComment = replyData.reply_comments[0];
+            const newReplyCommentContainer = document.querySelector("#newReply");
+            const newReplyCommentElement = createPostElement(newComment, 'REPLY');
+            newReplyCommentContainer.appendChild(newReplyCommentElement);
+        }
     } catch (error) {
         console.error("Erro na requisição:", error);
     }
@@ -803,8 +864,4 @@ function debounce(func, delay) {
             func.apply(this, arguments);
         }, delay);
     };
-}
-
-function updateUrl(path) {
-    window.history.pushState({}, '', path);
 }

@@ -132,28 +132,27 @@ class Api_jobs extends ResourceController
         return $this->respond($response);
     }
 
-    public function commentJob()
+    public function commentContent()
     {
         date_default_timezone_set('America/Sao_Paulo');
         $response = [];
+        $requestInfo = $this->request->getJSON();
         if ($this->_tokenValidate()) {
-            $reply = $this->request->getPost('reply');
             $newComment = [];
-            if ($reply == 1) {
+            if ($requestInfo->type_content == 'REPLY') {
                 $newComment = [
-                    'USER_ID'               =>  $this->request->getPost('user_id'),
-                    'PARENT_REPLY_ID'       =>  $this->request->getPost('reply_id'),
-                    'ID_JOB'                =>  $this->request->getPost('job_id'),
-                    'REPLY'                 =>  $this->request->getPost('reply_comment'),
+                    'USER_ID'               =>  $requestInfo->user_id,
+                    'PARENT_REPLY_ID'       =>  $requestInfo->content_id,
+                    'REPLY'                 =>  $requestInfo->comment,
                     'DATETIME_REPLIED'      =>  date("Y-m-d H:i:s"),
                 ];
             }
 
-            if ($reply == 0) {
+            if ($requestInfo->type_content == 'POST') {
                 $newComment = [
-                    'USER_ID'               =>  $this->request->getPost('user_id'),
-                    'ID_JOB'                =>  $this->request->getPost('job_id'),
-                    'REPLY'                 =>  $this->request->getPost('job_comment'),
+                    'USER_ID'               =>  $requestInfo->user_id,
+                    'ID_JOB'                =>  $requestInfo->content_id,
+                    'REPLY'                 =>  $requestInfo->comment,
                     'DATETIME_REPLIED'      =>  date("Y-m-d H:i:s"),
                 ];
             }
@@ -189,11 +188,6 @@ class Api_jobs extends ResourceController
         return $this->respond($response);
     }
 
-    /**
-     * Return the properties of a resource object
-     *
-     * @return mixed
-     */
     public function show($id = null)
     {
         if (isset($this->session->USER_ID)) {
@@ -336,7 +330,7 @@ class Api_jobs extends ResourceController
                                 'user_id'               => $reply['USER_ID'],
                                 'reply_id'              => $reply['REPLY_ID'],
                                 'reply'                 => $this->HTMLPurifier->html_purify($reply['REPLY']),
-                                'reply_created'         => isset($reply['DATETIME_REPLIED']) ? date("d/m/Y H:i:s", strtotime($reply['DATETIME_REPLIED'])) : "",
+                                'reply_created'         => isset($reply['DATETIME_REPLIED']) ? $this->TimeElapsedString->time_elapsed_string($reply['DATETIME_REPLIED']) : "",
                                 'reply_likes'           => $this->likesModel->getContentLikes($reply['REPLY_ID'], 'REPLY'),
                                 'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($reply['REPLY_ID']),
                                 'user_liked'            => $this->likesModel->checkUserLikedReply($reply['REPLY_ID'], $this->session->USER_ID),
@@ -352,7 +346,7 @@ class Api_jobs extends ResourceController
                                 'user_id'               => $comment['user_id'],
                                 'reply_id'              => $comment['comment_id'],
                                 'reply'                 => $this->HTMLPurifier->html_purify($comment['comment']),
-                                'datetime_replied'      => isset($comment['comment_created']) ? date("d/m/Y H:i:s", strtotime($comment['comment_created'])) : "",
+                                'datetime_replied'      => isset($comment['comment_created']) ? $this->TimeElapsedString->time_elapsed_string($comment['comment_created']) : "",
                                 'reply_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
                                 'reply_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
                                 'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], $this->session->USER_ID),
@@ -392,51 +386,29 @@ class Api_jobs extends ResourceController
         }
     }
 
-    /**
-     * Return a new resource object, with default properties
-     *
-     * @return mixed
-     */
+
     public function new()
     {
         //
     }
 
-    /**
-     * Create a new resource object, from "posted" parameters
-     *
-     * @return mixed
-     */
+
     public function create()
     {
         //
     }
 
-    /**
-     * Return the editable properties of a resource object
-     *
-     * @return mixed
-     */
+
     public function edit($id = null)
     {
         //
     }
 
-    /**
-     * Add or update a model resource, from "posted" properties
-     *
-     * @return mixed
-     */
     public function update($id = null)
     {
         //
     }
 
-    /**
-     * Delete the designated resource object from the model
-     *
-     * @return mixed
-     */
     public function delete($id = null)
     {
         if ($this->_tokenValidate()) {

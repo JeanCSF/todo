@@ -9,8 +9,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, minimum-scale=1">
     <title>Anti Social Social Network</title>
-    <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/libs/font-awesome_6.4.0_css_all.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/bootstrap-5.3.1-dist/css/bootstrap.min.css') ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="<?= base_url('assets/css/main.css') ?>">
 </head>
 
@@ -114,8 +114,8 @@
         </div>
     </div>
     <script src="<?= base_url('assets/js/libs/jquery_3.7.0_jquery.min.js')?>"></script>
-    <script src="<?= base_url('assets/js/libs/popper.min.js') ?>"></script>
-    <script src="<?= base_url('assets/js/bootstrap.min.js') ?>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="<?= base_url('assets/bootstrap-5.3.1-dist/js/bootstrap.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/libs/font-awesome_6.4.0_js_all.min.js') ?>"></script>
     <script defer src="<?= base_url('assets/js/pages/main/main_scripts.js') ?>"></script>
     <script>

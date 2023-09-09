@@ -17,6 +17,8 @@
         </div>
     </form>
 </div>
+<article id="newPost" class="row">
+</article>
 <article id="postContainer" class="row">
 </article>
 <div id="main"></div>

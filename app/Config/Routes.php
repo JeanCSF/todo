@@ -43,7 +43,7 @@ $routes->delete('job_delete/(:any)', 'Api_jobs::delete/$1');
 $routes->delete('reply_delete/(:any)', 'Api_jobs::deleteReply/$1');
 $routes->get('comment/(:any)', 'Api_jobs::showComment/$1');
 $routes->match(['get', 'post'], 'like_content', 'Api_jobs::likeContent');
-$routes->match(['get', 'post'], 'comment_job', 'Api_jobs::commentJob');
+$routes->match(['get', 'post'], 'comment_content', 'Api_jobs::commentContent');
 $routes->match(['get', 'post'], 'show_likes', 'Api_jobs::showLikes');
 
 /*
