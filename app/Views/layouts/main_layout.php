@@ -2,19 +2,25 @@
 
 ?>
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-bs-theme="">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, minimum-scale=1">
     <title>Anti Social Social Network</title>
+    <script>
+        const theme = localStorage.getItem('theme');
+        if (theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+        }
+    </script>
     <link rel="stylesheet" href="<?= base_url('assets/bootstrap-5.3.1-dist/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="<?= base_url('assets/css/main.css') ?>">
 </head>
 
-<body id="body" data-bs-theme="light">
+<body>
     <?= $this->include('layouts/modals') ?>
     <div class="row">
         <header class="d-flex flex-column justify-content-between mt-2 left-panel">
@@ -26,13 +32,13 @@
                     <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="dropdown-item"><i class="fa fa-inbox icon"></i><span class="side-text">Mensagens</span></a>
                     <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="dropdown-item"><i class="fa fa-bell icon"></i><span class="side-text">Notificações</span></a>
                     <a href="<?= base_url('logout') ?>" class="dropdown-item"><i class="fa fa-right-from-bracket icon"></i><span class="side-text">Logout</span></a>
-                    <a id="sidebarTask" type="button" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="new task" onclick="fillModalNewJob()"></a>
                     <?php if ($_SESSION['SU'] == 1) : ?>
                         <a href="<?= base_url('users') ?>" class="dropdown-item"><i class="fa fa-users icon"></i><span class="side-text">Usuários</span></a>
                     <?php endif; ?>
                 <?php endif; ?>
 
                 <a href="<?= base_url('about') ?>" class="dropdown-item"><i class="fa fa-circle-info icon"></i><span class="side-text">Sobre</span></a>
+                <a href="javascript:void(0)" role="Theme button" id="themeToggleButton" class="dropdown-item"><i class="fa fa-circle-half-stroke icon"></i> <span class="side-text">Tema</span></a>
             </div>
         </header>
 
@@ -101,7 +107,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-dark mt-3">
                                 <li> <a href="<?= base_url('contact') ?>" class="dropdown-item"><i class="fa fa-message icon"></i> Feedback</a></li>
-                                <li> <a href="javascript:void(0)" role="button" id="themeToggle" class="dropdown-item"><i class="fa fa-sun icon"></i> Tema</a></li>
+                                <li> <a href="javascript:void(0)" role="button" id="themeToggle" class="dropdown-item"><i class="fa fa-circle-half-stroke"></i> Tema</a></li>
                                 <?php if (isset($_SESSION['USER_ID'])) : ?>
                                     <li><a class="dropdown-item" href="<?= base_url('user/' . $_SESSION['USER']) ?>"><i class="fa fa-user icon"></i><span class="side-text"> Perfil</span></a></li>
                                     <li><a class="dropdown-item" href="<?= base_url('logout') ?>"><i class="fa fa-right-from-bracket icon"></i> Sair</a></li>
@@ -113,16 +119,16 @@
             </nav>
         </div>
     </div>
-    <script src="<?= base_url('assets/js/libs/jquery_3.7.0_jquery.min.js')?>"></script>
+    <script src="<?= base_url('assets/js/libs/jquery_3.7.0_jquery.min.js') ?>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
     <script src="<?= base_url('assets/bootstrap-5.3.1-dist/js/bootstrap.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/libs/font-awesome_6.4.0_js_all.min.js') ?>"></script>
     <script defer src="<?= base_url('assets/js/pages/main/main_scripts.js') ?>"></script>
     <script>
         const BASEURL = '<?= base_url() ?>';
-        var session_user_id = '<?= isset($_SESSION['USER_ID'])? $_SESSION['USER_ID'] : '' ?>';
-        var session_profile_pic = '<?= isset($_SESSION['IMG'])? $_SESSION['IMG'] : '' ?>';
-        var session_user = '<?= isset($_SESSION['USER'])? $_SESSION['USER'] : '' ?>'
+        var session_user_id = '<?= isset($_SESSION['USER_ID']) ? $_SESSION['USER_ID'] : '' ?>';
+        var session_profile_pic = '<?= isset($_SESSION['IMG']) ? $_SESSION['IMG'] : '' ?>';
+        var session_user = '<?= isset($_SESSION['USER']) ? $_SESSION['USER'] : '' ?>'
 
         <?php
         if (isset($_SESSION['msg'])) {

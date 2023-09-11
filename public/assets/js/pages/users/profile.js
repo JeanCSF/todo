@@ -132,7 +132,6 @@ async function headerContent(page, user) {
 }
 
 async function tasksTab(page, user, more = false) {
-    postsContainer.innerHTML = '';
     if (isLoading || !hasMoreData) {
         return;
     }
@@ -181,6 +180,7 @@ async function tasksTab(page, user, more = false) {
         }
         isLoading = false;
     } else {
+        postsContainer.innerHTML = '';
         try {
             const response = await fetch(`${BASEURL}/profile/${user}?page=${page}`, {
                 method: 'GET',
@@ -214,7 +214,6 @@ async function tasksTab(page, user, more = false) {
 }
 
 async function repliesTab(page, user_id, more = false) {
-    postsContainer.innerHTML = '';
     if (isLoading || !hasMoreData) {
         return;
     }
@@ -263,6 +262,7 @@ async function repliesTab(page, user_id, more = false) {
         }
         isLoading = false;
     } else {
+        postsContainer.innerHTML = '';
         try {
             const response = await fetch(`${BASEURL}/user_comments/${user_id}?page=${page}`, {
                 method: 'GET',
@@ -296,7 +296,6 @@ async function repliesTab(page, user_id, more = false) {
 }
 
 async function likesTab(page, user_id, more = false) {
-    postsContainer.innerHTML = '';
     document.querySelector("#tasksTab").classList.remove("active");
     document.querySelector("#repliesTab").classList.remove("active");
     document.querySelector("#likesTab").classList.add("active");
@@ -351,6 +350,7 @@ async function likesTab(page, user_id, more = false) {
         }
         isLoading = false;
     } else {
+        postsContainer.innerHTML = '';
         try {
             const response = await fetch(`${BASEURL}/user_likes/${user_id}?page=${page}`, {
                 method: 'GET',

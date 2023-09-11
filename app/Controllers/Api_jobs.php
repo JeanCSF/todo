@@ -392,16 +392,75 @@ class Api_jobs extends ResourceController
         //
     }
 
-
     public function create()
     {
-        //
+        date_default_timezone_set('America/Sao_Paulo');
+        $response = [];
+        $requestInfo = $this->request->getJSON();
+        if (isset($this->session->USER_ID) && $this->_tokenValidate()) {
+                $newJob = [
+                    'USER_ID'               =>  $requestInfo->user_id,
+                    'JOB_TITLE'             =>  $requestInfo->job_title,
+                    'JOB'                   =>  $requestInfo->job,
+                    'DATETIME_CREATED'      =>  date("Y-m-d H:i:s"),
+                    'PRIVACY'               =>  $requestInfo->job_privacy,
+                ];
+            try {
+                if (!empty($newJob)) {
+                    $response = [
+                        'response'  =>  'success',
+                        'msg'       =>  'Job Created'
+                    ];
+                    $this->jobsModel->save($newJob);
+                } else {
+                    $response = [
+                        'response'  =>  'error',
+                        'msg'       =>  'Job Create Error'
+                    ];
+                }
+            } catch (Exception $e) {
+                $response = [
+                    'response'  =>  'error',
+                    'msg'       =>  'Erro inesperado',
+                    'errors'    =>  [
+                        'exception' =>  $e->getMessage()
+                    ],
+                ];
+            }
+        } else {
+            $response = [
+                'response'  =>  'error',
+                'msg'       =>  'Token inválido',
+            ];
+        }
+        return $this->respond($response);
     }
-
 
     public function edit($id = null)
     {
-        //
+        date_default_timezone_set('America/Sao_Paulo');
+        $response = [];
+        $requestInfo = $this->request->getJSON();
+        if ($this->_tokenValidate()) {
+            $job = $this->jobsModel->find($id);
+            if (!$job) {
+                return $this->failNotFound('Item not found.');
+            }
+            if ($this->session->USER_ID == $job->USER_ID) {
+                $jobEdit = [
+                    'JOB_TITLE'             =>  $requestInfo->job_title,
+                    'JOB'                   =>  $requestInfo->job,
+                    'DATETIME_UPDATED'      =>  date("Y-m-d H:i:s"),
+                    'PRIVACY'               =>  $requestInfo->job_privacy,
+                ];
+                $this->jobsModel->where('JOB_ID', $id)->set($jobEdit)->update();
+                return $this->respondDeleted(['message' => 'Tarefa deletada com sucesso!']);
+            } else {
+                return $this->respondDeleted(['error' => 'Esta tarefa não pertence a você!']);
+            }
+        } else {
+            return $this->respondDeleted(['error' => 'Token inválido!']);
+        }
     }
 
     public function update($id = null)

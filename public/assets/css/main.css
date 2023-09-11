@@ -29,6 +29,7 @@
 :root {
     --maingrey: #F7F7F7;
     --hovergrey: #E7E7E7;
+    --darkhover: #2B3035;
     --primary: #0D6EFD;
     --white: #F2F2F2;
     --black: #212121;
@@ -75,19 +76,6 @@ html {
     padding-inline: 60px;
 }
 
-#sidebarTask {
-    border-radius: 50px;
-    display: flex;
-    justify-content: center;
-    background-color: var(--primary);
-    color: var(--white);
-}
-
-#sidebarTask::before {
-    content: "Nova Tarefa";
-
-}
-
 .content {
     top: 0;
     bottom: 0;
@@ -121,10 +109,10 @@ html {
     position: fixed;
     width: 49.9%;
     top: 0;
+    font-family: 'Friz Quadrata Std', sans-serif;
 }
 
 .page-title a {
-    color: var(--black);
     font-weight: 900;
 
 }
@@ -278,8 +266,12 @@ html {
 
 }
 
-.post:hover {
+.light-hover:hover {
     background: var(--maingrey);
+}
+
+.dark-hover:hover {
+    background: var(--darkhover);
 }
 
 .post-container span {
@@ -289,7 +281,6 @@ html {
 }
 
 .post-container .user-name {
-    color: var(--black);
     text-decoration: none;
     font-weight: 500;
 }
@@ -313,15 +304,9 @@ html {
     display: block;
     font-size: var(--link-text);
     font-weight: 900;
-    color: var(--black);
     padding: 1rem;
     border-radius: 50px;
 
-}
-
-.left-panel a:hover {
-    background-color: var(--hovergrey);
-    border-radius: 50px;
 }
 
 .right-panel {
@@ -474,22 +459,6 @@ html {
         border-radius: 5px;
     }
 
-    #sidebarTask::before {
-        font-family: "Font Awesome 5 Free";
-        content: "\f31c";
-        font-weight: 900;
-        display: flex;
-        align-items: center;
-    }
-
-    #sidebarTask {
-        background: var(--transparent);
-        color: var(--primary);
-        border-radius: 50% !important;
-        font-size: 2.5rem;
-
-    }
-
     .left-panel .icon {
         font-size: 2.5rem !important;
     }
@@ -542,20 +511,6 @@ html {
         position: relative;
     }
 
-    #sidebarTask::before {
-        font-family: "Font Awesome 5 Free";
-        content: "\f31c";
-        font-weight: 900;
-        display: flex;
-        align-items: center;
-
-    }
-
-    #sidebarTask {
-        border-radius: 50% !important;
-
-    }
-
     .left-panel .icon {
         font-size: 2.5rem !important;
     }
@@ -605,7 +560,6 @@ html {
 
     .post-container .user-name {
         font-weight: 500;
-        color: var(--black);
         white-space: nowrap;
         max-width: 15ch;
         text-overflow: ellipsis;
@@ -625,7 +579,7 @@ html {
 
     .page-title {
         width: 100%;
-        font-size: 1rem;
+        right: 0;
     }
 
     .page-title p {

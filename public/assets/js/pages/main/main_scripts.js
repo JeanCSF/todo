@@ -1,15 +1,118 @@
-document.querySelector("#themeToggle").addEventListener("click", function () {
-    let body = document.querySelector("#body");
-    let theme = body.getAttribute("data-bs-theme")
-    if (theme === 'light') {
-        body.setAttribute("data-bs-theme", 'dark')
+const hoverPostElements = document.querySelectorAll('.post');
+const hoverLinkElements = document.querySelectorAll('.dropdown-item');
+
+const btnSubmitTaskModal = document.querySelector("#btnSubmitTaskModal");
+const taskModalLabel = document.querySelector("#taskModalLabel");
+
+const newPost = document.querySelector("#newPost");
+var jobModalTitle = document.querySelector('#job_name');
+var jobModalText = document.querySelector('#job_desc');
+var jobModalPrivacy = document.querySelector('#job_privacy_select');
+var frmPostModal = document.querySelector('#frmPostModal');
+console.log(jobModalPrivacy.value);
+
+frmPostModal.addEventListener('submit', function (e) {
+    const dataType = btnSubmitTaskModal.getAttribute('data-type');
+    const jobToEditId = btnSubmitTaskModal.getAttribute('data-job-id');
+    if (dataType === 'new') {
+        createJob(session_user_id, jobModalTitle.value, jobModalText.value, jobModalPrivacy.value);
+        e.preventDefault();
+        jobModalTitle.value = '';
+        jobModalText.value = '';
+        document.querySelector('#closeTaskModal').click();
+    } else {
+        editJob(session_user_id, jobToEditId, jobModalTitle.value, jobModalText.value, jobModalPrivacy.value);
+        e.preventDefault();
+        jobModalTitle.value = '';
+        jobModalText.value = '';
+        document.querySelector('#closeTaskModal').click();
+    }
+
+
+});
+
+document.querySelector("#themeToggle").addEventListener("click", () => {
+    if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
+        document.documentElement.setAttribute('data-bs-theme', 'light')
+        localStorage.setItem('theme', 'light');
+
+        hoverPostElements.forEach(function (element) {
+            element.classList.remove('dark-hover');
+            element.classList.add('light-hover');
+        });
+
+        hoverLinkElements.forEach(function (element) {
+            element.classList.remove('dark-hover');
+            element.classList.add('light-hover');
+        });
     }
     else {
-        body.setAttribute("data-bs-theme", 'light')
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+
+        hoverPostElements.forEach(function (element) {
+            element.classList.remove('light-hover');
+            element.classList.add('dark-hover');
+        });
+
+        hoverLinkElements.forEach(function (element) {
+            element.classList.remove('light-hover');
+            element.classList.add('dark-hover');
+        });
+    }
+});
+
+document.querySelector("#themeToggleButton").addEventListener("click", () => {
+    if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
+        document.documentElement.setAttribute('data-bs-theme', 'light')
+        localStorage.setItem('theme', 'light');
+
+        hoverPostElements.forEach(function (element) {
+            element.classList.remove('dark-hover');
+            element.classList.add('light-hover');
+        });
+
+        hoverLinkElements.forEach(function (element) {
+            element.classList.remove('dark-hover');
+            element.classList.add('light-hover');
+        });
+    }
+    else {
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+
+        hoverPostElements.forEach(function (element) {
+            element.classList.remove('light-hover');
+            element.classList.add('dark-hover');
+        });
+
+        hoverLinkElements.forEach(function (element) {
+            element.classList.remove('light-hover');
+            element.classList.add('dark-hover');
+        });
     }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    const theme = localStorage.getItem('theme');
+    if (theme === 'dark') {
+        hoverPostElements.forEach(function (e) {
+            e.classList.add('dark-hover');
+        });
+
+        hoverLinkElements.forEach(function (element) {
+            element.classList.add('dark-hover');
+        });
+    } else {
+        hoverPostElements.forEach(function (e) {
+            e.classList.add('light-hover');
+        });
+
+        hoverLinkElements.forEach(function (element) {
+            element.classList.add('light-hover');
+        });
+    }
+
     $('#btnDeletar').on('click', function () {
         var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
         var type = document.getElementById("btnDeletar").getAttribute('data-type', type);
@@ -587,6 +690,90 @@ function createVisitElement(visit) {
     return container;
 }
 
+async function createJob(user_id, job_title, job, job_privacy) {
+    const paramsObj = {
+        user_id: user_id,
+        job_title: job_title,
+        job: job,
+        job_privacy: job_privacy,
+    }
+    try {
+        const response = await fetch(`${BASEURL}/create_job`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': 'ihgfedcba987654321',
+            },
+            body: JSON.stringify(paramsObj),
+        });
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+
+        const jobResponse = await fetch(`${BASEURL}/profile/${session_user}?page=${1}`, {
+            method: 'GET',
+            headers: {
+                'token': 'ihgfedcba987654321'
+            }
+        });
+
+        if (!jobResponse.ok) {
+            throw new Error(`Erro na requisição: ${jobResponse.statusText}`);
+        }
+
+        const jobData = await jobResponse.json();
+        const newJob = jobData.user_jobs[0];
+        const newJobContainer = document.querySelector("#newPost");
+        const newJobElement = createPostElement(newJob, 'POST');
+        newJobContainer.appendChild(newJobElement);
+
+    } catch (error) {
+        console.error("Erro na requisição:", error);
+    }
+}
+
+async function editJob(user_id, job_id, job_title, job, job_privacy) {
+    const paramsObj = {
+        user_id: user_id,
+        job_title: job_title,
+        job: job,
+        job_privacy: job_privacy,
+    }
+    try {
+        const response = await fetch(`${BASEURL}/edit_job/${job_id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': 'ihgfedcba987654321',
+            },
+            body: JSON.stringify(paramsObj),
+        });
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+
+        const jobResponse = await fetch(`${BASEURL}/profile/${session_user}?page=${1}`, {
+            method: 'GET',
+            headers: {
+                'token': 'ihgfedcba987654321'
+            }
+        });
+
+        if (!jobResponse.ok) {
+            throw new Error(`Erro na requisição: ${jobResponse.statusText}`);
+        }
+
+        const jobData = await jobResponse.json();
+        const newJob = jobData.user_jobs[0];
+        const newJobContainer = document.querySelector("#newPost");
+        const newJobElement = createPostElement(newJob, 'POST');
+        newJobContainer.appendChild(newJobElement);
+
+    } catch (error) {
+        console.error("Erro na requisição:", error);
+    }
+}
+
 async function fillModalLikes(content_id, type) {
     var likesContainer = document.querySelector("#likesModalContainer");
     likesContainer.innerHTML = '';
@@ -621,13 +808,13 @@ async function fillModalLikes(content_id, type) {
 }
 
 function fillModalEdit(id, job, desc) {
-    document.getElementById("form").setAttribute('action', BASEURL + 'todocontroller/editjobsubmit');
-    document.getElementById("taskModalLabel").textContent = "Atualizar Tarefa";
-    document.getElementById("btnSubmit").setAttribute('value', 'Atualizar');
-    document.getElementById("id_job").setAttribute('value', id);
-    document.getElementById("job_name").setAttribute('value', job);
-    document.getElementById("job_desc").setAttribute('value', desc);
-    document.getElementById("job_desc").textContent = '' + desc;
+    taskModalLabel.textContent = "Atualizar Tarefa";
+    btnSubmitTaskModal.setAttribute('value', 'Atualizar');
+    btnSubmitTaskModal.setAttribute('data-job-id', id);
+    btnSubmitTaskModal.setAttribute('data-type', 'edit')
+    jobModalTitle.setAttribute('value', job);
+    jobModalText.setAttribute('value', desc);
+    jobModalText.textContent = '' + desc;
 
 }
 
@@ -664,18 +851,9 @@ function fillModalDeleteUser(id) {
 }
 
 function fillModalNewJob() {
-    document.getElementById("form").setAttribute('action', BASEURL + 'todocontroller/newjobsubmit');
-    document.getElementById("taskModalLabel").textContent = "Adicionar Tarefa";
-    document.getElementById("btnSubmit").setAttribute('value', 'Gravar');
-    document.getElementById("id_job").setAttribute('value', '');
-    document.getElementById("job_name").setAttribute('value', '');
-    document.getElementById("job_desc").setAttribute('value', '');
-    document.getElementById("job_desc").textContent = '';
-}
-
-function fillModalPlus(job, title) {
-    document.getElementById("plusTaskModalDesc").textContent = job;
-    document.getElementById("plusTaskModalTitle").textContent = title;
+    taskModalLabel.textContent = "Adicionar Tarefa";
+    btnSubmitTaskModal.setAttribute('value', 'Gravar');
+    btnSubmitTaskModal.setAttribute('data-type', 'new');
 }
 
 function fillModalPrivacy(id) {

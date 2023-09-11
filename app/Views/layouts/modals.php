@@ -76,21 +76,26 @@
                 <h1 class="modal-title fs-5 text-center" id="taskModalLabel"></h1>
             </div>
             <div class="modal-body">
+            <button type="button" class="border-0 bg-transparent" data-bs-dismiss="modal" id="closeTaskModal" aria-label="Close"></button>
                 <div class="container">
                     <div class="row">
                         <div class="p-4 mb-3">
-                            <form action="" id="form" method="post">
+                            <form id="frmPostModal" method="post">
+                                <div class="row mb-3">
+                                    <select name="job_privacy_select" id="job_privacy_select" class="form-select" title="Visualização">
+                                        <option value="1">Todos</option>
+                                        <option value="0">Somente eu</option>
+                                    </select>
+                                </div>
                                 <div class="row mb-3">
                                     <input type="text" placeholder="Nome da tarefa" name="job_name" id="job_name" value="" class="form-control" autofocus required>
                                 </div>
                                 <div class="row mb-3">
                                     <textarea style="height: 150px;" name="job_desc" id="job_desc" value="" class="form-control" placeholder="Descrição" required></textarea>
                                 </div>
-                                <input type="hidden" name="id_job" id="id_job" value="">
-                                <input type="hidden" id="editar" value="">
                                 <div class="modal-footer d-flex justify-content-between">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <input type="submit" value="" id="btnSubmit" onclick="" class="btn btn-success">
+                                    <input type="submit" value="" id="btnSubmitTaskModal" data-type="" data-job-id="" class="btn btn-success">
                                 </div>
                             </form>
                         </div>

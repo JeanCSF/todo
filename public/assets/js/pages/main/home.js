@@ -1,8 +1,20 @@
-let Posts = [];
 var currentPage = 1;
 var isLoading = false;
 var hasMoreData = true;
 var mainContainer = document.querySelector("#postContainer");
+
+var jobTitle = document.querySelector('#header_job_name');
+var jobText = document.querySelector('#header_job_desc');
+var jobPrivacy = document.querySelector('#privacy_select');
+var frmPost = document.querySelector('#frmPost');
+
+frmPost.addEventListener('submit', function (e) {
+    createJob(session_user_id, jobTitle.value, jobText.value, jobPrivacy.value);
+    e.preventDefault();
+    jobTitle.value = '';
+    jobText.value = '';
+
+});
 
 document.addEventListener("DOMContentLoaded", function () {
     loadPosts(currentPage);
@@ -81,8 +93,6 @@ async function loadPosts(page, more = false) {
         isLoading = false;
     }
 }
-
-
 
 [document.querySelector("#header_job_name"), document.querySelector("#header_job_desc"), document.querySelector("#privacy_select")].forEach(item => {
     item.addEventListener("focus", event => {
