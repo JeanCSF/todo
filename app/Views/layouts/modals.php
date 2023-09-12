@@ -34,38 +34,7 @@
 <!-- Reply Modal -->
 
 <!-- Profile Modal -->
-<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5 text-center" id="profileModalLabel">Foto do Perfil</h1>
-            </div>
-            <div class="modal-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="p-4 mb-3">
-                            <form action="<?= url_to('upload') ?>" id="formProfilePic" method="post" enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <?php if (session()->has('errors')) : ?>
-                                        <p class="text-danger"><?= session()->get('errors')['userfile'] ?></p>
-                                    <?php endif; ?>
-                                    <?php if (session()->has('uploaded')) : ?>
-                                        <p class="text-success"><?= session()->get('uploaded') ?></p>
-                                    <?php endif; ?>
-                                    <input type="file" name="userfile" id="userfile" class="form-control-file">
-                                </div>
-                                <div class="modal-footer d-flex justify-content-between">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <input type="submit" value="Salvar Imagem" id="btnUpload" onclick="" class="btn btn-success">
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 <!-- Profile Modal -->
 
 <!-- Task Modal -->
