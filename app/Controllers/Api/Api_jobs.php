@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Api;
 
 use App\Libraries\HTMLPurifierService;
 use App\Libraries\TimeElapsedStringService;
 use CodeIgniter\Debug\Exceptions;
 use CodeIgniter\RESTful\ResourceController;
 use Exception;
-
-use function PHPSTORM_META\type;
 
 class Api_jobs extends ResourceController
 {
@@ -293,7 +291,7 @@ class Api_jobs extends ResourceController
         }
     }
 
-    public function showComment($id = null)
+    public function showReply($id = null)
     {
         if (isset($this->session->USER_ID)) {
             if ($this->_tokenValidate() && $id != null) {
@@ -398,13 +396,13 @@ class Api_jobs extends ResourceController
         $response = [];
         $requestInfo = $this->request->getJSON();
         if (isset($this->session->USER_ID) && $this->_tokenValidate()) {
-                $newJob = [
-                    'USER_ID'               =>  $requestInfo->user_id,
-                    'JOB_TITLE'             =>  $requestInfo->job_title,
-                    'JOB'                   =>  $requestInfo->job,
-                    'DATETIME_CREATED'      =>  date("Y-m-d H:i:s"),
-                    'PRIVACY'               =>  $requestInfo->job_privacy,
-                ];
+            $newJob = [
+                'USER_ID'               =>  $requestInfo->user_id,
+                'JOB_TITLE'             =>  $requestInfo->job_title,
+                'JOB'                   =>  $requestInfo->job,
+                'DATETIME_CREATED'      =>  date("Y-m-d H:i:s"),
+                'PRIVACY'               =>  $requestInfo->job_privacy,
+            ];
             try {
                 if (!empty($newJob)) {
                     $response = [
@@ -438,6 +436,10 @@ class Api_jobs extends ResourceController
 
     public function edit($id = null)
     {
+    }
+
+    public function update($id = null)
+    {
         date_default_timezone_set('America/Sao_Paulo');
         $response = [];
         $requestInfo = $this->request->getJSON();
@@ -453,19 +455,14 @@ class Api_jobs extends ResourceController
                     'DATETIME_UPDATED'      =>  date("Y-m-d H:i:s"),
                     'PRIVACY'               =>  $requestInfo->job_privacy,
                 ];
-                $this->jobsModel->where('JOB_ID', $id)->set($jobEdit)->update();
-                return $this->respondDeleted(['message' => 'Tarefa deletada com sucesso!']);
+                $this->jobsModel->table('jobs')->update($id, $jobEdit);
+                return $this->respond(['message' => 'Tarefa atualizada com sucesso!']);
             } else {
-                return $this->respondDeleted(['error' => 'Esta tarefa não pertence a você!']);
+                return $this->respond(['error' => 'Esta tarefa não pertence a você!']);
             }
         } else {
-            return $this->respondDeleted(['error' => 'Token inválido!']);
+            return $this->respond(['error' => 'Token inválido!']);
         }
-    }
-
-    public function update($id = null)
-    {
-        //
     }
 
     public function delete($id = null)

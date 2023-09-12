@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Api;
 
 use App\Libraries\HTMLPurifierService;
 use App\Libraries\TimeElapsedStringService;

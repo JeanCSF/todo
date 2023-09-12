@@ -36,7 +36,7 @@ async function loadPosts(page, more = false) {
         isLoading = true;
         page++;
         try {
-            const response = await fetch(`${BASEURL}/all_jobs?page=${page}`, {
+            const response = await fetch(`${BASEURL}/api/job/all?page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ async function loadPosts(page, more = false) {
         isLoading = false;
     } else {
         try {
-            const response = await fetch(`${BASEURL}/all_jobs?page=${page}`, {
+            const response = await fetch(`${BASEURL}/api/job/all?page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

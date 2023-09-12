@@ -9,7 +9,6 @@ var jobModalTitle = document.querySelector('#job_name');
 var jobModalText = document.querySelector('#job_desc');
 var jobModalPrivacy = document.querySelector('#job_privacy_select');
 var frmPostModal = document.querySelector('#frmPostModal');
-console.log(jobModalPrivacy.value);
 
 frmPostModal.addEventListener('submit', function (e) {
     const dataType = btnSubmitTaskModal.getAttribute('data-type');
@@ -23,8 +22,6 @@ frmPostModal.addEventListener('submit', function (e) {
     } else {
         editJob(session_user_id, jobToEditId, jobModalTitle.value, jobModalText.value, jobModalPrivacy.value);
         e.preventDefault();
-        jobModalTitle.value = '';
-        jobModalText.value = '';
         document.querySelector('#closeTaskModal').click();
     }
 
@@ -118,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var type = document.getElementById("btnDeletar").getAttribute('data-type', type);
         if (type == "null") {
             $.ajax({
-                url: BASEURL + '/reply_delete/' + id,
+                url: BASEURL + '/api/job/reply_delete/' + id,
                 type: 'delete',
                 headers: {
                     'token': 'ihgfedcba987654321'
@@ -140,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         } else if (type == 'home') {
             $.ajax({
-                url: BASEURL + '/job_delete/' + id,
+                url: BASEURL + '/api/job/job_delete/' + id,
                 type: 'delete',
                 headers: {
                     'token': 'ihgfedcba987654321'
@@ -162,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         } else {
             $.ajax({
-                url: BASEURL + '/job_delete/' + id,
+                url: BASEURL + '/api/job/job_delete/' + id,
                 type: 'delete',
                 headers: {
                     'token': 'ihgfedcba987654321'
@@ -388,14 +385,12 @@ function createPostElement(response, type) {
             class: 'user-post-text'
         });
         const jobTitle = createElement('span', {
-            id: 'jobTitle',
             class: 'fst-italic text-center d-block fs-5 job-title',
             style: `${!response.job_finished ? "" : "text-decoration: line-through;"}`
         });
         jobTitle.addEventListener('click', () => postPage(response.job_id))
         jobTitle.textContent = response.job_title;
         const jobTextContent = createElement('span', {
-            id: 'jobTextContent',
             class: 'job-text'
         });
         jobTextContent.addEventListener('click', () => postPage(response.job_id))
@@ -535,7 +530,6 @@ function createPostElement(response, type) {
         });
 
         const jobReplyContent = createElement('span', {
-            id: 'jobReplyContent',
             class: 'job-text'
         });
         jobReplyContent.addEventListener('click', () => commentPage(response.reply_id))
@@ -698,7 +692,7 @@ async function createJob(user_id, job_title, job, job_privacy) {
         job_privacy: job_privacy,
     }
     try {
-        const response = await fetch(`${BASEURL}/create_job`, {
+        const response = await fetch(`${BASEURL}/api/job/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -710,7 +704,7 @@ async function createJob(user_id, job_title, job, job_privacy) {
             throw new Error(`Erro na requisição: ${response.statusText}`);
         }
 
-        const jobResponse = await fetch(`${BASEURL}/profile/${session_user}?page=${1}`, {
+        const jobResponse = await fetch(`${BASEURL}/api/user/show/${session_user}?page=${1}`, {
             method: 'GET',
             headers: {
                 'token': 'ihgfedcba987654321'
@@ -740,8 +734,8 @@ async function editJob(user_id, job_id, job_title, job, job_privacy) {
         job_privacy: job_privacy,
     }
     try {
-        const response = await fetch(`${BASEURL}/edit_job/${job_id}`, {
-            method: 'POST',
+        const response = await fetch(`${BASEURL}/api/job/update/${job_id}`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'token': 'ihgfedcba987654321',
@@ -752,7 +746,7 @@ async function editJob(user_id, job_id, job_title, job, job_privacy) {
             throw new Error(`Erro na requisição: ${response.statusText}`);
         }
 
-        const jobResponse = await fetch(`${BASEURL}/profile/${session_user}?page=${1}`, {
+        const jobResponse = await fetch(`${BASEURL}/api/job/show/${job_id}`, {
             method: 'GET',
             headers: {
                 'token': 'ihgfedcba987654321'
@@ -764,10 +758,12 @@ async function editJob(user_id, job_id, job_title, job, job_privacy) {
         }
 
         const jobData = await jobResponse.json();
-        const newJob = jobData.user_jobs[0];
-        const newJobContainer = document.querySelector("#newPost");
-        const newJobElement = createPostElement(newJob, 'POST');
-        newJobContainer.appendChild(newJobElement);
+        const updatedJob = jobData.job;
+        const jobContainer = document.querySelector(`#post${job_id}`);
+        const newJobTittle = jobContainer.querySelector('.job-title');
+        const newJobDesc = jobContainer.querySelector('.job-text'); 
+        newJobTittle.textContent = updatedJob.job_title;
+        newJobDesc.textContent = updatedJob.job;
 
     } catch (error) {
         console.error("Erro na requisição:", error);
@@ -782,7 +778,7 @@ async function fillModalLikes(content_id, type) {
         type
     };
 
-    const response = await fetch(`${BASEURL}/show_likes`, {
+    const response = await fetch(`${BASEURL}/api/job/likes`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -814,7 +810,7 @@ function fillModalEdit(id, job, desc) {
     btnSubmitTaskModal.setAttribute('data-type', 'edit')
     jobModalTitle.setAttribute('value', job);
     jobModalText.setAttribute('value', desc);
-    jobModalText.textContent = '' + desc;
+    jobModalText.textContent =  desc;
 
 }
 
@@ -851,6 +847,8 @@ function fillModalDeleteUser(id) {
 }
 
 function fillModalNewJob() {
+    jobModalTitle.value = '';
+    jobModalText.value = '';
     taskModalLabel.textContent = "Adicionar Tarefa";
     btnSubmitTaskModal.setAttribute('value', 'Gravar');
     btnSubmitTaskModal.setAttribute('data-type', 'new');
@@ -879,7 +877,7 @@ async function likeContent(user_id, content_id, type_content) {
         type_content
     };
     try {
-        const response = await fetch(`${BASEURL}/like_content`, {
+        const response = await fetch(`${BASEURL}/api/job/like`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -891,7 +889,7 @@ async function likeContent(user_id, content_id, type_content) {
             throw new Error(`Erro na requisição: ${response.statusText}`);
         }
         if (type_content === 'POST') {
-            const jobResponse = await fetch(`${BASEURL}/job/${content_id}`, {
+            const jobResponse = await fetch(`${BASEURL}/api/job/show/${content_id}`, {
                 method: 'GET',
                 headers: {
                     'token': 'ihgfedcba987654321'
@@ -918,7 +916,7 @@ async function likeContent(user_id, content_id, type_content) {
             likesCount.textContent = jobData.job.job_likes;
 
         } else if (type_content === 'REPLY') {
-            const replyResponse = await fetch(`${BASEURL}/comment/${content_id}`, {
+            const replyResponse = await fetch(`${BASEURL}/api/job/reply/${content_id}`, {
                 method: 'GET',
                 headers: {
                     'token': 'ihgfedcba987654321'
@@ -960,7 +958,7 @@ async function commentContent(user_id, content_id, comment, type_content) {
         type_content: type_content
     }
     try {
-        const response = await fetch(`${BASEURL}/comment_content`, {
+        const response = await fetch(`${BASEURL}/api/job/comment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -973,7 +971,7 @@ async function commentContent(user_id, content_id, comment, type_content) {
         }
 
         if (type_content === 'POST') {
-            const jobResponse = await fetch(`${BASEURL}/job/${content_id}`, {
+            const jobResponse = await fetch(`${BASEURL}/api/job/show/${content_id}`, {
                 method: 'GET',
                 headers: {
                     'token': 'ihgfedcba987654321'
@@ -991,7 +989,7 @@ async function commentContent(user_id, content_id, comment, type_content) {
             newJobCommentContainer.appendChild(newJobCommentElement);
 
         } else if (type_content === 'REPLY') {
-            const replyResponse = await fetch(`${BASEURL}/comment/${content_id}`, {
+            const replyResponse = await fetch(`${BASEURL}/api/job/reply/${content_id}`, {
                 method: 'GET',
                 headers: {
                     'token': 'ihgfedcba987654321'

@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function loadReply(reply_id) {
     mainContainer.innerHTML = '';
-    const response = await fetch(`${BASEURL}/comment/${reply_id}`, {
+    const response = await fetch(`${BASEURL}/api/job/reply/${reply_id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

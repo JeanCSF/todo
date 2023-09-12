@@ -37,27 +37,31 @@ $routes->setAutoRoute(true);
  * Jobs Api Controller Routes
  * --------------------------------------------------------------------
  */
-$routes->get('all_jobs', 'Api_jobs::index');
-$routes->get('job/(:any)', 'Api_jobs::show/$1');
-$routes->delete('job_delete/(:any)', 'Api_jobs::delete/$1');
-$routes->delete('reply_delete/(:any)', 'Api_jobs::deleteReply/$1');
-$routes->get('comment/(:any)', 'Api_jobs::showComment/$1');
-$routes->match(['get', 'post'], 'like_content', 'Api_jobs::likeContent');
-$routes->match(['get', 'post'], 'comment_content', 'Api_jobs::commentContent');
-$routes->match(['get', 'post'], 'create_job', 'Api_jobs::create');
-$routes->post('edit_job/(:any)', 'Api_jobs::edit/$1');
-$routes->match(['get', 'post'], 'show_likes', 'Api_jobs::showLikes');
+$routes->group('api/job', ['namespace' => 'App\Controllers\Api'], function ($routes) {
+    $routes->put('update/(:num)', 'Api_jobs::update/$1');
+    $routes->get('all', 'Api_jobs::index');
+    $routes->get('show/(:num)', 'Api_jobs::show/$1');
+    $routes->delete('job_delete/(:num)', 'Api_jobs::delete/$1');
+    $routes->delete('reply_delete/(:num)', 'Api_jobs::deleteReply/$1');
+    $routes->get('reply/(:num)', 'Api_jobs::showReply/$1');
+    $routes->post('like', 'Api_jobs::likeContent');
+    $routes->post('comment', 'Api_jobs::commentContent');
+    $routes->post('create', 'Api_jobs::create');
+    $routes->post('likes', 'Api_jobs::showLikes');
+});
 
 /*
  * --------------------------------------------------------------------
  * Users Api Controller Routes
  * --------------------------------------------------------------------
  */
-$routes->get('profile/(:any)', 'Api_users::show/$1');
-$routes->get('user_comments/(:any)', 'Api_users::getReplies/$1');
-$routes->get('user_likes/(:any)', 'Api_users::getLikes/$1');
-$routes->match(['get', 'post'], 'save_visit', 'Api_users::saveVisit');
-$routes->match(['get', 'post'], 'show_visits', 'Api_users::showVisits');
+$routes->group('api/user', ['namespace' => 'App\Controllers\Api'], function ($routes) {
+    $routes->get('show/(:any)', 'Api_users::show/$1');
+    $routes->get('replies/(:num)', 'Api_users::getReplies/$1');
+    $routes->get('liked/(:num)', 'Api_users::getLikes/$1');
+    $routes->post('save_visit', 'Api_users::saveVisit');
+    $routes->get('visits', 'Api_users::showVisits');
+});
 
 
 /*
@@ -95,7 +99,6 @@ $routes->post('/upload', 'Userscontroller::upload', ['as' => 'upload']);
  * Todo Controller Routes
  * --------------------------------------------------------------------
  */
-$routes->match(['get', 'post'], 'job_likes', 'Todocontroller::countJobLikes');
 $routes->get('post/(:any)', 'Todocontroller::job/$1');
 $routes->get('reply/(:any)', 'Todocontroller::reply/$1');
 

@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function loadPost(job_id) {
     mainContainer.innerHTML = '';
-    const response = await fetch(`${BASEURL}/job/${job_id}`, {
+    const response = await fetch(`${BASEURL}/api/job/show/${job_id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

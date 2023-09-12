@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function saveVisitForProfile(profile_user_id, session_user_id) {
     $.ajax({
-        url: BASEURL + '/save_visit',
+        url: BASEURL + '/api/user/save_visit',
         type: "POST",
         data: {
             user_id: profile_user_id,
@@ -40,7 +40,7 @@ async function fillModalVisits(profile_id) {
         profile_id
     };
 
-    const response = await fetch(`${BASEURL}/show_visits`, {
+    const response = await fetch(`${BASEURL}/api/user/visits`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ async function fillModalVisits(profile_id) {
 async function headerContent(page, user) {
     headerContainer.innerHTML = '';
 
-    const response = await fetch(`${BASEURL}/profile/${user}?page=${page}`, {
+    const response = await fetch(`${BASEURL}/api/user/show/${user}?page=${page}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ async function tasksTab(page, user, more = false) {
         isLoading = true;
         page++;
         try {
-            const response = await fetch(`${BASEURL}/profile/${user}?page=${page}`, {
+            const response = await fetch(`${BASEURL}/api/user/show/${user}?page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -182,7 +182,7 @@ async function tasksTab(page, user, more = false) {
     } else {
         postsContainer.innerHTML = '';
         try {
-            const response = await fetch(`${BASEURL}/profile/${user}?page=${page}`, {
+            const response = await fetch(`${BASEURL}/api/user/show/${user}?page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -233,7 +233,7 @@ async function repliesTab(page, user_id, more = false) {
         isLoading = true;
         page++;
         try {
-            const response = await fetch(`${BASEURL}/user_comments/${user_id}?page=${page}`, {
+            const response = await fetch(`${BASEURL}/api/user/replies/${user_id}?page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -264,7 +264,7 @@ async function repliesTab(page, user_id, more = false) {
     } else {
         postsContainer.innerHTML = '';
         try {
-            const response = await fetch(`${BASEURL}/user_comments/${user_id}?page=${page}`, {
+            const response = await fetch(`${BASEURL}/api/user/replies/${user_id}?page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -315,7 +315,7 @@ async function likesTab(page, user_id, more = false) {
         isLoading = true;
         page++;
         try {
-            const response = await fetch(`${BASEURL}/user_likes/${user_id}?page=${page}`, {
+            const response = await fetch(`${BASEURL}/api/user/liked/${user_id}?page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -352,7 +352,7 @@ async function likesTab(page, user_id, more = false) {
     } else {
         postsContainer.innerHTML = '';
         try {
-            const response = await fetch(`${BASEURL}/user_likes/${user_id}?page=${page}`, {
+            const response = await fetch(`${BASEURL}/api/user/liked/${user_id}?page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
