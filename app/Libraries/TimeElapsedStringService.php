@@ -5,7 +5,7 @@ use DateTime;
 
 class TimeElapsedStringService {
     function time_elapsed_string($datetime, $full = false) {
-        date_default_timezone_set('America/Sao_Paulo');
+        
         $now = new DateTime;
         $ago = new DateTime($datetime);
         $diff = $now->diff($ago);

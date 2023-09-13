@@ -33,11 +33,49 @@ class Replies extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
+    public function getReply($id_reply)
+    {
+        $result = $this->select('login.PROFILE_PIC
+                                ,login.USER
+                                ,login.NAME
+                                ,login.USER_ID
+                                ,replies.REPLY_ID
+                                ,replies.REPLY
+                                ,replies.DATETIME_REPLIED')
+            ->join('login', 'login.USER_ID = replies.USER_ID')
+            ->where('replies.REPLY_ID', $id_reply)->get();
+
+        return $result->getResultArray();
+    }
+
     public function getJobReplies($id_job)
     {
-        $result = $this->select('REPLY')->where('ID_JOB', $id_job)->get()->getResultObject();
+        $result = $this->select('login.PROFILE_PIC              AS profile_pic
+                                ,login.USER                     AS user
+                                ,login.NAME                     AS name
+                                ,login.USER_ID                  AS user_id
+                                ,replies.REPLY_ID               AS comment_id
+                                ,replies.REPLY                  AS comment
+                                ,replies.DATETIME_REPLIED       AS comment_created')
+            ->join('login', 'login.USER_ID = replies.USER_ID')
+            ->where('replies.ID_JOB', $id_job)->orderBy('replies.DATETIME_REPLIED DESC')->get();
 
-        return $result;
+        return $result->getResultArray();
+    }
+
+    public function getReplyReplies($id_parent_reply)
+    {
+        $result = $this->select('login.PROFILE_PIC              AS profile_pic
+                                ,login.USER                     AS user
+                                ,login.NAME                     AS name
+                                ,login.USER_ID                  AS user_id
+                                ,replies.REPLY_ID               AS comment_id
+                                ,replies.REPLY                  AS comment
+                                ,replies.DATETIME_REPLIED       AS comment_created')
+            ->join('login', 'login.USER_ID = replies.USER_ID')
+            ->where('replies.PARENT_REPLY_ID', $id_parent_reply)->orderBy('replies.DATETIME_REPLIED DESC')->get();
+        
+        return $result->getResultArray();
     }
 
     public function countJobReplies($id_job)

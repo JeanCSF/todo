@@ -47,7 +47,7 @@ class Users extends Model
 
     public function addUser($post)
     {
-        date_default_timezone_set('America/Sao_Paulo');
+        
 
         $data = [
             'USER'                  => $post['user'],
@@ -62,7 +62,7 @@ class Users extends Model
 
     public function editUser($id, $post)
     {
-        date_default_timezone_set('America/Sao_Paulo');
+        
         if (!empty($post)) {
             $data = [
                 'USER'                  => $post['user'],

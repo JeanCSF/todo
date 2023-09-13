@@ -33,10 +33,6 @@
 </div>
 <!-- Reply Modal -->
 
-<!-- Profile Modal -->
-
-<!-- Profile Modal -->
-
 <!-- Task Modal -->
 <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

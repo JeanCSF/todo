@@ -62,114 +62,30 @@ class Api_users extends ResourceController
      */
     public function show($user = null)
     {
-        if ($user != null) {
+        if ($user != null && $this->_tokenValidate()) {
+
             $currentPage = $this->request->getVar('page') ?? 1;
-            $response = [];
-            $userInfo = $this->usersModel->where('USER', $user)->get()->getRow();
-            $userJobs = $this->jobsModel->getJobsDataAndPages($userInfo->USER_ID, $currentPage);
-            $pages = $this->jobsModel->getJobsDataAndPages($userInfo->USER_ID);
-
-            try {
-                if ($currentPage <= $pages || $pages == 0) {
-                    $user_info = [
-                        'profile_pic'           => $userInfo->PROFILE_PIC,
-                        'user'                  => $userInfo->USER,
-                        'name'                  => $userInfo->NAME,
-                        'user_id'               => $userInfo->USER_ID,
-                    ];
-
-                    foreach ($userJobs as $job) {
-                        $user_jobs[] = [
-                            'profile_pic'           => $userInfo->PROFILE_PIC,
-                            'user'                  => $userInfo->USER,
-                            'name'                  => $userInfo->NAME,
-                            'user_id'               => $userInfo->USER_ID,
-                            'job_id'                => $job->ID_JOB,
-                            'job_title'             => $this->HTMLPurifier->html_purify($job->JOB_TITLE),
-                            'job'                   => $this->HTMLPurifier->html_purify($job->JOB),
-                            'job_created'           => isset($job->DATETIME_CREATED) ? $this->TimeElapsedString->time_elapsed_string($job->DATETIME_CREATED) : "",
-                            'job_updated'           => isset($job->DATETIME_UPDATED) ? 'Atualizado: ' . $this->TimeElapsedString->time_elapsed_string($job->DATETIME_UPDATED) : "",
-                            'job_finished'          => isset($job->DATETIME_FINISHED) ? 'Finalizado: ' . $this->TimeElapsedString->time_elapsed_string($job->DATETIME_FINISHED) : "",
-                            'job_privacy'           => $job->PRIVACY,
-                            'job_likes'             => $job->NUM_LIKES,
-                            'job_num_comments'      => $job->NUM_REPLIES,
-                            'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, $this->session->USER_ID),
-                            'type'                  => 'POST'
-                        ];
-                    }
-
-                    $response = [
-                        'user_info'     =>  $user_info,
-                        'user_jobs'     =>  isset($user_jobs) ? $user_jobs : null,
-                    ];
-                } else {
-                    $response = [];
-                }
-            } catch (Exception $e) {
-                $response = [
-                    'response'  =>  'error',
-                    'msg'       =>  'Erro ao consultar usuário',
-                    'errors'    =>  [
-                        'exception' =>  $e->getMessage()
-                    ],
-                ];
-            }
-
-            return $this->respond($response);
+            $response = $this->usersServices->getFormatedUser($user, $currentPage);
         } else {
             $response = [
                 'response'  =>  'error',
                 'msg'       =>  'Token inválido',
             ];
         }
+
+        return $this->respond($response);
     }
 
     public function saveVisit()
     {
-        date_default_timezone_set('America/Sao_Paulo');
-        $response = [];
-        if ($this->_tokenValidate()) {
-            $checkVisit = $this->visitsModel->getInfoIfAlreadyVisitedProfile($this->request->getPost('user_id'), $this->request->getPost('visitor_id'));
+        if (isset($this->session->USER_ID) && $this->_tokenValidate()) {
 
-            try {
-                if ($this->request->getPost('user_id') == $this->request->getPost('visitor_id')) {
-                    $response = [];
-                } else if (!empty($checkVisit)) {
-                    $newVisit = [
-                        'DATETIME_VISITED'          =>  date("Y-m-d H:i:s"),
-                    ];
-
-                    $this->visitsModel->table('profile_views')->update($checkVisit, $newVisit);
-                    $response = [
-                        'response'  =>  'success',
-                        'msg'       =>  'Visit Updated'
-                    ];
-                } else {
-                    $newVisit = [
-                        'PROFILE_USER_ID'           =>  $this->request->getPost('user_id'),
-                        'VISITOR_ID'                =>  $this->request->getPost('visitor_id'),
-                        'DATETIME_VISITED'          =>  date("Y-m-d H:i:s"),
-                    ];
-
-                    $this->visitsModel->save($newVisit);
-                    $response = [
-                        'response'  =>  'success',
-                        'msg'       =>  'Visit Saved'
-                    ];
-                }
-            } catch (Exception $e) {
-                $response = [
-                    'response'  =>  'error',
-                    'msg'       =>  'Erro ao Visitar Perfil',
-                    'errors'    =>  [
-                        'exception' =>  $e->getMessage()
-                    ],
-                ];
-            }
+            $requestInfo = $this->request->getJSON();
+            $response = $this->usersServices->saveProfileVIsit($requestInfo);
         } else {
             $response = [
                 'response'  =>  'error',
-                'msg'       =>  'Invalid Token',
+                'msg'       =>  'Invalid Token/Not Logged In',
             ];
         }
         return $this->respond($response);
@@ -212,7 +128,7 @@ class Api_users extends ResourceController
         if ($user_id != null && $this->_tokenValidate()) {
             $currentPage = $this->request->getVar('page') ?? 1;
 
-            $response = ['likes' => $this->usersServices->getFormatedLikes($user_id, $currentPage)]; 
+            $response = ['likes' => $this->usersServices->getFormatedLikes($user_id, $currentPage)];
 
             return $this->respond($response);
         } else {

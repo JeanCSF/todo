@@ -58,6 +58,19 @@ class Likes extends Model
         return $result;
     }
 
+    public function getContentLikesInfo($content_id, $type)
+    {
+        $result = $this->select('login.USER
+                                ,login.NAME
+                                ,login.PROFILE_PIC
+                                ,likes.LIKE_ID
+                                ,likes.DATETIME_LIKED')
+            ->join('login', 'login.USER_ID = likes.USER_ID')
+            ->where('CONTENT_ID', $content_id)->where('TYPE', $type)->get();
+        
+        return $result->getResultObject();
+    }
+
     public function checkUserLikedReply($reply_id, $user_id)
     {
         $result = $this->select('LIKE_ID')->where('CONTENT_ID', $reply_id)->where('USER_ID', $user_id)->where("TYPE = 'REPLY' ")->countAllResults();

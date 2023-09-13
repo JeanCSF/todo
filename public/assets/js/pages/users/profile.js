@@ -15,21 +15,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-function saveVisitForProfile(profile_user_id, session_user_id) {
-    $.ajax({
-        url: BASEURL + '/api/user/save_visit',
-        type: "POST",
-        data: {
-            user_id: profile_user_id,
-            visitor_id: session_user_id
-        },
+async function saveVisitForProfile(profile_user_id, session_user_id) {
+
+
+    const paramsObj = {
+        profile_user_id,
+        session_user_id
+    };
+
+    const response = await fetch(`${BASEURL}/api/user/save_visit`, {
+        method: 'POST',
         headers: {
+            'Content-Type': 'application/json',
             'token': 'ihgfedcba987654321'
         },
-        error: function (xhr, status, error) {
-            console.error("Erro na requisição:", error);
-        }
+        body: JSON.stringify(paramsObj)
     });
+    try {
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error("Erro na requisição", error)
+    }
+    // $.ajax({
+    //     url: BASEURL + '/api/user/save_visit',
+    //     type: "POST",
+    //     data: {
+    //         user_id: profile_user_id,
+    //         visitor_id: session_user_id
+    //     },
+    //     headers: {
+    //         'token': 'ihgfedcba987654321'
+    //     },
+    //     error: function (xhr, status, error) {
+    //         console.error("Erro na requisição:", error);
+    //     }
+    // });
 }
 
 async function fillModalVisits(profile_id) {

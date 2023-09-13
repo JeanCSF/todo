@@ -1,3 +1,7 @@
+var msg = document.querySelector('#msgInfo');
+var alerta = document.querySelector('#alerta');
+const toastElement = document.querySelector('#basicToast');
+
 const hoverPostElements = document.querySelectorAll('.post');
 const hoverLinkElements = document.querySelectorAll('.dropdown-item');
 
@@ -90,9 +94,9 @@ document.querySelector("#themeToggleButton").addEventListener("click", () => {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const theme = localStorage.getItem('theme');
-    if (theme === 'dark') {
+document.addEventListener("DOMContentLoaded", () => {
+    const themeStoraged = localStorage.getItem('theme');
+    if (themeStoraged === 'dark') {
         hoverPostElements.forEach(function (e) {
             e.classList.add('dark-hover');
         });
@@ -110,80 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    $('#btnDeletar').on('click', function () {
-        var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
-        var type = document.getElementById("btnDeletar").getAttribute('data-type', type);
-        if (type == "null") {
-            $.ajax({
-                url: BASEURL + '/api/job/reply_delete/' + id,
-                type: 'delete',
-                headers: {
-                    'token': 'ihgfedcba987654321'
-                },
-                success: function (data) {
-                    msg = document.querySelector('#msgInfo');
-                    alerta = document.querySelector('#alerta');
-                    if (!data.error) {
-                        alerta.classList.add('alert-success');
-                        msg.textContent = data.message;
-                        document.querySelector('#reply' + id).remove();
-                        document.querySelector('#closeDeleteModal').click();
-                    } else {
-                        alerta.classList.add('alert-danger');
-                        msg.textContent = data.error;
-                    }
-                    new bootstrap.Toast(document.querySelector('#basicToast')).show();
-                }
-            });
-        } else if (type == 'home') {
-            $.ajax({
-                url: BASEURL + '/api/job/job_delete/' + id,
-                type: 'delete',
-                headers: {
-                    'token': 'ihgfedcba987654321'
-                },
-                success: function (data) {
-                    msg = document.querySelector('#msgInfo');
-                    alerta = document.querySelector('#alerta');
-                    if (!data.error) {
-                        alerta.classList.add('alert-success');
-                        msg.textContent = data.message;
-                        document.querySelector('#post' + id).remove();
-                        document.querySelector('#closeDeleteModal').click();
-                    } else {
-                        alerta.classList.add('alert-danger');
-                        msg.textContent = data.error;
-                    }
-                    new bootstrap.Toast(document.querySelector('#basicToast')).show();
-                }
-            });
-        } else {
-            $.ajax({
-                url: BASEURL + '/api/job/job_delete/' + id,
-                type: 'delete',
-                headers: {
-                    'token': 'ihgfedcba987654321'
-                },
-                success: function (data) {
-                    msg = document.querySelector('#msgInfo');
-                    alerta = document.querySelector('#alerta');
-                    if (!data.error) {
-                        alerta.classList.add('alert-success');
-                        msg.textContent = data.message;
-                        document.querySelector('#closeDeleteModal').click();
-                        setTimeout(() => {
-                            window.history.go(-1);
-                        }, 300)
-                    } else {
-                        alerta.classList.add('alert-danger');
-                        msg.textContent = data.error;
-                    }
-                    new bootstrap.Toast(document.querySelector('#basicToast')).show();
-
-                }
-            });
-        }
-    });
+    deleteContent()
 });
 
 const createElement = (elementName, attributes) => {
@@ -260,7 +191,7 @@ function createUserOptionsDropdown(response, type) {
                 title: 'Excluír Tarefa',
                 role: 'delete',
             });
-            linkItem4.addEventListener('click', () => fillModalDelete(response.job_id, 'home'));
+            linkItem4.addEventListener('click', () => fillModalDelete(response.job_id, 'POST'));
             linkItem4.innerHTML = 'Excluír <i class="fa fa-trash text-danger"></i>';
             item4.appendChild(linkItem4);
             dropdownMenu.appendChild(item4);
@@ -303,7 +234,7 @@ function createUserOptionsDropdown(response, type) {
                 title: 'Editar Tarefa',
                 role: 'edit',
             });
-            item3.addEventListener('click', () => fillModalEditReply(response.comment_id, response.comment))
+            item3.addEventListener('click', () => fillModalEditReply(response.reply_id, response.reply))
             linkItem3.innerHTML = 'Editar <i class="fa fa-pencil text-primary"></i>';
             item3.appendChild(linkItem3)
             dropdownMenu.appendChild(item3);
@@ -317,7 +248,7 @@ function createUserOptionsDropdown(response, type) {
                 title: 'Excluír Tarefa',
                 role: 'delete',
             });
-            linkItem4.addEventListener('click', () => fillModalDeleteReply(response.comment_id, 'REPLY'));
+            linkItem4.addEventListener('click', () => fillModalDelete(response.reply_id, 'REPLY'));
             linkItem4.innerHTML = 'Excluír <i class="fa fa-trash text-danger"></i>';
             item4.appendChild(linkItem4);
             dropdownMenu.appendChild(item4);
@@ -700,10 +631,17 @@ async function createJob(user_id, job_title, job, job_privacy) {
             },
             body: JSON.stringify(paramsObj),
         });
+        const responseData = await response.json();
         if (!response.ok) {
+            alerta.classList.add('alert-danger');
+            msg.textContent = responseData.error;
             throw new Error(`Erro na requisição: ${response.statusText}`);
         }
 
+        alerta.classList.add('alert-success');
+        msg.textContent = responseData.message;
+        var toast = new bootstrap.Toast(toastElement);
+        toast.show();
         const jobResponse = await fetch(`${BASEURL}/api/user/show/${session_user}?page=${1}`, {
             method: 'GET',
             headers: {
@@ -742,9 +680,17 @@ async function editJob(user_id, job_id, job_title, job, job_privacy) {
             },
             body: JSON.stringify(paramsObj),
         });
+
+        const responseData = await response.json();
         if (!response.ok) {
+            alerta.classList.add('alert-danger');
+            msg.textContent = responseData.error;
             throw new Error(`Erro na requisição: ${response.statusText}`);
         }
+        alerta.classList.add('alert-success');
+        msg.textContent = responseData.message;
+        var toast = new bootstrap.Toast(toastElement);
+        toast.show();
 
         const jobResponse = await fetch(`${BASEURL}/api/job/show/${job_id}`, {
             method: 'GET',
@@ -761,7 +707,7 @@ async function editJob(user_id, job_id, job_title, job, job_privacy) {
         const updatedJob = jobData.job;
         const jobContainer = document.querySelector(`#post${job_id}`);
         const newJobTittle = jobContainer.querySelector('.job-title');
-        const newJobDesc = jobContainer.querySelector('.job-text'); 
+        const newJobDesc = jobContainer.querySelector('.job-text');
         newJobTittle.textContent = updatedJob.job_title;
         newJobDesc.textContent = updatedJob.job;
 
@@ -810,7 +756,7 @@ function fillModalEdit(id, job, desc) {
     btnSubmitTaskModal.setAttribute('data-type', 'edit')
     jobModalTitle.setAttribute('value', job);
     jobModalText.setAttribute('value', desc);
-    jobModalText.textContent =  desc;
+    jobModalText.textContent = desc;
 
 }
 
@@ -824,18 +770,16 @@ function fillModalEditReply(id, reply) {
 }
 
 function fillModalDelete(id, type) {
+    if (type === 'REPLY') {
+        document.getElementById("modalTitle").textContent = "Deletar Resposta";
+        document.getElementById("bodyMsg").textContent = "Deseja realmente deletar esta resposta?";
+        document.getElementById("btnDeletar").setAttribute('data-delete', id);
+        document.getElementById("btnDeletar").setAttribute('data-type', type);
+    }
     document.getElementById("modalTitle").textContent = "Deletar Tarefa";
     document.getElementById("bodyMsg").textContent = "Deseja realmente deletar esta tarefa?";
     document.getElementById("btnDeletar").setAttribute('data-delete', id);
     document.getElementById("btnDeletar").setAttribute('data-type', type);
-}
-
-function fillModalDeleteReply(id, type = null) {
-    document.getElementById("modalTitle").textContent = "Deletar Resposta";
-    document.getElementById("bodyMsg").textContent = "Deseja realmente deletar esta resposta?";
-    document.getElementById("btnDeletar").setAttribute('data-delete', id);
-    document.getElementById("btnDeletar").setAttribute('data-type', type);
-
 }
 
 function fillModalDeleteUser(id) {
@@ -1009,6 +953,121 @@ async function commentContent(user_id, content_id, comment, type_content) {
     } catch (error) {
         console.error("Erro na requisição:", error);
     }
+}
+
+function deleteContent() {
+    document.querySelector("#btnDeletar").addEventListener('click', async () => {
+        var id = document.getElementById("btnDeletar").getAttribute('data-delete', id);
+        var type = document.getElementById("btnDeletar").getAttribute('data-type', type);
+        var toast = new bootstrap.Toast(toastElement);
+        var currentUrl = window.location.href;
+        try {
+            const response = await fetch(`${BASEURL}/api/job/delete/${id}?type=${type}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': 'ihgfedcba987654321',
+                }
+            });
+            const responseData = await response.json();
+            if (!response.ok) {
+                alerta.classList.add('alert-danger');
+                msg.textContent = responseData.error;
+                throw new Error(`Erro na requisição: ${response.statusText}`);
+            }
+            if (type === 'POST' && currentUrl != `${BASEURL}/post/${id}`) {
+                alerta.classList.add('alert-success');
+                msg.textContent = responseData.message;
+                document.querySelector(`#post${id}`).remove();
+                document.querySelector('#closeDeleteModal').click();
+                toast.show();
+            } else if (type === 'POST' && currentUrl === `${BASEURL}/post/${id}`) {
+                alerta.classList.add('alert-success');
+                msg.textContent = responseData.message;
+                document.querySelector('#closeDeleteModal').click();
+                setTimeout(() => {
+                    window.history.go(-1);
+                }, 300);
+                toast.show();
+            } else {
+                alerta.classList.add('alert-success');
+                msg.textContent = responseData.message;
+                document.querySelector(`#jobReplyContent${id}`).remove();
+                document.querySelector('#closeDeleteModal').click();
+                toast.show();
+
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+        }
+    });
+    //     if (type == "null") {
+    //         $.ajax({
+    //             url: BASEURL + '/api/job/reply_delete/' + id,
+    //             type: 'delete',
+    //             headers: {
+    //                 'token': 'ihgfedcba987654321'
+    //             },
+    //             success: function (data) {
+    //                 if (!data.error) {
+    //                     alerta.classList.add('alert-success');
+    //                     msg.textContent = data.message;
+    //                     document.querySelector('#reply' + id).remove();
+    //                     document.querySelector('#closeDeleteModal').click();
+    //                 } else {
+    //                     alerta.classList.add('alert-danger');
+    //                     msg.textContent = data.error;
+    //                 }
+    //                 new bootstrap.Toast(document.querySelector('#basicToast')).show();
+    //             }
+    //         });
+    //     } else if (type == 'home') {
+    //         $.ajax({
+    //             url: BASEURL + '/api/job/job_delete/' + id,
+    //             type: 'delete',
+    //             headers: {
+    //                 'token': 'ihgfedcba987654321'
+    //             },
+    //             success: function (data) {
+    //                 msg = document.querySelector('#msgInfo');
+    //                 alerta = document.querySelector('#alerta');
+    //                 if (!data.error) {
+    //                     alerta.classList.add('alert-success');
+    //                     msg.textContent = data.message;
+    //                     document.querySelector('#post' + id).remove();
+    //                     document.querySelector('#closeDeleteModal').click();
+    //                 } else {
+    //                     alerta.classList.add('alert-danger');
+    //                     msg.textContent = data.error;
+    //                 }
+    //                 new bootstrap.Toast(document.querySelector('#basicToast')).show();
+    //             }
+    //         });
+    //     } else {
+    //         $.ajax({
+    //             url: BASEURL + '/api/job/job_delete/' + id,
+    //             type: 'delete',
+    //             headers: {
+    //                 'token': 'ihgfedcba987654321'
+    //             },
+    //             success: function (data) {
+    //                 if (!data.error) {
+    //                     alerta.classList.add('alert-success');
+    //                     msg.textContent = data.message;
+    //                     document.querySelector('#closeDeleteModal').click();
+    //                     setTimeout(() => {
+    //                         window.history.go(-1);
+    //                     }, 300)
+    //                 } else {
+    //                     alerta.classList.add('alert-danger');
+    //                     msg.textContent = data.error;
+    //                 }
+    //                 new bootstrap.Toast(document.querySelector('#basicToast')).show();
+
+    //             }
+    //         });
+    //     }
+    // });
 }
 
 function autoGrow(element) {

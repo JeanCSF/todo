@@ -41,8 +41,7 @@ $routes->group('api/job', ['namespace' => 'App\Controllers\Api'], function ($rou
     $routes->put('update/(:num)', 'Api_jobs::update/$1');
     $routes->get('all', 'Api_jobs::index');
     $routes->get('show/(:num)', 'Api_jobs::show/$1');
-    $routes->delete('job_delete/(:num)', 'Api_jobs::delete/$1');
-    $routes->delete('reply_delete/(:num)', 'Api_jobs::deleteReply/$1');
+    $routes->delete('delete/(:num)', 'Api_jobs::delete/$1');
     $routes->get('reply/(:num)', 'Api_jobs::showReply/$1');
     $routes->post('like', 'Api_jobs::likeContent');
     $routes->post('comment', 'Api_jobs::commentContent');
@@ -60,7 +59,7 @@ $routes->group('api/user', ['namespace' => 'App\Controllers\Api'], function ($ro
     $routes->get('replies/(:num)', 'Api_users::getReplies/$1');
     $routes->get('liked/(:num)', 'Api_users::getLikes/$1');
     $routes->post('save_visit', 'Api_users::saveVisit');
-    $routes->get('visits', 'Api_users::showVisits');
+    $routes->post('visits', 'Api_users::showVisits');
 });
 
 

@@ -36,7 +36,7 @@ class Login extends Model
 
     public function signUpCreateAccount($post, $img_name)
     {
-        date_default_timezone_set('America/Sao_Paulo');
+        
         $data = [
             'USER'              => $post['user'],
             'PASS'              => password_hash($post['pass'], PASSWORD_BCRYPT),

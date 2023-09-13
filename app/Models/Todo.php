@@ -42,38 +42,26 @@ class Todo extends Model
 
     public function getJob($id_job)
     {
-        $result = $this->find($id_job);
-        return $result;
-    }
+        $result = $this->select('login.PROFILE_PIC
+                                ,login.USER
+                                ,login.NAME
+                                ,login.USER_ID
+                                ,jobs.ID_JOB
+                                ,jobs.USER_ID
+                                ,jobs.JOB_TITLE
+                                ,jobs.JOB
+                                ,jobs.DATETIME_CREATED
+                                ,jobs.DATETIME_UPDATED
+                                ,jobs.DATETIME_FINISHED
+                                ,jobs.PRIVACY')
+            ->select('COALESCE(likes.NUM_LIKES, 0) AS NUM_LIKES', false)
+            ->select('COALESCE(replies.NUM_REPLIES, 0) AS NUM_REPLIES', false)
+            ->join('login', 'login.USER_ID = jobs.USER_ID')
+            ->join('(SELECT CONTENT_ID, TYPE, COUNT(LIKE_ID) AS NUM_LIKES FROM likes GROUP BY CONTENT_ID) AS likes', "likes.CONTENT_ID = jobs.ID_JOB AND likes.TYPE = 'POST'", 'left')
+            ->join('(SELECT ID_JOB, COUNT(REPLY_ID) AS NUM_REPLIES FROM replies GROUP BY ID_JOB) AS replies', 'replies.ID_JOB = jobs.ID_JOB', 'left')
+            ->where('jobs.PRIVACY', true)->where('jobs.ID_JOB', $id_job)->get();
 
-    public function insertJob($post)
-    {
-
-        date_default_timezone_set('America/Sao_Paulo');
-
-        if (!empty($post)) {
-            $data = [
-                'JOB_TITLE'         => isset($post['job_name']) ? $post['job_name'] : $post['header_job_name'],
-                'JOB'               => isset($post['job_desc']) ? nl2br($post['job_desc']) : nl2br($post['header_job_desc']),
-                'DATETIME_CREATED'  => date('Y-m-d H:i:s'),
-                'USER_ID'           => $_SESSION['USER_ID'],
-                'PRIVACY'           => (isset($post['privacy_select'])) ? $post['privacy_select'] : 1,
-            ];
-            return $this->save($data) ? true : false;
-        }
-    }
-
-    public function editJob($post)
-    {
-        date_default_timezone_set('America/Sao_Paulo');
-        if (!empty($post)) {
-            $data = [
-                'JOB_TITLE'         => $post['job_name'],
-                'JOB'               => $post['job_desc'],
-                'DATETIME_UPDATED'  => date('Y-m-d H:i:s'),
-            ];
-            return $this->table('jobs')->update($post['id_job'], $data) ? true : false;
-        }
+        return $result->getResultArray();
     }
 
     public function finishJob($params)
@@ -139,7 +127,7 @@ class Todo extends Model
 
     public function changeJobPrivacy($post)
     {
-        date_default_timezone_set('America/Sao_Paulo');
+
         if (!empty($post)) {
             $data = [
                 'DATETIME_UPDATED'  => date('Y-m-d H:i:s'),

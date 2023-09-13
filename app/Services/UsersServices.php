@@ -31,6 +31,107 @@ class UsersServices
         $this->jobsModel = new \App\Models\Todo();
     }
 
+    public function getFormatedUser($user, $currentPage)
+    {
+        $response = [];
+        $userInfo = $this->usersModel->where('USER', $user)->get()->getRow();
+        $userJobs = $this->jobsModel->getJobsDataAndPages($userInfo->USER_ID, $currentPage);
+        $pages = $this->jobsModel->getJobsDataAndPages($userInfo->USER_ID);
+
+        try {
+            if ($currentPage <= $pages || $pages == 0) {
+                $user_info = [
+                    'profile_pic'           => $userInfo->PROFILE_PIC,
+                    'user'                  => $userInfo->USER,
+                    'name'                  => $userInfo->NAME,
+                    'user_id'               => $userInfo->USER_ID,
+                ];
+
+                foreach ($userJobs as $job) {
+                    $user_jobs[] = [
+                        'profile_pic'           => $userInfo->PROFILE_PIC,
+                        'user'                  => $userInfo->USER,
+                        'name'                  => $userInfo->NAME,
+                        'user_id'               => $userInfo->USER_ID,
+                        'job_id'                => $job->ID_JOB,
+                        'job_title'             => $this->HTMLPurifier->html_purify($job->JOB_TITLE),
+                        'job'                   => $this->HTMLPurifier->html_purify($job->JOB),
+                        'job_created'           => isset($job->DATETIME_CREATED) ? $this->TimeElapsedString->time_elapsed_string($job->DATETIME_CREATED) : "",
+                        'job_updated'           => isset($job->DATETIME_UPDATED) ? 'Atualizado: ' . $this->TimeElapsedString->time_elapsed_string($job->DATETIME_UPDATED) : "",
+                        'job_finished'          => isset($job->DATETIME_FINISHED) ? 'Finalizado: ' . $this->TimeElapsedString->time_elapsed_string($job->DATETIME_FINISHED) : "",
+                        'job_privacy'           => $job->PRIVACY,
+                        'job_likes'             => $job->NUM_LIKES,
+                        'job_num_comments'      => $job->NUM_REPLIES,
+                        'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, $this->session->USER_ID),
+                        'type'                  => 'POST'
+                    ];
+                }
+
+                $response = [
+                    'user_info'     =>  $user_info,
+                    'user_jobs'     =>  isset($user_jobs) ? $user_jobs : null,
+                ];
+            } else {
+                $response = [];
+            }
+        } catch (Exception $e) {
+            $response = [
+                'response'  =>  'error',
+                'msg'       =>  'Erro ao consultar usuário',
+                'errors'    =>  [
+                    'exception' =>  $e->getMessage()
+                ],
+            ];
+        }
+
+        return $response;
+    }
+
+    public function saveProfileVIsit($requestInfo)
+    {
+        $response = [];
+        
+        $checkVisit = $this->visitsModel->getInfoIfAlreadyVisitedProfile($requestInfo->profile_user_id, $requestInfo->session_user_id);
+
+        try {
+            if ($requestInfo->profile_user_id == $requestInfo->session_user_id) {
+                $response = [];
+            } else if (!empty($checkVisit)) {
+                $newVisit = [
+                    'DATETIME_VISITED'          =>  date("Y-m-d H:i:s"),
+                ];
+
+                $this->visitsModel->table('profile_views')->update($checkVisit, $newVisit);
+                $response = [
+                    'response'  =>  'success',
+                    'msg'       =>  'Visit Updated'
+                ];
+            } else {
+                $newVisit = [
+                    'PROFILE_USER_ID'           =>  $requestInfo->profile_user_id,
+                    'VISITOR_ID'                =>  $requestInfo->session_user_id,
+                    'DATETIME_VISITED'          =>  date("Y-m-d H:i:s"),
+                ];
+
+                $this->visitsModel->save($newVisit);
+                $response = [
+                    'response'  =>  'success',
+                    'msg'       =>  'Visit Saved'
+                ];
+            }
+        } catch (Exception $e) {
+            $response = [
+                'response'  =>  'error',
+                'msg'       =>  'Erro ao Visitar Perfil',
+                'errors'    =>  [
+                    'exception' =>  $e->getMessage()
+                ],
+            ];
+        }
+
+        return $response;
+    }
+
     public function getFormattedVisits($profileId)
     {
         $response = [];
