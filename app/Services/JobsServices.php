@@ -85,11 +85,10 @@ class JobsServices
 
     public function getFormatedPost($id)
     {
-        $response = [];
-        $jobs = $this->jobsModel->getJob($id);
-        $comments = $this->repliesModel->getJobReplies($id);
-
         try {
+            $response = [];
+            $jobs = $this->jobsModel->getJob($id);
+            $comments = $this->repliesModel->getJobReplies($id);
             if (!empty($jobs)) {
                 $comment_info = [];
                 foreach ($jobs as $job) {
@@ -150,11 +149,10 @@ class JobsServices
 
     public function getFormatedReply($id)
     {
-        $response = [];
-        $replyInfo = $this->repliesModel->getReply($id);
-        $comments = $this->repliesModel->getReplyReplies($id);
-
         try {
+            $response = [];
+            $replyInfo = $this->repliesModel->getReply($id);
+            $comments = $this->repliesModel->getReplyReplies($id);
             if (!empty($replyInfo)) {
                 $comment_info = [];
                 foreach ($replyInfo as $reply) {
@@ -259,42 +257,26 @@ class JobsServices
 
     public function like($requestInfo)
     {
-        $response = [];
-        $newLike = [
-            'LIKE_ID'           =>  $this->session->USER . '_' . date("Y_m_d_H_i_s"),
-            'USER_ID'           =>  $requestInfo->user_id,
-            'CONTENT_ID'        =>  $requestInfo->content_id,
-            'TYPE'              =>  $requestInfo->type_content,
-            'DATETIME_LIKED'    =>  date("Y-m-d H:i:s"),
-        ];
-
-        $checkLike = $this->likesModel->getInfoIfAlreadyLikedContent($newLike['CONTENT_ID'], $newLike['USER_ID'], $newLike['TYPE']);
-
         try {
+            $newLike = [
+                'LIKE_ID'           =>  $this->session->USER . '_' . date("Y_m_d_H_i_s"),
+                'USER_ID'           =>  $requestInfo->user_id,
+                'CONTENT_ID'        =>  $requestInfo->content_id,
+                'TYPE'              =>  $requestInfo->type_content,
+                'DATETIME_LIKED'    =>  date("Y-m-d H:i:s"),
+            ];
+
+            $checkLike = $this->likesModel->getInfoIfAlreadyLikedContent($newLike['CONTENT_ID'], $newLike['USER_ID'], $newLike['TYPE']);
             if (!empty($checkLike)) {
                 $this->likesModel->where('LIKE_ID', $checkLike[0]->LIKE_ID)->delete();
-                $response = [
-                    'response'  =>  'success',
-                    'msg'       =>  'Unliked Post'
-                ];
+                return ['message' => 'Unliked Post'];
             } else {
                 $this->likesModel->save($newLike);
-                $response = [
-                    'response'  =>  'success',
-                    'msg'       =>  'Liked Post'
-                ];
+                return ['message' => 'Liked Post'];
             }
         } catch (Exception $e) {
-            $response = [
-                'response'  =>  'error',
-                'msg'       =>  'Error on like',
-                'errors'    =>  [
-                    'exception' =>  $e->getMessage(),
-                ],
-
-            ];
+            return ['error' => $e->getMessage()];
         }
-        return $response;
     }
 
     public function getFormatedLikes($requestInfo)
@@ -319,49 +301,33 @@ class JobsServices
 
     public function comment($requestInfo)
     {
-        $response = [];
-        $newComment = [];
-        if ($requestInfo->type_content == 'REPLY') {
-            $newComment = [
-                'USER_ID'               =>  $requestInfo->user_id,
-                'PARENT_REPLY_ID'       =>  $requestInfo->content_id,
-                'REPLY'                 =>  $requestInfo->comment,
-                'DATETIME_REPLIED'      =>  date("Y-m-d H:i:s"),
-            ];
-        }
-
-        if ($requestInfo->type_content == 'POST') {
-            $newComment = [
-                'USER_ID'               =>  $requestInfo->user_id,
-                'ID_JOB'                =>  $requestInfo->content_id,
-                'REPLY'                 =>  $requestInfo->comment,
-                'DATETIME_REPLIED'      =>  date("Y-m-d H:i:s"),
-            ];
-        }
-
         try {
-            if (!empty($newComment)) {
-                $response = [
-                    'response'  =>  'success',
-                    'msg'       =>  'Commented Post'
-                ];
-                $this->repliesModel->save($newComment);
-            } else {
-                $response = [
-                    'response'  =>  'error',
-                    'msg'       =>  'Error on Comment'
+            $newComment = [];
+            if ($requestInfo->type_content == 'REPLY') {
+                $newComment = [
+                    'USER_ID'               =>  $requestInfo->user_id,
+                    'PARENT_REPLY_ID'       =>  $requestInfo->content_id,
+                    'REPLY'                 =>  $requestInfo->comment,
+                    'DATETIME_REPLIED'      =>  date("Y-m-d H:i:s"),
                 ];
             }
-        } catch (Exception $e) {
-            $response = [
-                'response'  =>  'error',
-                'msg'       =>  'Unexpected Error',
-                'errors'    =>  [
-                    'exception' =>  $e->getMessage()
-                ],
-            ];
-        }
+            if ($requestInfo->type_content == 'POST') {
+                $newComment = [
+                    'USER_ID'               =>  $requestInfo->user_id,
+                    'ID_JOB'                =>  $requestInfo->content_id,
+                    'REPLY'                 =>  $requestInfo->comment,
+                    'DATETIME_REPLIED'      =>  date("Y-m-d H:i:s"),
+                ];
+            }
 
-        return $response;
+            if (!empty($newComment)) {
+                $this->repliesModel->save($newComment);
+                return ['message' => 'Commented Post'];
+            } else {
+                return ['message' => 'Error on Comment'];
+            }
+        } catch (Exception $e) {
+            return ['error' => $e->getMessage()];
+        }
     }
 }

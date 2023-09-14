@@ -106,18 +106,18 @@
                     <div class="row">
                         <div class="row mb-3 d-flex">
                             <div class="col-1">
-                                <input type="radio" name="privacyRb" id="privacyRb" value="<?= true ?>">
+                                <input type="radio" name="privacyRb" value="<?= true ?>">
                             </div>
                             <div class="col-11">
-                                <label for="privacyRb">Visível para todos</label>
+                                <p>Visível para todos</p>
                             </div>
                         </div>
                         <div class="row mb-3 d-flex">
                             <div class="col-1">
-                                <input type="radio" name="privacyRb" id="privacyRb" value="<?= false ?>">
+                                <input type="radio" name="privacyRb" value="<?= false ?>">
                             </div>
                             <div class="col-11">
-                                <label for="privacyRb">Somente eu</label>
+                                <p>Somente eu</p>
                             </div>
                         </div>
                     </div>

@@ -2,9 +2,6 @@ var msg = document.querySelector('#msgInfo');
 var alerta = document.querySelector('#alerta');
 const toastElement = document.querySelector('#basicToast');
 
-const hoverPostElements = document.querySelectorAll('.post');
-const hoverLinkElements = document.querySelectorAll('.dropdown-item');
-
 const btnSubmitTaskModal = document.querySelector("#btnSubmitTaskModal");
 const taskModalLabel = document.querySelector("#taskModalLabel");
 
@@ -32,88 +29,7 @@ frmPostModal.addEventListener('submit', function (e) {
 
 });
 
-document.querySelector("#themeToggle").addEventListener("click", () => {
-    if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
-        document.documentElement.setAttribute('data-bs-theme', 'light')
-        localStorage.setItem('theme', 'light');
-
-        hoverPostElements.forEach(function (element) {
-            element.classList.remove('dark-hover');
-            element.classList.add('light-hover');
-        });
-
-        hoverLinkElements.forEach(function (element) {
-            element.classList.remove('dark-hover');
-            element.classList.add('light-hover');
-        });
-    }
-    else {
-        document.documentElement.setAttribute('data-bs-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-
-        hoverPostElements.forEach(function (element) {
-            element.classList.remove('light-hover');
-            element.classList.add('dark-hover');
-        });
-
-        hoverLinkElements.forEach(function (element) {
-            element.classList.remove('light-hover');
-            element.classList.add('dark-hover');
-        });
-    }
-});
-
-document.querySelector("#themeToggleButton").addEventListener("click", () => {
-    if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
-        document.documentElement.setAttribute('data-bs-theme', 'light')
-        localStorage.setItem('theme', 'light');
-
-        hoverPostElements.forEach(function (element) {
-            element.classList.remove('dark-hover');
-            element.classList.add('light-hover');
-        });
-
-        hoverLinkElements.forEach(function (element) {
-            element.classList.remove('dark-hover');
-            element.classList.add('light-hover');
-        });
-    }
-    else {
-        document.documentElement.setAttribute('data-bs-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-
-        hoverPostElements.forEach(function (element) {
-            element.classList.remove('light-hover');
-            element.classList.add('dark-hover');
-        });
-
-        hoverLinkElements.forEach(function (element) {
-            element.classList.remove('light-hover');
-            element.classList.add('dark-hover');
-        });
-    }
-});
-
 document.addEventListener("DOMContentLoaded", () => {
-    const themeStoraged = localStorage.getItem('theme');
-    if (themeStoraged === 'dark') {
-        hoverPostElements.forEach(function (e) {
-            e.classList.add('dark-hover');
-        });
-
-        hoverLinkElements.forEach(function (element) {
-            element.classList.add('dark-hover');
-        });
-    } else {
-        hoverPostElements.forEach(function (e) {
-            e.classList.add('light-hover');
-        });
-
-        hoverLinkElements.forEach(function (element) {
-            element.classList.add('light-hover');
-        });
-    }
-
     deleteContent()
 });
 
@@ -132,12 +48,14 @@ function createUserOptionsDropdown(response, type) {
             class: 'dropdown'
         });
 
-        if (session_user_id === response.user_id) {
+        if (session_user_id == response.user_id) {
             const dropdownToggle = createElement('button', {
                 class: 'bg-transparent border-0',
                 type: 'button',
                 'data-bs-toggle': 'dropdown',
-                'aria-expanded': 'false'
+                'aria-expanded': 'false',
+                title: 'Opções da Tarefa',
+                role: 'menu'
             });
             dropdownToggle.innerHTML = '<i class="fa fa-ellipsis"></i>'
 
@@ -149,7 +67,10 @@ function createUserOptionsDropdown(response, type) {
             const linkItem1 = createElement('a', {
                 'data-bs-toggle': 'modal',
                 'data-bs-target': '#privacyModal',
-                class: 'dropdown-item'
+                class: 'dropdown-item',
+                title: 'Muda Privacidade',
+                role: 'menuitem',
+                href: 'javascript:void(0)'
             });
             linkItem1.addEventListener('click', () => fillModalPrivacy(response.job_id));
             linkItem1.innerHTML = `Privacidade ${response.job.job_privacy == 1 ? '<i class="fa fa-earth-americas"></i>' : '<i class="fa fa-lock"></i>'}`;
@@ -161,7 +82,7 @@ function createUserOptionsDropdown(response, type) {
                 const linkItem2 = createElement('a', {
                     class: 'dropdown-item',
                     href: `${BASEURL}/todocontroller/jobdone/${response.job_id}`,
-                    role: 'finish',
+                    role: 'menuitem',
                     title: 'Finalizar Tarefa',
                 });
                 linkItem2.innerHTML = 'Finalizar <i class="fa fa-crosshairs text-success"></i>';
@@ -174,7 +95,8 @@ function createUserOptionsDropdown(response, type) {
                     'data-bs-toggle': 'modal',
                     'data-bs-target': '#taskModal',
                     title: 'Editar Tarefa',
-                    role: 'edit',
+                    role: 'menuitem',
+                    href: 'javascript:void(0)'
                 });
                 item3.addEventListener('click', () => fillModalEdit(response.job_id, response.job_title, response.job))
                 linkItem3.innerHTML = 'Editar <i class="fa fa-pencil text-primary"></i>';
@@ -189,7 +111,8 @@ function createUserOptionsDropdown(response, type) {
                 'data-bs-toggle': 'modal',
                 'data-bs-target': '#deleteModal',
                 title: 'Excluír Tarefa',
-                role: 'delete',
+                role: 'menuitem',
+                href: 'javascript:void(0)'
             });
             linkItem4.addEventListener('click', () => fillModalDelete(response.job_id, 'POST'));
             linkItem4.innerHTML = 'Excluír <i class="fa fa-trash text-danger"></i>';
@@ -213,12 +136,14 @@ function createUserOptionsDropdown(response, type) {
             class: 'dropdown'
         });
 
-        if (session_user_id === response.user_id) {
+        if (session_user_id == response.user_id) {
             const dropdownToggle = createElement('button', {
                 class: 'bg-transparent border-0',
                 type: 'button',
                 'data-bs-toggle': 'dropdown',
-                'aria-expanded': 'false'
+                'aria-expanded': 'false',
+                title: 'Opções da Resposta',
+                role: 'menu'
             });
             dropdownToggle.innerHTML = '<i class="fa fa-ellipsis"></i>'
 
@@ -231,8 +156,9 @@ function createUserOptionsDropdown(response, type) {
                 class: 'dropdown-item',
                 'data-bs-toggle': 'modal',
                 'data-bs-target': '#replyModal',
-                title: 'Editar Tarefa',
-                role: 'edit',
+                title: 'Editar Resposta',
+                role: 'menuitem',
+                href: 'javascript:void(0)'
             });
             item3.addEventListener('click', () => fillModalEditReply(response.reply_id, response.reply))
             linkItem3.innerHTML = 'Editar <i class="fa fa-pencil text-primary"></i>';
@@ -245,8 +171,9 @@ function createUserOptionsDropdown(response, type) {
                 class: 'dropdown-item',
                 'data-bs-toggle': 'modal',
                 'data-bs-target': '#deleteModal',
-                title: 'Excluír Tarefa',
-                role: 'delete',
+                title: 'Excluír Resposta',
+                role: 'menuitem',
+                href: 'javascript:void(0)'
             });
             linkItem4.addEventListener('click', () => fillModalDelete(response.reply_id, 'REPLY'));
             linkItem4.innerHTML = 'Excluír <i class="fa fa-trash text-danger"></i>';
@@ -274,21 +201,21 @@ function createPostElement(response, type) {
             id: `post${response.job_id}`
         });
 
-
-        const profilePicContainer = createElement('div', {
-            class: 'user-img'
-        });
         const imgLink = createElement('a', {
             href: `${BASEURL}/user/${response.user}`,
+        });
+        const imgContainer = createElement('div', {
+            class: 'user-img'
         });
         const profilePic = createElement('img', {
             height: 48,
             width: 48,
-            src: !response.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${response.user}/${response.profile_pic}`,
-            alt: 'Profile Pic'
+            'data-src': !response.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${response.user}/${response.profile_pic}`,
+            alt: 'Profile Pic',
+            class: 'lazyload'
         });
-        imgLink.appendChild(profilePic);
-        profilePicContainer.appendChild(imgLink);
+        imgContainer.appendChild(profilePic);
+        imgLink.appendChild(imgContainer);
 
         const userInfo = createElement('div', {
             class: 'user-info'
@@ -403,7 +330,7 @@ function createPostElement(response, type) {
         postActions.appendChild(shareButton);
 
 
-        container.appendChild(profilePicContainer);
+        container.appendChild(imgLink);
         container.appendChild(userInfo);
         container.appendChild(userPostText);
         container.appendChild(userPostFooter);
@@ -420,18 +347,23 @@ function createPostElement(response, type) {
 
 
         const profilePicContainer = createElement('div', {
-            class: 'user-img'
+            class: ''
         });
         const imgLink = createElement('a', {
             href: `${BASEURL}/user/${response.user}`,
         });
+        const imgContainer = createElement('div', {
+            class: 'user-img'
+        });
         const profilePic = createElement('img', {
             height: 48,
             width: 48,
-            src: !response.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${response.user}/${response.profile_pic}`,
-            alt: 'Profile Pic'
+            'data-src': !response.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${response.user}/${response.profile_pic}`,
+            alt: 'Profile Pic',
+            class: 'lazyload'
         });
-        imgLink.appendChild(profilePic);
+        imgContainer.appendChild(profilePic);
+        imgLink.appendChild(imgContainer);
         profilePicContainer.appendChild(imgLink);
 
         const userInfo = createElement('div', {
@@ -975,13 +907,14 @@ function deleteContent() {
                 msg.textContent = responseData.error;
                 throw new Error(`Erro na requisição: ${response.statusText}`);
             }
+
             if (type === 'POST' && currentUrl != `${BASEURL}/post/${id}`) {
                 alerta.classList.add('alert-success');
                 msg.textContent = responseData.message;
                 document.querySelector(`#post${id}`).remove();
                 document.querySelector('#closeDeleteModal').click();
                 toast.show();
-            } else if (type === 'POST' && currentUrl === `${BASEURL}/post/${id}`) {
+            } else if (type === 'POST' && currentUrl == `${BASEURL}/post/${id}`) {
                 alerta.classList.add('alert-success');
                 msg.textContent = responseData.message;
                 document.querySelector('#closeDeleteModal').click();

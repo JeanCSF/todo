@@ -2,28 +2,32 @@
     font-family: friz quadrata std;
     font-style: italic;
     font-weight: 400;
-    src: local('Friz Quadrata Std'), url('../fonts/friz-quadrata/friz-quadrata-std-italic-587033b2c95df.woff') format('woff')
+    src: local('Friz Quadrata Std'), url('../fonts/friz-quadrata/friz-quadrata-std-italic-587033b2c95df.woff') format('woff');
+    font-display: swap;
 }
 
 @font-face {
     font-family: friz quadrata std;
     font-style: normal;
     font-weight: 500;
-    src: local('Friz Quadrata Std'), url('../fonts/friz-quadrata/friz-quadrata-std-medium-5870338ec7ef8.woff') format('woff')
+    src: local('Friz Quadrata Std'), url('../fonts/friz-quadrata/friz-quadrata-std-medium-5870338ec7ef8.woff') format('woff');
+    font-display: swap;
 }
 
 @font-face {
     font-family: friz quadrata std;
     font-style: normal;
     font-weight: 700;
-    src: local('Friz Quadrata Std'), url('../fonts/friz-quadrata/friz-quadrata-std-bold-587034a220f9f.woff') format('woff')
+    src: local('Friz Quadrata Std'), url('../fonts/friz-quadrata/friz-quadrata-std-bold-587034a220f9f.woff') format('woff');
+    font-display: swap;
 }
 
 @font-face {
     font-family: friz quadrata std;
     font-style: italic;
     font-weight: 700;
-    src: local('Friz Quadrata Std'), url('../fonts/friz-quadrata/friz-quadrata-std-bold-italic-587033d6d4298.woff') format('woff')
+    src: local('Friz Quadrata Std'), url('../fonts/friz-quadrata/friz-quadrata-std-bold-italic-587033d6d4298.woff') format('woff');
+    font-display: swap;
 }
 
 :root {
@@ -240,7 +244,7 @@ html {
     display: inline;
 }
 
-.post-container .user-img {
+.user-img {
     float: left;
 }
 

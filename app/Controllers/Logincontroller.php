@@ -9,6 +9,7 @@ class Logincontroller extends BaseController
 
     public function signUp()
     {
+        $image = \Config\Services::image();
         $email = \Config\Services::email();
         $login = new Login();
         $post = $this->request->getPost();
@@ -39,16 +40,24 @@ class Logincontroller extends BaseController
                 $this->session->setFlashdata('msg', $msg);
                 return view('login/signup', $data);
             } else if (!$img->hasMoved()) {
+
                 $foto = $img->getFilename();
                 $img_name = '';
                 !empty($foto) ? $img_name = $img->getRandomName() : $img_name = NULL;
 
                 $login->signUpCreateAccount($post, $img_name);
                 $path = '../../public/assets/img/profiles_pics/' . $post['user'];
+                $thumbPath = $path . '/thumb';
+                $sourceImagePath  = $path . '/' . $img_name;
                 if (!is_dir($path)) {
                     mkdir($path, 0777, true);
+                    mkdir($thumbPath, 0777, true);
                 }
-                !empty($foto) ? $img->store($path, $img_name) : PHP_EOL;
+                if (!empty($foto)) {
+                    $img->store($path, $img_name);
+                    
+                    $image->withFile($sourceImagePath)->resize(48, 48, true)->save($thumbPath . '/_icon' . $img_name);
+                }
                 $key = base64_encode($post['email'] . date('Y-m-d H:i:s'));
                 $email = \Config\Services::email();
                 $config = [

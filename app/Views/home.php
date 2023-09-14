@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main_layout') ?>
 <?= $this->section('section') ?>
 <div id="post_div" class="header-post mb-2" style="<?= isset($search) ? 'visibility:hidden;' : '' ?>" tabindex="0">
-    <img class="mt-2 rounded-circle border border-light-subtle float-start" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/avatar.webp') ?>" alt="Profile pic">
+    <img class="mt-2 rounded-circle border border-light-subtle float-start lazyload" height="48" width="48" data-src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/avatar.webp') ?>" alt="Profile pic">
     <form method="post" class="ms-5" id="frmPost">
         <select name="privacy_select" id="privacy_select" class="ms-3 mt-3" title="Visualização" hidden>
             <option value="1">Todos &#xf57d;</option>
