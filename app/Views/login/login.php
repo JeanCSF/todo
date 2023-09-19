@@ -16,10 +16,10 @@
         <p class="alert alert-danger text-center"><?php echo $error; ?></p>
     <?php endif; ?>
     <div class="row mb-3">
-        <input type="text" class="form-control" placeholder="Usuário" name="user" required>
+        <input type="text" class="form-control" placeholder="Usuário" name="user" maxlength="30" required>
     </div>
     <div class="row mb-3">
-        <input type="password" class="form-control" placeholder="Senha" name="pass" required>
+        <input type="password" class="form-control" placeholder="Senha" name="pass" minlength="8" maxlength="16" required>
     </div>
     <div class="d-flex justify-content-between">
         <a href="<?= site_url('/') ?>" class="btn btn-secondary">Cancelar</a>

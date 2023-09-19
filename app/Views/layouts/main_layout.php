@@ -80,15 +80,15 @@
             <?php endif; ?>
             <div>
                 <div class="footer mt-3">
-                    <a href="<?= base_url('contact') ?>" class="text-decoration-none fw-bolder">FEEDBACK</a>
+                    <a href="<?= base_url('contact') ?>" class="text-decoration-none fw-bolder text-reset">FEEDBACK</a>
                     <div class="footer-socials">
-                        <a class="me-4" href="https://github.com/JeanCSF" target="_blank">GitHub</a>
-                        <a class="me-4" href="https://facebook.com/fookinselfish" target="_blank">Facebook</a>
-                        <a class="me-4" href="https://twitter.com/JCS_16" target="_blank">Twitter</a>
-                        <a class="me-4" href="https://www.linkedin.com/in/jean-carlos-6149a2232/" target="_blank">Linkedin</a>
-                        <a href="https://instagram.com/fookinselfish" target="_blank">Instagram</a>
+                        <a class="me-4 text-reset" href="https://github.com/JeanCSF" target="_blank">GitHub</a>
+                        <a class="me-4 text-reset" href="https://facebook.com/fookinselfish" target="_blank">Facebook</a>
+                        <a class="me-4 text-reset" href="https://twitter.com/JCS_16" target="_blank">Twitter</a>
+                        <a class="me-4 text-reset" href="https://www.linkedin.com/in/jean-carlos-6149a2232/" target="_blank">Linkedin</a>
+                        <a class="text-reset" href="https://instagram.com/fookinselfish" target="_blank">Instagram</a>
                         <p>
-                            <a href="http://jeancsf.github.io/portfolio" target="_blank" rel="noopener noreferrer"> Site design / logo &copy; <?= date("Y") ?> JeanCSF</a>
+                            <a class="text-reset" href="http://jeancsf.github.io/portfolio" target="_blank" rel="noopener noreferrer"> Site design / logo &copy; <?= date("Y") ?> JeanCSF</a>
                         </p>
                     </div>
                 </div>

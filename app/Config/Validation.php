@@ -40,4 +40,19 @@ class Validation
     //--------------------------------------------------------------------
     // Rules
     //--------------------------------------------------------------------
+
+    public $signup = [
+        'USER' => [
+            'rules'  => 'required|max_length[50]',
+            'errors' => [
+                'required' => '',
+            ],
+        ],
+        'email' => [
+            'rules'  => 'required|max_length[254]|valid_email',
+            'errors' => [
+                'valid_email' => 'Please check the Email field. It does not appear to be valid.',
+            ],
+        ],
+    ];
 }

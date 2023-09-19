@@ -46,17 +46,12 @@ class Logincontroller extends BaseController
                 !empty($foto) ? $img_name = $img->getRandomName() : $img_name = NULL;
 
                 $login->signUpCreateAccount($post, $img_name);
-                $path = '../../public/assets/img/profiles_pics/' . $post['user'];
-                $thumbPath = $path . '/thumb';
-                $sourceImagePath  = $path . '/' . $img_name;
+                $path = '../../writable/uploads/img/profile_images/' . $post['user'];
                 if (!is_dir($path)) {
                     mkdir($path, 0777, true);
-                    mkdir($thumbPath, 0777, true);
                 }
-                if (!empty($foto)) {
+                if ($foto) {
                     $img->store($path, $img_name);
-                    
-                    $image->withFile($sourceImagePath)->resize(48, 48, true)->save($thumbPath . '/_icon' . $img_name);
                 }
                 $key = base64_encode($post['email'] . date('Y-m-d H:i:s'));
                 $email = \Config\Services::email();

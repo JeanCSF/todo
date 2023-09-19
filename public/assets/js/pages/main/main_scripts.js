@@ -2,8 +2,8 @@ var msg = document.querySelector('#msgInfo');
 var alerta = document.querySelector('#alerta');
 const toastElement = document.querySelector('#basicToast');
 
-const btnSubmitTaskModal = document.querySelector("#btnSubmitTaskModal");
-const taskModalLabel = document.querySelector("#taskModalLabel");
+const btnSubmitTaskModal = document.querySelector('#btnSubmitTaskModal');
+const taskModalLabel = document.querySelector('#taskModalLabel');
 
 const newPost = document.querySelector("#newPost");
 var jobModalTitle = document.querySelector('#job_name');

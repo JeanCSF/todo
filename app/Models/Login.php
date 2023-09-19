@@ -18,7 +18,10 @@ class Login extends Model
 
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules      = [
+        'USER'      => 'required|max_length[50]',
+        'PASS'      => 'required'
+    ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
