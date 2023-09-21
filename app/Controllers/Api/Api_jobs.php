@@ -130,6 +130,27 @@ class Api_jobs extends ResourceController
         }
     }
 
+    public function finish($id = null)
+    {
+        if (isset($this->session->USER_ID) && $this->_tokenValidate()) {
+            $response = $this->jobsServices->finishJob($id);
+            return $this->respond($response);
+        } else {
+            return $this->respond(['error' => 'Token inválido!']);
+        }
+    }
+
+    public function updateReply($id = null)
+    {
+        if (isset($this->session->USER_ID) && $this->_tokenValidate()) {
+            $requestInfo = $this->request->getJSON();
+            $response = $this->jobsServices->replyUpdate($id, $requestInfo);
+            return $this->respond($response);
+        } else {
+            return $this->respond(['error' => 'Token inválido!']);
+        }
+    }
+
     public function delete($id = null)
     {
         if (isset($this->session->USER_ID) && $this->_tokenValidate()) {

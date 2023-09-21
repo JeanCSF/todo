@@ -5,11 +5,14 @@ const toastElement = document.querySelector('#basicToast');
 const btnSubmitTaskModal = document.querySelector('#btnSubmitTaskModal');
 const taskModalLabel = document.querySelector('#taskModalLabel');
 
+const btnReplySubmit = document.querySelector('#btnReply');
+
 const newPost = document.querySelector("#newPost");
 var jobModalTitle = document.querySelector('#job_name');
 var jobModalText = document.querySelector('#job_desc');
 var jobModalPrivacy = document.querySelector('#job_privacy_select');
 var frmPostModal = document.querySelector('#frmPostModal');
+var formReplyModal = document.querySelector('#formReplyModal');
 
 frmPostModal.addEventListener('submit', function (e) {
     const dataType = btnSubmitTaskModal.getAttribute('data-type');
@@ -27,6 +30,15 @@ frmPostModal.addEventListener('submit', function (e) {
     }
 
 
+});
+
+formReplyModal.addEventListener('submit', (e) => {
+    const replyModalText = document.querySelector('#reply_content');
+    const replyToEditId = btnReplySubmit.getAttribute('data-reply-id');
+    console.log(replyToEditId);
+    editReply(session_user_id, replyToEditId, replyModalText.value);
+    e.preventDefault();
+    document.querySelector('#closeReplyModal').click();
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -68,7 +80,7 @@ function createUserOptionsDropdown(response, type) {
                 'data-bs-toggle': 'modal',
                 'data-bs-target': '#privacyModal',
                 class: 'dropdown-item',
-                title: 'Muda Privacidade',
+                title: 'Mudar Privacidade',
                 role: 'menuitem',
                 href: 'javascript:void(0)'
             });
@@ -81,10 +93,11 @@ function createUserOptionsDropdown(response, type) {
                 const item2 = document.createElement('li');
                 const linkItem2 = createElement('a', {
                     class: 'dropdown-item',
-                    href: `${BASEURL}/todocontroller/jobdone/${response.job_id}`,
+                    href: 'javascript:void(0)',
                     role: 'menuitem',
                     title: 'Finalizar Tarefa',
                 });
+                item2.addEventListener('click', () => finishJob(response.job_id));
                 linkItem2.innerHTML = 'Finalizar <i class="fa fa-crosshairs text-success"></i>';
                 item2.appendChild(linkItem2);
                 dropdownMenu.appendChild(item2);
@@ -98,7 +111,7 @@ function createUserOptionsDropdown(response, type) {
                     role: 'menuitem',
                     href: 'javascript:void(0)'
                 });
-                item3.addEventListener('click', () => fillModalEdit(response.job_id, response.job_title, response.job))
+                item3.addEventListener('click', () => fillModalEdit(response.job_id, response.job_title, response.job));
                 linkItem3.innerHTML = 'Editar <i class="fa fa-pencil text-primary"></i>';
                 item3.appendChild(linkItem3)
                 dropdownMenu.appendChild(item3);
@@ -210,7 +223,7 @@ function createPostElement(response, type) {
         const profilePic = createElement('img', {
             height: 48,
             width: 48,
-            'data-src': !response.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${response.user}/${response.profile_pic}`,
+            'data-src': !response.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profile_imgs/${response.user}/${response.profile_pic}`,
             alt: 'Profile Pic',
             class: 'lazyload'
         });
@@ -305,6 +318,7 @@ function createPostElement(response, type) {
         });
         commentButton.appendChild(commentIcon);
         const commentsCount = createElement('span', {
+            id: `commentsCount${response.job_id}`,
             class: 'ms-1 fst-italic text-muted fw-bold fs-6'
         });
         commentsCount.textContent = response.job_num_comments;
@@ -342,7 +356,7 @@ function createPostElement(response, type) {
     if (type === 'REPLY') {
         const container = createElement('div', {
             class: 'post-container post',
-            id: `jobReplyContent${response.reply_id}`
+            id: `replyContent${response.reply_id}`
         });
 
 
@@ -358,7 +372,7 @@ function createPostElement(response, type) {
         const profilePic = createElement('img', {
             height: 48,
             width: 48,
-            'data-src': !response.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${response.user}/${response.profile_pic}`,
+            'data-src': !response.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profile_imgs/${response.user}/${response.profile_pic}`,
             alt: 'Profile Pic',
             class: 'lazyload'
         });
@@ -445,6 +459,7 @@ function createPostElement(response, type) {
         });
         commentButton.appendChild(commentIcon);
         const commentsCount = createElement('span', {
+            id: `replyCommentsCount${response.reply_id}`,
             class: 'ms-1 fst-italic text-muted fw-bold fs-6'
         });
         commentsCount.textContent = response.reply_num_comments;
@@ -641,7 +656,102 @@ async function editJob(user_id, job_id, job_title, job, job_privacy) {
         const newJobTittle = jobContainer.querySelector('.job-title');
         const newJobDesc = jobContainer.querySelector('.job-text');
         newJobTittle.textContent = updatedJob.job_title;
-        newJobDesc.textContent = updatedJob.job;
+        newJobDesc.innerHTML = updatedJob.job;
+
+    } catch (error) {
+        console.error("Erro na requisição:", error);
+    }
+}
+
+async function finishJob(job_id) {
+    try {
+        const response = await fetch(`${BASEURL}/api/job/finish/${job_id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': 'ihgfedcba987654321',
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            alerta.classList.add('alert-danger');
+            msg.textContent = responseData.error;
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+        alerta.classList.add('alert-success');
+        msg.textContent = responseData.message;
+        var toast = new bootstrap.Toast(toastElement);
+        toast.show();
+        const jobResponse = await fetch(`${BASEURL}/api/job/show/${job_id}`, {
+            method: 'GET',
+            headers: {
+                'token': 'ihgfedcba987654321'
+            }
+        });
+
+        if (!jobResponse.ok) {
+            throw new Error(`Erro na requisição: ${jobResponse.statusText}`);
+        }
+
+        const jobData = await jobResponse.json();
+        const updatedJob = jobData.job;
+        const mainJobsContainer = document.querySelector('#postContainer');
+        const oldJobContainer = document.querySelector(`#post${job_id}`);
+        const newJobContainer = createPostElement(updatedJob, 'POST');
+        mainJobsContainer.replaceChild(newJobContainer, oldJobContainer);
+
+    } catch (error) {
+        console.error("Erro na requisição:", error);
+    }
+}
+
+async function editReply(user_id, reply_id, reply) {
+    const paramsObj = {
+        user_id: user_id,
+        reply_id: reply_id,
+        reply: reply,
+    }
+    console.log(paramsObj);
+    try {
+        const response = await fetch(`${BASEURL}/api/job/update_reply/${reply_id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': 'ihgfedcba987654321',
+            },
+            body: JSON.stringify(paramsObj),
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            alerta.classList.add('alert-danger');
+            msg.textContent = responseData.error;
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+        alerta.classList.add('alert-success');
+        msg.textContent = responseData.message;
+        var toast = new bootstrap.Toast(toastElement);
+        toast.show();
+
+        const replyResponse = await fetch(`${BASEURL}/api/job/reply/${reply_id}`, {
+            method: 'GET',
+            headers: {
+                'token': 'ihgfedcba987654321'
+            }
+        });
+
+        if (!replyResponse.ok) {
+            throw new Error(`Erro na requisição: ${replyResponse.statusText}`);
+        }
+
+        const replyData = await replyResponse.json();
+        const updatedReply = replyData.reply;
+        const replyContainer = document.querySelector(`#replyContent${reply_id}`);
+        const newReply = replyContainer.querySelector('.job-text');
+    
+        newReply.innerHTML = updatedReply.reply;
+    
 
     } catch (error) {
         console.error("Erro na requisição:", error);
@@ -687,16 +797,16 @@ function fillModalEdit(id, job, desc) {
     btnSubmitTaskModal.setAttribute('data-job-id', id);
     btnSubmitTaskModal.setAttribute('data-type', 'edit')
     jobModalTitle.setAttribute('value', job);
-    jobModalText.setAttribute('value', desc);
-    jobModalText.textContent = desc;
+    jobModalText.setAttribute('value', desc.replace(/<br\s*\/?>/gi, ''));
+    jobModalText.textContent = desc.replace(/<br\s*\/?>/gi, '');
 
 }
 
 function fillModalEditReply(id, reply) {
-    document.getElementById("btnSubmit").setAttribute('value', 'Atualizar');
-    document.getElementById("reply_id").setAttribute('value', id);
-    document.getElementById("reply_content").setAttribute('value', reply);
-    document.getElementById("reply_content").textContent = reply;
+    btnReplySubmit.setAttribute('data-reply-id', id);
+    document.getElementById("btnReply").setAttribute('value', 'Atualizar');
+    document.getElementById("reply_content").setAttribute('value', reply.replace(/<br\s*\/?>/gi, ''));
+    document.getElementById("reply_content").textContent = reply.replace(/<br\s*\/?>/gi, '');
 
 
 }
@@ -859,10 +969,14 @@ async function commentContent(user_id, content_id, comment, type_content) {
             }
 
             const jobData = await jobResponse.json();
+            const jobInfo = jobData.job;
             const newComment = jobData.job_comments[0];
+            const commentsCount = document.querySelector(`#commentsCount${content_id}`);
             const newJobCommentContainer = document.querySelector("#newComment");
+
             const newJobCommentElement = createPostElement(newComment, 'REPLY');
             newJobCommentContainer.appendChild(newJobCommentElement);
+            commentsCount.textContent = jobInfo.job_num_comments;
 
         } else if (type_content === 'REPLY') {
             const replyResponse = await fetch(`${BASEURL}/api/job/reply/${content_id}`, {

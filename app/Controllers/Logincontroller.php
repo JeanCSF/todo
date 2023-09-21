@@ -46,7 +46,7 @@ class Logincontroller extends BaseController
                 !empty($foto) ? $img_name = $img->getRandomName() : $img_name = NULL;
 
                 $login->signUpCreateAccount($post, $img_name);
-                $path = '../../writable/uploads/img/profile_images/' . $post['user'];
+                $path = '../../public/assets/img/profile_imgs/' . $post['user'];
                 if (!is_dir($path)) {
                     mkdir($path, 0777, true);
                 }

@@ -14,15 +14,15 @@
                 <div class="container">
                     <div class="row">
                         <div class="p-4 mb-3">
-                            <form action="" id="formReply" method="post">
+                            <form action="" id="formReplyModal" method="post">
+                            <button type="button" class="border-0 bg-transparent" data-bs-dismiss="modal" id="closeReplyModal" aria-label="Close"></button>
                                 <div class="row mb-3">
                                     <textarea style="height: 150px;" name="reply_content" id="reply_content" value="" class="form-control" required></textarea>
                                 </div>
-                                <input type="hidden" name="reply_id" id="reply_id" value="">
                         </div>
                         <div class="modal-footer d-flex justify-content-between">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <input type="submit" value="Salvar" id="btnReply" onclick="" class="btn btn-success">
+                            <input type="submit" value="Salvar" id="btnReply" data-reply-id="" class="btn btn-success">
                         </div>
                         </form>
                     </div>

@@ -115,7 +115,7 @@ async function headerContent(page, user) {
             class: 'img fluid rounded-circle',
             width: 200,
             height: 200,
-            src: !User.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${User.user}/${User.profile_pic}`,
+            src: !User.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profile_imgs/${User.user}/${User.profile_pic}`,
             alt: 'Profile pic'
         });
         const profileUser = createElement('p', {

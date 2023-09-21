@@ -5,7 +5,7 @@
 </article>
 <hr>
 <div id="reply_comment_div" class="header-post mb-2">
-    <img class="rounded-circle border border-light-subtle float-start" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profiles_pics/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt="Profile pic">
+    <img class="rounded-circle border border-light-subtle float-start" height="48" width="48" src="<?= !empty($_SESSION['IMG']) ? base_url('../../assets/img/profile_imgs/' . $_SESSION['USER'] . '/' . $_SESSION['IMG']) : base_url('/assets/logo.png') ?>" alt="Profile pic">
     <form method="post" class="d-flex justify-content-between align-items-center" id="frmReply">
         <div class="ms-3 text-center">
             <textarea oninput="autoGrow(this)" id="reply_comment" name="reply_comment" placeholder="Responder Comentário" required autocomplete="off" style="width: 600px;"></textarea>

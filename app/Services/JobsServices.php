@@ -64,7 +64,7 @@ class JobsServices
                     'user_id'               => $job->USER_ID,
                     'job_id'                => $job->ID_JOB,
                     'job_title'             => $this->HTMLPurifier->html_purify($job->JOB_TITLE),
-                    'job'                   => $this->HTMLPurifier->html_purify($job->JOB),
+                    'job'                   => nl2br($this->HTMLPurifier->html_purify($job->JOB)),
                     'job_created'           => isset($job->DATETIME_CREATED) ? $this->TimeElapsedString->time_elapsed_string($job->DATETIME_CREATED) : "",
                     'job_updated'           => isset($job->DATETIME_UPDATED) ? 'Atualizado: ' . $this->TimeElapsedString->time_elapsed_string($job->DATETIME_UPDATED) : "",
                     'job_finished'          => isset($job->DATETIME_FINISHED) ? 'Finalizado: ' . $this->TimeElapsedString->time_elapsed_string($job->DATETIME_FINISHED) : "",
@@ -99,7 +99,7 @@ class JobsServices
                         'user_id'               => $job['USER_ID'],
                         'job_id'                => $job['ID_JOB'],
                         'job_title'             => $this->HTMLPurifier->html_purify($job['JOB_TITLE']),
-                        'job'                   => $this->HTMLPurifier->html_purify($job['JOB']),
+                        'job'                   => nl2br($this->HTMLPurifier->html_purify($job['JOB'])),
                         'job_created'           => isset($job['DATETIME_CREATED']) ? $this->TimeElapsedString->time_elapsed_string($job['DATETIME_CREATED']) : "",
                         'job_updated'           => isset($job['DATETIME_UPDATED']) ? 'Atualizado: ' . $this->TimeElapsedString->time_elapsed_string($job['DATETIME_UPDATED']) : "",
                         'job_finished'          => isset($job['DATETIME_FINISHED']) ? 'Finalizado: ' . $this->TimeElapsedString->time_elapsed_string($job['DATETIME_FINISHED']) : "",
@@ -117,7 +117,7 @@ class JobsServices
                         'name'                  => $comment['name'],
                         'user_id'               => $comment['user_id'],
                         'reply_id'              => $comment['comment_id'],
-                        'reply'                 => $this->HTMLPurifier->html_purify($comment['comment']),
+                        'reply'                 => nl2br($this->HTMLPurifier->html_purify($comment['comment'])),
                         'datetime_replied'      => isset($comment['comment_created']) ? $this->TimeElapsedString->time_elapsed_string($comment['comment_created']) : "",
                         'reply_likes'           => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
                         'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
@@ -162,7 +162,7 @@ class JobsServices
                         'name'                  => $reply['NAME'],
                         'user_id'               => $reply['USER_ID'],
                         'reply_id'              => $reply['REPLY_ID'],
-                        'reply'                 => $this->HTMLPurifier->html_purify($reply['REPLY']),
+                        'reply'                 => nl2br($this->HTMLPurifier->html_purify($reply['REPLY'])),
                         'reply_created'         => isset($reply['DATETIME_REPLIED']) ? $this->TimeElapsedString->time_elapsed_string($reply['DATETIME_REPLIED']) : "",
                         'reply_likes'           => $this->likesModel->getContentLikes($reply['REPLY_ID'], 'REPLY'),
                         'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($reply['REPLY_ID']),
@@ -226,6 +226,50 @@ class JobsServices
                 return ['message' => 'Tarefa atualizada com sucesso!'];
             } else {
                 return ['error' => 'Esta tarefa não pertence a você!'];
+            }
+        } catch (Exception $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    public function finishJob($id)
+    {
+        try {
+            $job = $this->jobsModel->find($id);
+            if (!$job) {
+                return ['error' => 'Item not found'];
+            }
+            if ($this->session->USER_ID == $job->USER_ID) {
+                $jobFinish = [
+                    'DATETIME_FINISHED'     =>  date("Y-m-d H:i:s"),
+                    'DATETIME_UPDATED'      =>  date("Y-m-d H:i:s"),
+                ];
+                $this->jobsModel->table('jobs')->update($id, $jobFinish);
+                return ['message' => 'Tarefa finalizada com sucesso!'];
+            } else {
+                return ['error' => 'Esta tarefa não pertence a você!'];
+            }
+        } catch (Exception $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    public function replyUpdate($id, $requestInfo)
+    {
+        try {
+            $reply = $this->repliesModel->find($id);
+            if (!$reply) {
+                return ['error' => 'Item not found'];
+            }
+            if ($this->session->USER_ID == $reply->USER_ID) {
+                $replyEdit = [
+                    'REPLY'                   =>  $requestInfo->reply,
+                    'DATETIME_REPLIED'      =>  date("Y-m-d H:i:s"),
+                ];
+                $this->repliesModel->table('replies')->update($id, $replyEdit);
+                return ['message' => 'Resposta atualizada com sucesso!'];
+            } else {
+                return ['error' => 'Esta resposta não pertence a você!'];
             }
         } catch (Exception $e) {
             return ['error' => $e->getMessage()];

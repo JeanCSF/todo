@@ -39,8 +39,10 @@ $routes->setAutoRoute(true);
  */
 $routes->group('api/job', ['namespace' => 'App\Controllers\Api'], function ($routes) {
     $routes->put('update/(:num)', 'Api_jobs::update/$1');
+    $routes->put('update_reply/(:num)', 'Api_jobs::updateReply/$1');
     $routes->get('all', 'Api_jobs::index');
     $routes->get('show/(:num)', 'Api_jobs::show/$1');
+    $routes->post('finish/(:num)', 'Api_jobs::finish/$1');
     $routes->delete('delete/(:num)', 'Api_jobs::delete/$1');
     $routes->get('reply/(:num)', 'Api_jobs::showReply/$1');
     $routes->post('like', 'Api_jobs::likeContent');
