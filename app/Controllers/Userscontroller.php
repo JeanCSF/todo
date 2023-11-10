@@ -6,7 +6,7 @@ use App\Models\Login;
 use App\Models\Todo;
 use App\Models\Users;
 
-class Userscontroller extends BaseController
+class UsersController extends BaseController
 {
 
     public function upload()

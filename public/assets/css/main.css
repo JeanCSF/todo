@@ -115,6 +115,7 @@ html {
     width: 49.9%;
     top: 0;
     font-family: 'Friz Quadrata Std', sans-serif;
+    z-index: 999;
 }
 
 .page-title a {

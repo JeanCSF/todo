@@ -8,11 +8,15 @@ use App\Models\Users;
 
 class Main extends BaseController
 {
+    public function checkSession()
+    {
+        return session('USER_ID');
+    }
+
     public function main()
     {
-        $session = session();
-        if ($session->has('USER_ID')) {
-            redirect()->to(base_url('/home'));
+        if (session('USER_ID')) {
+            return redirect()->to(base_url('/home'));
         } else {
             echo view('main');
         }
@@ -20,16 +24,16 @@ class Main extends BaseController
 
     public function index()
     {
-        if (isset($_SESSION['USER_ID'])) {
-            $data = [
-                'pageTitle'     => "Página Inicial",
-            ];
-            return view('home', $data);
-        } else {
-            $this->main();
+        if (!$this->checkSession()) {
+            return redirect()->to(base_url('/'));
         }
+
+        $data = [
+            'pageTitle'     => "Página Inicial",
+        ];
+        return view('home', $data);
     }
-    
+
     public function about()
     {
         $data['pageTitle'] = "Sobre o Projeto";
@@ -68,5 +72,4 @@ class Main extends BaseController
         $data['pageTitle'] = "Contato";
         echo view('utils/contact', $data);
     }
-
 }

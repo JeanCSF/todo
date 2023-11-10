@@ -118,19 +118,33 @@ async function headerContent(page, user) {
             src: !User.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profile_imgs/${User.user}/${User.profile_pic}`,
             alt: 'Profile pic'
         });
+        const profileUserContainer = createElement('div', {
+            class: 'd-flex justify-content-between align-items-center'
+        });
+
         const profileUser = createElement('p', {
-            class: 'fst-italic fw-bold text-muted'
+            class: 'fst-italic fw-bold text-muted me-5 mt-3'
         });
         profileUser.textContent = `@${User.user}`;
+
+        const profileMessage = createElement('a', {
+            href: `${BASEURL}/messages/chat/${User.user}`,
+            class: `ms-3 btn btn-sm btn-outline-primary rounded-5 ${User.user === session_user ? 'd-none' : 'd-block'}`
+        });
+        profileMessage.innerHTML = 'Mensagem &#x2709;'
+
+        profileUserContainer.appendChild(profileUser);
+        profileUserContainer.appendChild(profileMessage);
+
         profilePicContainer.appendChild(profilePic);
-        profilePicContainer.appendChild(profileUser);
+        profilePicContainer.appendChild(profileUserContainer);
 
         if (session_user_id === User.user_id) {
             const visitsButtonDiv = createElement('div', {
-                class: 'text-end z-3'
+                class: 'position-relative'
             })
             const visitsButton = createElement('button', {
-                class: 'btn border-0',
+                class: 'btn border-0 position-absolute z-3',
                 'data-bs-toggle': 'modal',
                 'data-bs-target': '#profileViewsModal',
                 title: 'Visitas',

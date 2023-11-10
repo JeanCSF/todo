@@ -22,7 +22,7 @@
         background-color: lightsteelblue;
         position: relative;
         min-height: 200px;
-        z-index: -1;
+        z-index: 1;
     }
 
     .tabs {
@@ -52,6 +52,7 @@
     }
 </style>
 <div id="headerContainer" class="row mt-1">
+
 </div>
 <div class="tabs row">
     <div class="text-center d-flex justify-content-evenly m-0 p-0">

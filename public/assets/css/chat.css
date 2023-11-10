@@ -6,6 +6,7 @@
     max-height: 65vh;
     overflow-y: scroll;
     border-bottom: none !important;
+    position: relative;
 }
 
 .message {
@@ -20,11 +21,10 @@
     font-weight: 500;
     color: #fff;
     font-family: arial;
-    position: relative;
 }
 
 .my-message {
-    left: 36.5%;
+    margin-left: auto;
     background: var(--primary);
 }
 

@@ -1,32 +1,38 @@
 <?= $this->extend('layouts/main_layout') ?>
 <?= $this->section('section') ?>
 <link rel="stylesheet" href="<?= base_url('assets/css/chat.css') ?>">
-<main class="d-flex flex-column justify-content-between">
-    <div class="messages-container">
-        <div class="message">
-            <p>L</p>
+<?php if (!isset($user)) : ?>
+    <style>
+        main {
+            margin: 0;
+            display: flex;
+            place-items: center;
+            min-width: 320px;
+            min-height: 100vh;
+            justify-content: center;
+        }
+    </style>
+<?php endif; ?>
+<main class="<?= isset($user) ? 'd-flex flex-column justify-content-between' : '' ?>">
+    <?php if (isset($user)) : ?>
+        <div class="messages-container" id="messagesContainer">
+
         </div>
-        <div class="message">
-            <p>Lorem ipsum dolor, sit amet </p>
-        </div>
-        <div class="message my-message">
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. </p>
-        </div>
-        <div class="message">
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore rerum reiciendis voluptate eligendi. </p>
-        </div>
-        <div class="message">
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore rerum reiciendis voluptate eligendi. Sequi aliquid repellat aut in at praesentium ipsa explicabo eveniet error animi eaque, labore ab deleniti cupiditate.</p>
-        </div>
-    </div>
-    <form class="row" id="frmMessage">
-        <div class="d-flex">
-            <textarea class="msg-input form-control" placeholder="Mensagem" name="message" id="message" rows="1"></textarea>
-            <button type="submit" class="msg-submit"><i class="fa fa-location-arrow"></i></button>
-        </div>
-    </form>
+        <form class="row" id="frmMessage">
+            <div class="d-flex">
+                <textarea class="msg-input form-control" placeholder="Mensagem" name="message" id="message" rows="1"></textarea>
+                <button type="submit" class="msg-submit" onClick=""><i class="fa fa-location-arrow"></i></button>
+            </div>
+        </form>
+    <?php else : ?>
+        <p>Selecione um dos contatos ao lado para visualizar as mensagens</p>
+    <?php endif; ?>
 </main>
+
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
+<script>
+    var chat_user_name = '<?= $user ?>'
+</script>
 <script defer src="<?= base_url('assets/js/pages/main/chat.js') ?>"></script>
 <?= $this->endSection() ?>

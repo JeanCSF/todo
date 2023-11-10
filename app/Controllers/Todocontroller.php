@@ -7,7 +7,7 @@ use App\Models\Replies;
 use App\Models\Todo;
 use CodeIgniter\Controller;
 
-class Todocontroller extends BaseController
+class TodoController extends BaseController
 {
     public function jobDone($id_job)
     {

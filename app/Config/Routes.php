@@ -108,7 +108,12 @@ $routes->get('reply/(:any)', 'Todocontroller::reply/$1');
  * Chat Controller Routes
  * --------------------------------------------------------------------
  */
-$routes->get('chat', 'Chatcontroller::index');
+$routes->group('messages', ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->get('/', 'Chatcontroller::index');
+    $routes->get('chat/(:any)', 'ChatController::chat/$1');
+    $routes->post('send_message', 'ChatController::sendMessage');
+    $routes->post('new_chat', 'ChatController::createChat');
+});
 
 /*
  * --------------------------------------------------------------------

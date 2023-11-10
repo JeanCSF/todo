@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Login;
 
-class Logincontroller extends BaseController
+class LoginController extends BaseController
 {
 
     public function signUp()
