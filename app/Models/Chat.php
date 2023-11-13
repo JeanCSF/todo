@@ -41,23 +41,18 @@ class Chat extends Model
 
     public function addChat($data)
     {
-        return $this->save($data);
+        $this->insert($data);
+        return $this->insertID();
     }
 
-    public function saveMessage($data)
+    public function addUserToChat($chatId, $userId)
     {
-        $messageData = [
-            'USER_ID'           => $data['USER_ID'],
-            'MESSAGE'           => $data['MESSAGE'],
-            'DATETIME_CREATED'  => date("Y-m-d H:i:s")
-        ];
-        $this->messagesModel->saveMessage($messageData);
+        return $this->db->table('CHAT_CONNECTIONS')->insert(['CHAT_ID' => $chatId, 'USER_ID' => $userId]);
+    }
 
-        $chatData = [
-            'USER_ID'           => $data['USER_ID'],
-            'MESSAGE_ID'        => $this->messagesModel->getLastMessageByUserId($data['USER_ID']),
-            'DATETIME_CREATED'  => date("Y-m-d H:i:s")
-        ];
-        return $this->save($chatData);
+    public function getChatId($chatInfos)
+    {
+        $chatId = $this->select('CHAT_ID')->where('CHAT_INFOS', $chatInfos)->get()->getRow('CHAT_ID');
+        return $chatId;
     }
 }

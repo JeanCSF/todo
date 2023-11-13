@@ -16,9 +16,9 @@ class Main extends BaseController
     public function main()
     {
         if (session('USER_ID')) {
-            return redirect()->to(base_url('/home'));
+            return redirect()->to(base_url('home'));
         } else {
-            echo view('main');
+            return view('main');
         }
     }
 

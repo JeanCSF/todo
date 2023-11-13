@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="<?= base_url('assets/bootstrap-5.3.1-dist/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="<?= base_url('assets/css/main.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/chat.css') ?>">
+
 </head>
 
 <body>
@@ -90,6 +92,44 @@
                         <p>
                             <a class="text-reset" href="http://jeancsf.github.io/portfolio" target="_blank" rel="noopener noreferrer"> Site design / logo &copy; <?= date("Y") ?> JeanCSF</a>
                         </p>
+                    </div>
+                </div>
+                <div class="bottom-0 w-100" id="chatsContainer">
+                    <div class="mt-2 chat-tab d-flex justify-content-between align-content-center ps-3">
+                        <p><i class="fa fa-inbox me-2 pt-3 "></i>Mensagens</p>
+                        <button type="button" class="btn border-0 bg-transparent" style="cursor: pointer;" onclick="toggleChat()"><i class="fa fa-angles-up"></i></button>
+                    </div>
+                    <div class="d-none bg-dark-subtle bottom-0" id="chats">
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
+                        <p>aaa</p>
                     </div>
                 </div>
             </div>

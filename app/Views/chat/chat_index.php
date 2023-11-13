@@ -16,7 +16,6 @@
 <main class="<?= isset($user) ? 'd-flex flex-column justify-content-between' : '' ?>">
     <?php if (isset($user)) : ?>
         <div class="messages-container" id="messagesContainer">
-
         </div>
         <form class="row" id="frmMessage">
             <div class="d-flex">
@@ -32,7 +31,7 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script>
-    var chat_user_name = '<?= $user ?>'
+    var chat_user_name = '<?= isset($user) ? $user : '' ?>'
 </script>
 <script defer src="<?= base_url('assets/js/pages/main/chat.js') ?>"></script>
 <?= $this->endSection() ?>

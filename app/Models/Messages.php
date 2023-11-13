@@ -6,14 +6,14 @@ use CodeIgniter\Model;
 
 class Messages extends Model
 {
-    protected $table            = 'chat';
+    protected $table            = 'messages';
     protected $primaryKey       = 'MESSAGE_ID';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['USER_ID', 'MESSAGE', 'DATETIME_CREATED', 'DATETIME_UPDATED', 'DATETIME_READ'];
+    protected $allowedFields    = ['CHAT_ID', 'USER_ID', 'MESSAGE', 'DATETIME_CREATED', 'DATETIME_UPDATED', 'DATETIME_READ'];
 
     // Validation
     protected $validationRules      = [];
@@ -32,10 +32,10 @@ class Messages extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getLastMessageByUserId($userId)
+    public function getChatMessages($chatId)
     {
-        $result = $this->select('MESSAGE_ID')->where('USER_ID', $userId)->like('DATETIME_CREATED', date("Y-m-d H:i"))->get();
-        return $result->getRow();
+        $messages = $this->where('CHAT_ID', $chatId)->get();
+        return $messages;
     }
 
     public function saveMessage($data)

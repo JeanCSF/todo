@@ -1,3 +1,5 @@
+const messagesContainer = document.querySelector("#messagesContainer");
+
 function startComet() {
     setTimeout(function () {
         fetch("chat/get_messages")
@@ -21,18 +23,17 @@ function startComet() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    newChat()
     // startComet();
     document.getElementById("frmMessage").addEventListener("submit", (e) => {
         e.preventDefault();
         var message = document.getElementById("message").value;
-        sendMessage(message);
+        newMessage(message);
         document.getElementById("message").value = "";
 
     });
 });
 
-async function sendMessage(chatId, message) {
+async function newMessage(message) {
     try {
         const response = await fetch(`${BASEURL}/messages/send_message`, {
             method: "POST",
@@ -40,17 +41,23 @@ async function sendMessage(chatId, message) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                chatId: chatId,
+                chat_user_name: chat_user_name,
                 message: message
             }),
         });
-
         if (!response.ok) {
             throw new Error(`Erro na requisição: ${response.status}`);
         }
 
+        const myMessage = createElement('div', {
+            class: 'message my-message'
+        });
+        myMessage.textContent = message;
+
+        messagesContainer.appendChild(myMessage);
         const data = await response.json();
         return data;
+
     } catch (error) {
         console.error("Erro na requisição:", error);
         throw error;
@@ -64,10 +71,6 @@ async function newChat() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                session_user_id: session_user_id,
-                chat_user_name: chat_user_name
-            }),
         });
 
         if (!response.ok) {

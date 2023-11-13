@@ -42,7 +42,7 @@ formReplyModal.addEventListener('submit', (e) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    deleteContent()
+    deleteContent();
 });
 
 const createElement = (elementName, attributes) => {
@@ -52,6 +52,18 @@ const createElement = (elementName, attributes) => {
     attributesAsArray.forEach(([key, value]) => element.setAttribute(key, value));
 
     return element;
+}
+
+function toggleChat() {
+    const chat = document.querySelector('#chats');
+    const chatsContainer = document.querySelector('#chatsContainer');
+    chat.classList.toggle('d-none');
+    chatsContainer.classList.toggle('position-absolute');
+    chatsContainer.classList.toggle('pe-4');
+}
+
+async function loadChat(){
+    
 }
 
 function createUserOptionsDropdown(response, type) {

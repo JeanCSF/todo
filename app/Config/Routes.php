@@ -110,9 +110,10 @@ $routes->get('reply/(:any)', 'Todocontroller::reply/$1');
  */
 $routes->group('messages', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('/', 'Chatcontroller::index');
-    $routes->get('chat/(:any)', 'ChatController::chat/$1');
-    $routes->post('send_message', 'ChatController::sendMessage');
+    $routes->get('get_messages/(:num)', 'Chatcontroller::getMessages/$1');
+    $routes->get('chat/(:any)', 'ChatController::chat/$1/$2');
     $routes->post('new_chat', 'ChatController::createChat');
+    $routes->post('send_message', 'ChatController::sendMessage');
 });
 
 /*

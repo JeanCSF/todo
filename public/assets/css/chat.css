@@ -43,3 +43,19 @@
     padding: .5rem;
     color: var(--bordergrey);
 }
+
+.chat-tab {
+    border-bottom: 2px solid var(--maingrey);
+    background: rgba(255, 255, 255, 0.26);
+    backdrop-filter: blur(7.1px);
+    -webkit-backdrop-filter: blur(7.1px);
+    font-weight: 900;
+    font-family: 'Friz Quadrata Std', sans-serif;
+    z-index: 999;
+}
+
+#chats {
+    max-height: 550px;
+    overflow-y: scroll;
+    transition: max-height 1s ease-in-out;
+}
