@@ -6,31 +6,31 @@ use CodeIgniter\Model;
 
 class Chat extends Model
 {
-    protected $table            = 'chat';
-    protected $primaryKey       = 'CHAT_ID';
+    protected $table = 'chat';
+    protected $primaryKey = 'CHAT_ID';
     protected $useAutoIncrement = true;
-    protected $insertID         = 0;
-    protected $returnType       = 'object';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = ['DATETIME_CREATED', 'DATETIME_UPDATED', 'CHAT_INFOS'];
+    protected $insertID = 0;
+    protected $returnType = 'object';
+    protected $useSoftDeletes = false;
+    protected $protectFields = true;
+    protected $allowedFields = ['DATETIME_CREATED', 'DATETIME_UPDATED', 'CHAT_INFOS'];
 
     // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
+    protected $validationRules = [];
+    protected $validationMessages = [];
+    protected $skipValidation = false;
     protected $cleanValidationRules = true;
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    protected $beforeInsert = [];
+    protected $afterInsert = [];
+    protected $beforeUpdate = [];
+    protected $afterUpdate = [];
+    protected $beforeFind = [];
+    protected $afterFind = [];
+    protected $beforeDelete = [];
+    protected $afterDelete = [];
 
     private $messagesModel;
 
@@ -43,16 +43,5 @@ class Chat extends Model
     {
         $this->insert($data);
         return $this->insertID();
-    }
-
-    public function addUserToChat($chatId, $userId)
-    {
-        return $this->db->table('CHAT_CONNECTIONS')->insert(['CHAT_ID' => $chatId, 'USER_ID' => $userId]);
-    }
-
-    public function getChatId($chatInfos)
-    {
-        $chatId = $this->select('CHAT_ID')->where('CHAT_INFOS', $chatInfos)->get()->getRow('CHAT_ID');
-        return $chatId;
     }
 }

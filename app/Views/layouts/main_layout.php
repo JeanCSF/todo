@@ -30,12 +30,12 @@
             <div id="userActions">
                 <a href="<?= base_url('home') ?>" class="dropdown-item assn-text">ASSN</a>
                 <a href="<?= base_url('home') ?>" class="dropdown-item"><i class="fa fa-home icon"></i><span class="side-text">Home</span></a>
-                <?php if (isset($_SESSION['USER_ID'])) : ?>
+                <?php if (isset($_SESSION['USER_ID'])): ?>
                     <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="dropdown-item"><i class="fa fa-user icon"></i><span class="side-text">Perfil</span></a>
                     <a href="<?= base_url('messages') ?>" class="dropdown-item"><i class="fa fa-inbox icon"></i><span class="side-text">Mensagens</span></a>
                     <a href="<?= base_url('user/' . $_SESSION['USER']) ?>" class="dropdown-item"><i class="fa fa-bell icon"></i><span class="side-text">Notificações</span></a>
                     <a href="<?= base_url('logout') ?>" class="dropdown-item"><i class="fa fa-right-from-bracket icon"></i><span class="side-text">Logout</span></a>
-                    <?php if ($_SESSION['SU'] == 1) : ?>
+                    <?php if ($_SESSION['SU'] == 1): ?>
                         <a href="<?= base_url('users') ?>" class="dropdown-item"><i class="fa fa-users icon"></i><span class="side-text">Usuários</span></a>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -47,16 +47,18 @@
 
         <main class="content">
             <section>
-                <?php if (!empty($pageTitle)) : ?>
+                <?php if (!empty($pageTitle)): ?>
                     <div class="row">
                         <div class="page-title">
                             <div class="row">
                                 <div class="d-flex justify-content-between">
                                     <a href="javascript:history.go(-1)" style="<?= ($pageTitle == 'Página Inicial') ? 'visibility:hidden' : '' ?>"><i class="fa fa-arrow-left me-3"></i></a>
-                                    <p><?= isset($pageTitle) ? $pageTitle : "" ?></p>
+                                    <p>
+                                        <?= isset($pageTitle) ? $pageTitle : "" ?>
+                                    </p>
                                     <a style="<?= ($pageTitle != 'Página Inicial') ? 'visibility:hidden' : '' ?>" id="navbarTask" type="button" data-bs-toggle="modal" data-bs-target="#taskModal" title="Adicionar Tarefa" role="button" onclick="fillModalNewJob()"><i class="fa fa-pencil"></i><i style="font-size: small;" class="fa fa-circle-plus"></i></a>
                                 </div>
-                                <?php if (isset($search)) : ?>
+                                <?php if (isset($search)): ?>
                                     <form class="d-flex mt-1 search" role="search">
                                         <button type="submit" class="btn btn-lg"><i class="fa fa-search"></i></button>
                                         <input class="form-control shadow-none" type="search" value="<?= isset($search) ? $searchInput : '' ?>" name="search" aria-label="Search" />
@@ -74,7 +76,7 @@
             </section>
         </main>
         <footer class="d-flex flex-column justify-content-between right-panel">
-            <?php if (!isset($search)) : ?>
+            <?php if (!isset($search)): ?>
                 <form class="d-flex mt-2 search" role="search">
                     <button type="submit" class="btn btn-lg" title="Pesquisar" role="search"><i class="fa fa-search"></i></button>
                     <input class="form-control shadow-none" type="search" value="" name="search" aria-label="Search" />
@@ -90,46 +92,26 @@
                         <a class="me-4 text-reset" href="https://www.linkedin.com/in/jean-carlos-6149a2232/" target="_blank">Linkedin</a>
                         <a class="text-reset" href="https://instagram.com/fookinselfish" target="_blank">Instagram</a>
                         <p>
-                            <a class="text-reset" href="http://jeancsf.github.io/portfolio" target="_blank" rel="noopener noreferrer"> Site design / logo &copy; <?= date("Y") ?> JeanCSF</a>
+                            <a class="text-reset" href="http://jeancsf.github.io/portfolio" target="_blank" rel="noopener noreferrer"> Site design / logo &copy;
+                                <?= date("Y") ?> JeanCSF
+                            </a>
                         </p>
                     </div>
                 </div>
-                <div class="bottom-0 w-100" id="chatsContainer">
+                <div class="w-100 bottom-0" id="chatsContainer">
                     <div class="mt-2 chat-tab d-flex justify-content-between align-content-center ps-3">
                         <p><i class="fa fa-inbox me-2 pt-3 "></i>Mensagens</p>
-                        <button type="button" class="btn border-0 bg-transparent" style="cursor: pointer;" onclick="toggleChat()"><i class="fa fa-angles-up"></i></button>
+                        <button type="button" class="btn border-0 bg-transparent" style="cursor: pointer;" onclick="toggleChat()"><i class="fa fa-angles-up" id="toggleChatIcon"></i></button>
                     </div>
-                    <div class="d-none bg-dark-subtle bottom-0" id="chats">
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
-                        <p>aaa</p>
+                    <div class="bg-dark-subtle" id="chats">
+                    <div class="px-2 py-1 position-relative mb-3">
+                            <div class="d-flex">
+                                <img width="52" height="52" class="rounded-circle float-start" src="http://localhost:8085/todo/public/assets/avatar.webp" alt="profile pic">
+                                <p class="fst-italic fw-bold ms-4">jeancs</p>
+                                <p class="fst-italic text-muted position-absolute end-0 small me-1">Ontem</p>
+                                <p class="position position-absolute w-100 ms-4 ps-5 mt-4">messagemmessagem</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -149,7 +131,7 @@
                             <ul class="dropdown-menu dropdown-menu-dark mt-3">
                                 <li> <a href="<?= base_url('contact') ?>" class="dropdown-item"><i class="fa fa-message icon"></i> Feedback</a></li>
                                 <li> <a href="javascript:void(0)" role="button" id="themeToggle" class="dropdown-item"><i class="fa fa-circle-half-stroke"></i> Tema</a></li>
-                                <?php if (isset($_SESSION['USER_ID'])) : ?>
+                                <?php if (isset($_SESSION['USER_ID'])): ?>
                                     <li><a class="dropdown-item" href="<?= base_url('user/' . $_SESSION['USER']) ?>"><i class="fa fa-user icon"></i><span class="side-text"> Perfil</span></a></li>
                                     <li><a class="dropdown-item" href="<?= base_url('logout') ?>"><i class="fa fa-right-from-bracket icon"></i> Sair</a></li>
                                 <?php endif; ?>

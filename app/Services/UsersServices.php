@@ -20,7 +20,7 @@ class UsersServices
 
     public function __construct()
     {
-        $this->TimeElapsedString = new \App\Libraries\TimeElapsedStringService();
+        $this->TimeElapsedString = new TimeElapsedStringService();
         $this->HTMLPurifier = new HTMLPurifierService();
         $this->session = \Config\Services::session();
 
@@ -62,7 +62,7 @@ class UsersServices
                         'job_privacy'           => $job->PRIVACY,
                         'job_likes'             => $job->NUM_LIKES,
                         'job_num_comments'      => $job->NUM_REPLIES,
-                        'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, $this->session->USER_ID),
+                        'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, session('USER_ID')),
                         'type'                  => 'POST'
                     ];
                 }
@@ -174,7 +174,7 @@ class UsersServices
                         'datetime_replied'      => isset($reply->DATETIME_REPLIED) ? $this->TimeElapsedString->time_elapsed_string($reply->DATETIME_REPLIED) : "",
                         'reply_likes'           => $this->likesModel->getContentLikes($reply->REPLY_ID, 'REPLY'),
                         'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($reply->REPLY_ID),
-                        'user_liked'            => $this->likesModel->checkUserLikedReply($reply->REPLY_ID, $this->session->USER_ID),
+                        'user_liked'            => $this->likesModel->checkUserLikedReply($reply->REPLY_ID, session('USER_ID')),
                         'type'                  => 'REPLY'
                     ];
                 }
@@ -218,7 +218,7 @@ class UsersServices
                             'datetime_replied'      => $this->TimeElapsedString->time_elapsed_string($this->repliesModel->where('REPLY_ID', $like->CONTENT_ID)->get()->getRow('DATETIME_REPLIED')),
                             'reply_likes'           => $this->likesModel->getContentLikes($like->CONTENT_ID, 'REPLY'),
                             'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($like->CONTENT_ID),
-                            'user_liked'            => $this->likesModel->checkUserLikedReply($like->CONTENT_ID, $this->session->USER_ID),
+                            'user_liked'            => $this->likesModel->checkUserLikedReply($like->CONTENT_ID, session('USER_ID')),
                             'type'                  => 'REPLY'
                         ];
                     } else {
@@ -237,7 +237,7 @@ class UsersServices
                             'job_privacy'           => $this->jobsModel->where('ID_JOB', $like->CONTENT_ID)->get()->getRow('PRIVACY'),
                             'job_likes'             => $this->likesModel->getContentLikes($like->CONTENT_ID, 'POST'),
                             'job_num_comments'      => $this->repliesModel->countJobReplies($like->CONTENT_ID),
-                            'user_liked'            => $this->likesModel->checkUserLikedJob($like->CONTENT_ID, $this->session->USER_ID),
+                            'user_liked'            => $this->likesModel->checkUserLikedJob($like->CONTENT_ID, session('USER_ID')),
                             'type'                  => 'POST'
                         ];
                     }

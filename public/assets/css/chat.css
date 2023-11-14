@@ -44,6 +44,11 @@
     color: var(--bordergrey);
 }
 
+#chatsContainer {
+    position: relative; /* Alterado para relative */
+    width: 100%;
+}
+
 .chat-tab {
     border-bottom: 2px solid var(--maingrey);
     background: rgba(255, 255, 255, 0.26);
@@ -55,7 +60,13 @@
 }
 
 #chats {
-    max-height: 550px;
+    max-height: 0;
     overflow-y: scroll;
-    transition: max-height 1s ease-in-out;
+    transition: max-height 0.5s ease-in-out;
 }
+
+.active-chat {
+    max-height: 265px !important;
+}
+
+

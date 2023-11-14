@@ -6,15 +6,20 @@ use App\Controllers\BaseController;
 use App\Controllers\Main;
 
 use App\Models\Chat;
+use App\Models\ChatConnections;
 use App\Models\Messages;
 use App\Models\Users;
+use App\Services\ChatServices;
 
 class ChatController extends BaseController
 {
 
     private $mainController;
 
+    private $chatServices;
+
     private $chatModel;
+    private $chatConnModel;
     private $messagesModel;
     private $usersModel;
 
@@ -22,7 +27,10 @@ class ChatController extends BaseController
     {
         $this->mainController = new Main();
 
+        $this->chatServices = new ChatServices();
+
         $this->chatModel = new Chat();
+        $this->chatConnModel = new ChatConnections();
         $this->messagesModel = new Messages();
         $this->usersModel = new Users();
     }
@@ -39,25 +47,6 @@ class ChatController extends BaseController
         return view('chat/chat_index', $data);
     }
 
-    public function createChat()
-    {
-        if (!$this->mainController->checkSession()) {
-            return $this->response->setStatusCode(401)->setJSON(['error' => 'Usuário não autenticado']);
-        }
-
-        $data = [
-            'DATETIME_CREATED'  => date("Y-m-d H:i:s"),
-        ];
-
-        try {
-            $this->chatModel->addChat($data);
-            return $this->response->setJSON(['success' => true]);
-        } catch (\Exception $e) {
-            log_message('error', 'Erro ao criar chat: ' . $e->getMessage());
-            return $this->response->setStatusCode(500)->setJSON(['error' => 'Erro interno do servidor']);
-        }
-    }
-
     public function chat($user, $chatId)
     {
         if (!$this->mainController->checkSession()) {
@@ -66,7 +55,7 @@ class ChatController extends BaseController
 
         $data = [
             'pageTitle' => ($user == session('USER') ? "Mensagens {$user}" : "{$user}"),
-            'user'      => $user,
+            'user' => $user,
         ];
         return view('chat/chat_index', $data);
     }
@@ -77,18 +66,19 @@ class ChatController extends BaseController
             return $this->response->setStatusCode(401)->setJSON(['error' => 'Usuário não autenticado']);
         }
 
-        $chatId = $this->chatModel->addChat(['DATETIME_CREATED' => date("Y-m-d H:i:s")]);
+        $chatingWithId = $this->usersModel->where('USER', $this->request->getVar('chat_user_name'))->get()->getRow('USER_ID');
 
-        $userIds = [session('USER_ID'), $this->usersModel->where('USER', $this->request->getVar('chat_user_name'))->get()->getRow('USER_ID')];
-        foreach ($userIds as $userId) {
-            $this->chatModel->addUserToChat($chatId, $userId);
+        $chatId = $this->chatConnModel->getChatId(session('USER_ID'), $chatingWithId);
+        if (empty($chatId)) {
+            $chatId = $this->chatModel->addChat(['DATETIME_CREATED' => date("Y-m-d H:i:s")]);
+            $this->chatConnModel->addUserChatConn($chatId, session('USER_ID'), $chatingWithId);
         }
 
         $data = [
-            'CHAT_ID'           => $chatId,
-            'USER_ID'           => session('USER_ID'),
-            'MESSAGE'           => $this->request->getVar('message'),
-            'DATETIME_CREATED'  => date("Y-m-d H:i:s")
+            'CHAT_ID' => $chatId,
+            'USER_ID' => session('USER_ID'),
+            'MESSAGE' => $this->request->getVar('message'),
+            'DATETIME_CREATED' => date("Y-m-d H:i:s")
         ];
 
         try {
@@ -103,5 +93,18 @@ class ChatController extends BaseController
 
     public function getMessages($chatId)
     {
+
+    }
+
+    public function getChats($userId)
+    {
+        if ($this->mainController->checkSession()) {
+
+            $response = $this->chatServices->getFormatedChats($userId);
+            return $this->response->setStatusCode(200)->setJSON($response);
+
+        } else {
+            return $this->response->setStatusCode(401)->setJSON(['error' => 'Usuário não autenticado']);
+        }
     }
 }

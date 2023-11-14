@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Libraries\TimeElapsedStringService;
 use App\Libraries\HTMLPurifierService;
 use Exception;
-use CodeIgniter\Debug\Exceptions;
 
 class JobsServices
 {
@@ -20,7 +19,7 @@ class JobsServices
 
     public function __construct()
     {
-        $this->TimeElapsedString = new \App\Libraries\TimeElapsedStringService();
+        $this->TimeElapsedString = new TimeElapsedStringService();
         $this->HTMLPurifier = new HTMLPurifierService();
         $this->session = \Config\Services::session();
 
@@ -71,7 +70,7 @@ class JobsServices
                     'job_privacy'           => $job->PRIVACY,
                     'job_likes'             => $job->NUM_LIKES,
                     'job_num_comments'      => $job->NUM_REPLIES,
-                    'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, $this->session->USER_ID),
+                    'user_liked'            => $this->likesModel->checkUserLikedJob($job->ID_JOB, session('USER_ID')),
                     'type'                  => 'POST'
 
                 ];
@@ -106,7 +105,7 @@ class JobsServices
                         'job_privacy'           => $job['PRIVACY'],
                         'job_likes'             => $job['NUM_LIKES'],
                         'job_num_comments'      => $job['NUM_REPLIES'],
-                        'user_liked'            => $this->likesModel->checkUserLikedJob($job['ID_JOB'], $this->session->USER_ID),
+                        'user_liked'            => $this->likesModel->checkUserLikedJob($job['ID_JOB'], session('USER_ID')),
                         'type'                  => 'POST'
                     ];
                 }
@@ -121,7 +120,7 @@ class JobsServices
                         'datetime_replied'      => isset($comment['comment_created']) ? $this->TimeElapsedString->time_elapsed_string($comment['comment_created']) : "",
                         'reply_likes'           => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
                         'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
-                        'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], $this->session->USER_ID),
+                        'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], session('USER_ID')),
                         'type'                  => 'REPLY',
                     ];
                 }
@@ -166,7 +165,7 @@ class JobsServices
                         'reply_created'         => isset($reply['DATETIME_REPLIED']) ? $this->TimeElapsedString->time_elapsed_string($reply['DATETIME_REPLIED']) : "",
                         'reply_likes'           => $this->likesModel->getContentLikes($reply['REPLY_ID'], 'REPLY'),
                         'reply_num_comments'    => $this->repliesModel->countRepliesOfThisReply($reply['REPLY_ID']),
-                        'user_liked'            => $this->likesModel->checkUserLikedReply($reply['REPLY_ID'], $this->session->USER_ID),
+                        'user_liked'            => $this->likesModel->checkUserLikedReply($reply['REPLY_ID'], session('USER_ID')),
                         'type'                  => 'REPLY'
                     ];
                 }
@@ -182,7 +181,7 @@ class JobsServices
                         'datetime_replied'      => isset($comment['comment_created']) ? $this->TimeElapsedString->time_elapsed_string($comment['comment_created']) : "",
                         'reply_likes'         => $this->likesModel->getContentLikes($comment['comment_id'], 'REPLY'),
                         'reply_num_comments'  => $this->repliesModel->countRepliesOfThisReply($comment['comment_id']),
-                        'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], $this->session->USER_ID),
+                        'user_liked'            => $this->likesModel->checkUserLikedReply($comment['comment_id'], session('USER_ID')),
                         'type'                  => 'REPLY'
                     ];
                 }
@@ -215,7 +214,7 @@ class JobsServices
             if (!$job) {
                 return ['error' => 'Item not found'];
             }
-            if ($this->session->USER_ID == $job->USER_ID) {
+            if (session('USER_ID') == $job->USER_ID) {
                 $jobEdit = [
                     'JOB_TITLE'             =>  $requestInfo->job_title,
                     'JOB'                   =>  $requestInfo->job,
@@ -239,7 +238,7 @@ class JobsServices
             if (!$job) {
                 return ['error' => 'Item not found'];
             }
-            if ($this->session->USER_ID == $job->USER_ID) {
+            if (session('USER_ID') == $job->USER_ID) {
                 $jobFinish = [
                     'DATETIME_FINISHED'     =>  date("Y-m-d H:i:s"),
                     'DATETIME_UPDATED'      =>  date("Y-m-d H:i:s"),
@@ -261,7 +260,7 @@ class JobsServices
             if (!$reply) {
                 return ['error' => 'Item not found'];
             }
-            if ($this->session->USER_ID == $reply->USER_ID) {
+            if (session('USER_ID') == $reply->USER_ID) {
                 $replyEdit = [
                     'REPLY'                   =>  $requestInfo->reply,
                     'DATETIME_REPLIED'      =>  date("Y-m-d H:i:s"),
@@ -283,7 +282,7 @@ class JobsServices
             if (!$content) {
                 return ['error' => 'Item not found'];
             }
-            if ($this->session->USER_ID == $content->USER_ID) {
+            if (session('USER_ID') == $content->USER_ID) {
                 if ($type == 'POST') {
                     $this->jobsModel->delete($id);
                     return ['message' => 'Tarefa deletada com sucesso!'];
@@ -303,7 +302,7 @@ class JobsServices
     {
         try {
             $newLike = [
-                'LIKE_ID'           =>  $this->session->USER . '_' . date("Y_m_d_H_i_s"),
+                'LIKE_ID'           =>  session('USER') . '_' . date("Y_m_d_H_i_s"),
                 'USER_ID'           =>  $requestInfo->user_id,
                 'CONTENT_ID'        =>  $requestInfo->content_id,
                 'TYPE'              =>  $requestInfo->type_content,

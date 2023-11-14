@@ -96,7 +96,7 @@ class Api_users extends ResourceController
         $response = [];
         if ($this->_tokenValidate()) {
 
-            $response = $this->usersServices->getFormattedVisits($this->request->getJSON('profile_id'));
+            $response = $this->usersServices->getFormattedVisits($this->request->getVar('profile_id'));
         } else {
             $response = [
                 'response'  =>  'error',

@@ -43,6 +43,7 @@ formReplyModal.addEventListener('submit', (e) => {
 
 document.addEventListener("DOMContentLoaded", () => {
     deleteContent();
+    // loadChats();
 });
 
 const createElement = (elementName, attributes) => {
@@ -57,13 +58,15 @@ const createElement = (elementName, attributes) => {
 function toggleChat() {
     const chat = document.querySelector('#chats');
     const chatsContainer = document.querySelector('#chatsContainer');
-    chat.classList.toggle('d-none');
+    const icon = chatsContainer.querySelector('#toggleChatIcon');
+
+    icon.classList.toggle('fa-angles-up');
+    icon.classList.toggle('fa-angles-down');
+
+    chat.classList.toggle('active-chat');
+
     chatsContainer.classList.toggle('position-absolute');
     chatsContainer.classList.toggle('pe-4');
-}
-
-async function loadChat(){
-    
 }
 
 function createUserOptionsDropdown(response, type) {
@@ -574,6 +577,32 @@ function createVisitElement(visit) {
     return container;
 }
 
+async function loadChats() {
+    const chatsContainer = document.querySelector("#chats");
+    chatsContainer.innerHTML = '';
+
+    const response = await fetch(`${BASEURL}/messages/get_chats/${session_user_id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    try {
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+
+        const Chats = await response.json();
+
+        Chats.forEach(chat => {
+            const chatFragment = createChatFragment(chat);
+            chatsContainer.appendChild(chatFragment);
+        })
+    } catch (error) {
+        console.error("Erro na requisição", error)
+    }
+}
+
 async function createJob(user_id, job_title, job, job_privacy) {
     const paramsObj = {
         user_id: user_id,
@@ -761,9 +790,9 @@ async function editReply(user_id, reply_id, reply) {
         const updatedReply = replyData.reply;
         const replyContainer = document.querySelector(`#replyContent${reply_id}`);
         const newReply = replyContainer.querySelector('.job-text');
-    
+
         newReply.innerHTML = updatedReply.reply;
-    
+
 
     } catch (error) {
         console.error("Erro na requisição:", error);
