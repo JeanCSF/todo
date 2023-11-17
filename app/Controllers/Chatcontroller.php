@@ -47,15 +47,17 @@ class ChatController extends BaseController
         return view('chat/chat_index', $data);
     }
 
-    public function chat($user, $chatId)
+    public function chat($user)
     {
         if (!$this->mainController->checkSession()) {
             return redirect()->to(base_url('/'));
         }
+        $chatId = $this->request->getVar('chatId');
 
         $data = [
             'pageTitle' => ($user == session('USER') ? "Mensagens {$user}" : "{$user}"),
             'user' => $user,
+            'chatId' => $chatId
         ];
         return view('chat/chat_index', $data);
     }
@@ -93,7 +95,26 @@ class ChatController extends BaseController
 
     public function getMessages($chatId)
     {
+        if ($this->mainController->checkSession()) {
 
+            $response = $this->chatServices->getFormatedMessages($chatId);
+            return $this->response->setStatusCode(200)->setJSON($response);
+
+        } else {
+            return $this->response->setStatusCode(401)->setJSON(['error' => 'Usuário não autenticado']);
+        }
+    }
+
+    public function getLastChatMessage($chatId)
+    {
+        if ($this->mainController->checkSession()) {
+
+            $response = $this->chatServices->getFormatedLastChatMessage($chatId);
+            return $this->response->setStatusCode(200)->setJSON($response);
+
+        } else {
+            return $this->response->setStatusCode(401)->setJSON(['error' => 'Usuário não autenticado']);
+        }
     }
 
     public function getChats($userId)

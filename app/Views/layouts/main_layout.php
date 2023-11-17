@@ -103,15 +103,8 @@
                         <p><i class="fa fa-inbox me-2 pt-3 "></i>Mensagens</p>
                         <button type="button" class="btn border-0 bg-transparent" style="cursor: pointer;" onclick="toggleChat()"><i class="fa fa-angles-up" id="toggleChatIcon"></i></button>
                     </div>
-                    <div class="bg-dark-subtle" id="chats">
-                    <div class="px-2 py-1 position-relative mb-3">
-                            <div class="d-flex">
-                                <img width="52" height="52" class="rounded-circle float-start" src="http://localhost:8085/todo/public/assets/avatar.webp" alt="profile pic">
-                                <p class="fst-italic fw-bold ms-4">jeancs</p>
-                                <p class="fst-italic text-muted position-absolute end-0 small me-1">Ontem</p>
-                                <p class="position position-absolute w-100 ms-4 ps-5 mt-4">messagemmessagem</p>
-                            </div>
-                        </div>
+                    <div class="bg-dark-subtle overflow-x-hidden over" id="chats">
+
                     </div>
                 </div>
             </div>

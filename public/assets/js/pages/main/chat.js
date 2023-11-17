@@ -1,8 +1,19 @@
 const messagesContainer = document.querySelector("#messagesContainer");
+var lastProcessedMessageId = null;
+
+function processMessages(messages) {
+    messages.forEach(message => {
+        const messageDiv = createElement('div', {
+            class: message.user_id == session_user_id ? 'message my-message' : 'message'
+        });
+        messageDiv.textContent = message.message;
+        messagesContainer.appendChild(messageDiv);
+    });
+}
 
 function startComet() {
     setTimeout(function () {
-        fetch("chat/get_messages")
+        fetch(`${BASEURL}/messages/get_last_message/${php_chat_id}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`Erro na requisição: ${response.status}`);
@@ -10,8 +21,11 @@ function startComet() {
                 return response.json();
             })
             .then(data => {
-                // Lógica para exibir as mensagens recebidas
-                // Implemente aqui a lógica para exibir as mensagens recebidas no front-end
+                if (lastProcessedMessageId !== data[0].message_id) {
+                    lastProcessedMessageId = data[0].message_id
+                    processMessages(data);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
             })
             .catch(error => {
                 console.error("Erro na requisição:", error);
@@ -23,14 +37,19 @@ function startComet() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // startComet();
-    document.getElementById("frmMessage").addEventListener("submit", (e) => {
-        e.preventDefault();
-        var message = document.getElementById("message").value;
-        newMessage(message);
-        document.getElementById("message").value = "";
+    if (php_chat_id) {
+        startComet();
+        loadMessages()
+    }
+    if (chat_user_name) {
+        document.getElementById("frmMessage").addEventListener("submit", (e) => {
+            e.preventDefault();
+            var message = document.getElementById("message").value;
+            newMessage(message);
+            document.getElementById("message").value = "";
 
-    });
+        });
+    }
 });
 
 async function newMessage(message) {
@@ -49,36 +68,42 @@ async function newMessage(message) {
             throw new Error(`Erro na requisição: ${response.status}`);
         }
 
-        const myMessage = createElement('div', {
-            class: 'message my-message'
-        });
-        myMessage.textContent = message;
+        // const myMessage = createElement('div', {
+        //     class: 'message my-message'
+        // });
+        // myMessage.textContent = message;
 
-        messagesContainer.appendChild(myMessage);
-        const data = await response.json();
-        return data;
+        // messagesContainer.appendChild(myMessage);
+        // const data = await response.json();
+        // return data;
 
     } catch (error) {
         console.error("Erro na requisição:", error);
         throw error;
     }
 }
-
-async function newChat() {
+async function loadMessages() {
     try {
-        const response = await fetch(`${BASEURL}/messages/new_chat`, {
-            method: "POST",
+        const response = await fetch(`${BASEURL}/messages/get_messages/${php_chat_id}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
         });
-
         if (!response.ok) {
             throw new Error(`Erro na requisição: ${response.status}`);
         }
 
-        const data = await response.json();
-        return data;
+        const Messages = await response.json();
+        const lastMessageIndex = Messages.length - 1;
+        Messages.splice(lastMessageIndex, 1);
+        Messages.forEach(message => {
+            const MessageDiv = createElement('div', {
+                class: message.user_id == session_user_id ? 'message my-message' : 'message'
+            });
+            MessageDiv.textContent = message.message;
+            messagesContainer.appendChild(MessageDiv);
+        });
     } catch (error) {
         console.error("Erro na requisição:", error);
         throw error;

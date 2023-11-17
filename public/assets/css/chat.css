@@ -11,7 +11,7 @@
 
 .message {
     width: fit-content;
-    max-width: 200px;
+    max-width: 350px;
     height: fit-content;
     margin: .3rem;
     padding-inline: .7rem;
@@ -21,6 +21,7 @@
     font-weight: 500;
     color: #fff;
     font-family: arial;
+    word-wrap: break-word;
 }
 
 .my-message {
@@ -45,7 +46,7 @@
 }
 
 #chatsContainer {
-    position: relative; /* Alterado para relative */
+    position: relative;
     width: 100%;
 }
 
@@ -59,6 +60,13 @@
     z-index: 999;
 }
 
+.chat-tab-message {
+    white-space: nowrap;
+    max-width: 38ch;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 #chats {
     max-height: 0;
     overflow-y: scroll;
@@ -69,4 +77,8 @@
     max-height: 265px !important;
 }
 
-
+@media screen and (max-width: 768px) {
+    .message {
+        max-width: 200px;
+    }
+}

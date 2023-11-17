@@ -43,7 +43,7 @@ formReplyModal.addEventListener('submit', (e) => {
 
 document.addEventListener("DOMContentLoaded", () => {
     deleteContent();
-    // loadChats();
+    loadChats();
 });
 
 const createElement = (elementName, attributes) => {
@@ -534,7 +534,7 @@ function createProfilePic(data) {
         height: 48,
         width: 48,
         alt: 'Profile Pic',
-        src: !data.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profiles_pics/${data.user}/${data.profile_pic}`
+        src: !data.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profile_imgs/${data.user}/${data.profile_pic}`
     });
 }
 
@@ -595,8 +595,46 @@ async function loadChats() {
         const Chats = await response.json();
 
         Chats.forEach(chat => {
-            const chatFragment = createChatFragment(chat);
-            chatsContainer.appendChild(chatFragment);
+            const chatsContent = createElement('div', {
+                class: 'px-2 py-1 position-relative mb-3'
+            });
+
+            const chatFragment = createElement('a', {
+                class: 'd-flex text-decoration-none text-reset',
+                href: `${BASEURL}/messages/chat/${chat.user}?chatId=${chat.chat_id}`,
+            });
+
+            const chatProfilePic = createElement('img', {
+                width: 52,
+                height: 52,
+                class: 'rounded-circle float-start',
+                src: !chat.profile_pic ? `${BASEURL}/assets/avatar.webp` : `${BASEURL}/assets/img/profile_imgs/${chat.user}/${chat.profile_pic}`,
+                alt: 'Profile pic'
+            });
+            chatFragment.appendChild(chatProfilePic);
+
+            const chatTargetUser = createElement('p', {
+                class: 'fst-italic fw-bold ms-4'
+            });
+            chatTargetUser.textContent = chat.user;
+            chatFragment.appendChild(chatTargetUser);
+
+            const messageTimeElapsed = createElement('p', {
+                class: 'fst-italic text-muted position-absolute end-0 small me-1',
+                title: chat.full_datetime_last_message
+            });
+            messageTimeElapsed.textContent = chat.time_elapsed_last_message;
+            chatFragment.appendChild(messageTimeElapsed);
+
+            const messageText = createElement('p', {
+                class: 'position-absolute w-100 ms-4 ps-5 mt-4 chat-tab-message'
+            });
+            messageText.textContent = chat.last_message_user_id == session_user_id ? `Você: ${chat.last_message}` : chat.last_message;
+            chatFragment.appendChild(messageText);
+
+            chatsContent.appendChild(chatFragment);
+
+            chatsContainer.appendChild(chatsContent);
         })
     } catch (error) {
         console.error("Erro na requisição", error)

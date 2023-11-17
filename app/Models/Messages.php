@@ -42,4 +42,9 @@ class Messages extends Model
     {
         return $this->save($data);
     }
+
+    public function getLastMessage($chatId)
+    {
+       return $this->where('CHAT_ID', $chatId)->get()->getLastRow();
+    }
 }

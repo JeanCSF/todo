@@ -31,7 +31,8 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script>
-    var chat_user_name = '<?= isset($user) ? $user : '' ?>'
+    var chat_user_name = '<?= isset($user) ? $user : null ?>'
+    var php_chat_id = '<?= isset($chatId) ? $chatId : null ?>'
 </script>
 <script defer src="<?= base_url('assets/js/pages/main/chat.js') ?>"></script>
 <?= $this->endSection() ?>
